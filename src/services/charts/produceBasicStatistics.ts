@@ -1,6 +1,10 @@
 import {BasicStatistics, MessageCounts, SentReceivedPoint} from "@models/graphData";
 
-const produceBasicStatistics = (messageCounts: MessageCounts, wordCounts: SentReceivedPoint[], secondCounts: SentReceivedPoint[]): BasicStatistics => {
+const produceBasicStatistics = (
+    messageCounts: MessageCounts, 
+    wordCounts: SentReceivedPoint[], 
+    secondCounts: SentReceivedPoint[]
+): BasicStatistics => {
     // Totals
     const calculateTotal = (data: SentReceivedPoint[], key: keyof SentReceivedPoint): number =>
         data.map((point) => point[key]).reduce((a, b) => a + b, 0);
@@ -49,7 +53,7 @@ const produceBasicStatistics = (messageCounts: MessageCounts, wordCounts: SentRe
         secondsPerActiveMonth: {
             sent: calculateActiveMonthAverage(sentSecondsTotal, activeMonths),
             received: calculateActiveMonthAverage(receivedSecondsTotal, activeMonths)
-        },
+        }
     };
 }
 

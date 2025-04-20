@@ -62,24 +62,59 @@ export default function produceGraphData(donorId: string, allConversations: Conv
                 const messageCounts = produceMessagesSentReceivedPerType(donorId, conversations);
                 const wordCounts = Object.values(monthlyWordsPerConversation).flat();
                 const secondCounts = Object.values(monthlySecondsPerConversation).flat();
+
+                // Initialize audio length distribution
+                let audioLengthDistribution: { sent: Record<string, number>, received: Record<string, number> } | undefined;
+
+                // Only calculate if there are audio messages
+                const hasAudioMessages = conversations.some(conversation => conversation.messagesAudio.length > 0);
+
+                if (hasAudioMessages) {
+                    // Initialize with empty objects
+                    audioLengthDistribution = {
+                        sent: {},
+                        received: {}
+                    };
+
+                    // Count audio messages by their rounded length in seconds
+                    conversations.forEach(conversation => {
+                        conversation.messagesAudio.forEach(messageAudio => {
+                            if (messageAudio.lengthSeconds > 0) {
+                                // Round the length to the nearest second
+                                const roundedLength = Math.round(messageAudio.lengthSeconds).toString();
+
+                                if (messageAudio.sender === donorId) {
+                                    audioLengthDistribution!.sent[roundedLength] = (audioLengthDistribution!.sent[roundedLength] || 0) + 1;
+                                } else {
+                                    audioLengthDistribution!.received[roundedLength] = (audioLengthDistribution!.received[roundedLength] || 0) + 1;
+                                }
+                            }
+                        });
+                    });
+                }
+
                 const basicStatistics = produceBasicStatistics(messageCounts, wordCounts, secondCounts);
+
+                // Create the GraphData object
+                const graphData: GraphData = {
+                    focusConversations,
+                    monthlyWordsPerConversation,
+                    monthlySecondsPerConversation,
+                    dailyWords,
+                    slidingWindowMeanDailyWords,
+                    slidingWindowMeanDailySeconds,
+                    dailyWordsPerConversation,
+                    dailySentHours,
+                    dailyReceivedHours,
+                    answerTimes,
+                    basicStatistics,
+                    participantsPerConversation,
+                    audioLengthDistribution
+                };
 
                 return [
                     dataSourceValue,
-                    {
-                        focusConversations,
-                        monthlyWordsPerConversation,
-                        monthlySecondsPerConversation,
-                        dailyWords,
-                        slidingWindowMeanDailyWords,
-                        slidingWindowMeanDailySeconds,
-                        dailyWordsPerConversation,
-                        dailySentHours,
-                        dailyReceivedHours,
-                        answerTimes,
-                        basicStatistics,
-                        participantsPerConversation,
-                    },
+                    graphData,
                 ];
             })
     ) as Record<DataSourceValue, GraphData>;

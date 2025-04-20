@@ -14,6 +14,7 @@ import DataSourceFeedbackSection from "@components/DataSourceFeedbackSection";
 import {MainTitle, RichText} from "@/styles/StyledTypography";
 import {useRichTranslations} from "@/hooks/useRichTranslations";
 import Box from "@mui/material/Box";
+import {DataSourceValue} from "@models/processed";
 
 
 const isFeedbackSurveyEnabled = process.env.NEXT_PUBLIC_FEEDBACK_SURVEY_ENABLED === "true";
@@ -85,7 +86,7 @@ export default function DonationFeedbackPage() {
                             {Object.entries(feedbackData).map(([source, data]) => (
                                 <DataSourceFeedbackSection
                                     key={source}
-                                    dataSourceValue={source}
+                                    dataSourceValue={source as DataSourceValue}
                                     graphData={data}
                                 />
                             ))}

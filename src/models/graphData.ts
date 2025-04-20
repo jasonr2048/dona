@@ -44,6 +44,11 @@ export type MessageCounts = {
     allMessages: SentReceived;
 }
 
+export interface AudioLengthDistribution {
+    sent: Record<string, number>;
+    received: Record<string, number>;
+}
+
 export interface BasicStatistics {
     messagesTotal: MessageCounts;
     wordsTotal: SentReceived;
@@ -67,5 +72,6 @@ export interface GraphData {
     dailySentHours: DailyHourPoint[];
     dailyReceivedHours: DailyHourPoint[];
     answerTimes: AnswerTimePoint[];
+    audioLengthDistribution: AudioLengthDistribution;
     basicStatistics: BasicStatistics;
 }

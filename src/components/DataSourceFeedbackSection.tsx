@@ -85,7 +85,7 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
 
                     {/* Message composition */}
                     <Typography variant="h6">{t("messageComposition.title")}</Typography>
-                    {/* TODO: Audio vs. text (vs. media) */}
+                    {/* TODO: Add media as type */}
                     <Box>
                         <Typography variant="body1" fontWeight="fontWeightBold">
                             {t("messageComposition.messageTypesBarChart.title")}
@@ -101,23 +101,26 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                         data={graphData}
                         dataSourceValue={dataSourceValue}
                     />
-
-                    <Box>
-                        <Typography variant="body1" fontWeight="fontWeightBold">
-                            {t("messageComposition.audioLengthsBarChart.title")}
-                        </Typography>
-                        <Typography variant="body2">
-                            {t.rich("messageComposition.audioLengthsBarChart.description", {
-                                button: (label) => openModalSpan(label, t, "messageComposition.audioLengthsBarChart"),
-                            })}
-                        </Typography>
-                    </Box>
-                    <ChartContainer
-                        type={ChartType.AudioLengthsBarChart}
-                        data={graphData}
-                        dataSourceValue={dataSourceValue}
-                    />
-                    {/* TODO: Histogram word counts */}
+                    {showDetailedAudioFeedback && (
+                        <>
+                            <Box>
+                            <Typography variant="body1" fontWeight="fontWeightBold">
+                                {t("messageComposition.audioLengthsBarChart.title")}
+                            </Typography>
+                            <Typography variant="body2">
+                                {t.rich("messageComposition.audioLengthsBarChart.description", {
+                                    button: (label) => openModalSpan(label, t, "messageComposition.audioLengthsBarChart"),
+                                })}
+                            </Typography>
+                        </Box>
+                        <ChartContainer
+                            type={ChartType.AudioLengthsBarChart}
+                            data={graphData}
+                            dataSourceValue={dataSourceValue}
+                        />
+                        </>
+                    )}
+                    {/* TODO: Histogram word counts? */}
                     {/* TODO: Emoji analysis */}
 
                     {/* Interaction Intensity */}

@@ -64,7 +64,7 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
             case ChartType.AudioLengthsBarChart:
                 return (
                     <AudioLengthsBarChart
-                        basicStatistics={data.basicStatistics}
+                        audioLengthDistribution={data.audioLengthDistribution}
                     />
                 );
 

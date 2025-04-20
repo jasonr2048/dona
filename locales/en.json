@@ -479,6 +479,20 @@
           "image": "images/charts/feedback_example_messageTypes_english.svg",
           "text": "<p><b>(1)</b> This shows the total number of text messages you sent.</p><p><b>(2)</b> This shows the total number of text messages you received from your contacts.</p><p><b>(3)</b> This shows the total number of audio messages you sent.</p><p><b>(4)</b> This shows the total number of audio messages you received from your contacts.</p><p><b>(5)</b> Click this icon to download the graph.</p>"
         }
+      },
+      "audioLengthsBarChart": {
+        "title": "Audio Message Lengths",
+        "description": "This chart shows the distribution of audio message lengths that you sent and received. Click <button>HERE</button> to see an explanation with an example.",
+        "legend": {
+          "donor": "Your Audio Messages",
+          "contacts": "Contacts Audio Messages"
+        },
+        "xAxis": "Audio length",
+        "yAxis": "Percentage of audio messages",
+        "example": {
+          "image": "images/charts/feedback_example_audioLengths_english.svg",
+          "text": "<p><b>(1)</b> This shows the percentage of your audio messages that are less than 10 seconds long.</p><p><b>(2)</b> This shows the percentage of audio messages from your contacts that are less than 10 seconds long.</p><p><b>(3)</b> This shows the percentage of your audio messages that are between 1-2 minutes long.</p><p><b>(4)</b> This shows the percentage of audio messages from your contacts that are between 1-2 minutes long.</p><p><b>(5)</b> Click this icon to download the graph.</p>"
+        }
       }
     },
     "interactionIntensity": {

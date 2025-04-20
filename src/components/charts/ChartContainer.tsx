@@ -13,9 +13,11 @@ import DayPartsActivityOverallChart from "@components/charts/DayPartsActivityOve
 import SentReceivedSlidingWindowChart from "@components/charts/SentReceivedSlidingWindowChart";
 import CountsOverallBarChart from "@components/charts/CountsOverallBarChart";
 import MessageTypesBarChart from "@components/charts/MessageTypesBarChart";
+import AudioLengthsBarChart from "@components/charts/AudioLengthsBarChart";
 
 export enum ChartType {
     MessageTypesBarChart = "messageTypesBarChart",
+    AudioLengthsBarChart = "audioLengthsBarChart",
     AnimatedIntensityPolarChart = "animatedIntensityPolarChart",
     AnimatedWordsPerChatBarChart = "animatedWordsPerChatBarChart",
     AnimatedSecondsPerChatBarChart = "animatedSecondsPerChatBarChart",
@@ -56,6 +58,12 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
             case ChartType.MessageTypesBarChart:
                 return (
                     <MessageTypesBarChart
+                        basicStatistics={data.basicStatistics}
+                    />
+                );
+            case ChartType.AudioLengthsBarChart:
+                return (
+                    <AudioLengthsBarChart
                         basicStatistics={data.basicStatistics}
                     />
                 );

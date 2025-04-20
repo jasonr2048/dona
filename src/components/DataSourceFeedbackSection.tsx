@@ -101,8 +101,23 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                         data={graphData}
                         dataSourceValue={dataSourceValue}
                     />
+
+                    <Box>
+                        <Typography variant="body1" fontWeight="fontWeightBold">
+                            {t("messageComposition.audioLengthsBarChart.title")}
+                        </Typography>
+                        <Typography variant="body2">
+                            {t.rich("messageComposition.audioLengthsBarChart.description", {
+                                button: (label) => openModalSpan(label, t, "messageComposition.audioLengthsBarChart"),
+                            })}
+                        </Typography>
+                    </Box>
+                    <ChartContainer
+                        type={ChartType.AudioLengthsBarChart}
+                        data={graphData}
+                        dataSourceValue={dataSourceValue}
+                    />
                     {/* TODO: Histogram word counts */}
-                    {/* TODO: Histogram second lengths */}
                     {/* TODO: Emoji analysis */}
 
                     {/* Interaction Intensity */}

@@ -136,7 +136,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({dataSourceValue, onDon
             )}
 
             {/* Loading indicator */}
-            {isLoading && <LoadingSpinner message={donation.t('sendData.wait')}/>}
+            {isLoading && <LoadingSpinner message={donation.t('anonymisation.wait')}/>}
 
             {/* Display anonymized data */}
             {!error && !isLoading && anonymizationResult && filteredConversations && (

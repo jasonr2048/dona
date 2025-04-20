@@ -327,9 +327,7 @@
       "onlyYouInConv": "<i>You are the only member in this chat. This could be because the other people have left the chat.</i>"
     },
     "chat-selection": "You can select up to {max_num} chats to receive focused feedback on, but you <b>must</b> select at least {min_num}, so that the feedback given to you cannot be considered the analysis of your contacts' personal data. The ones currently selected are the {default_num} with the highest word count in messages.",
-    "sendData": {
-      "wait": "Sending the data could take a few minutes. Please wait and keep this website open. Thanks!"
-    },
+    "sending-wait": "Sending the data could take a few minutes. Please wait and keep this website open. Thanks!",
     "alias-not-required": "Not required",
     "alias": "Username",
     "please-insert-alias": "Please enter your username to enable anonymization.",
@@ -344,20 +342,7 @@
       "contactInitial": "C",
       "system": "System",
       "chooseUsername": "Please choose your username. Your username will not be saved and we will not know it.",
-      "loading": {
-        "": "Sending the anonymized data could take a few minutes. Please wait and keep this website open. Thanks!",
-        "tooLong": {
-          "title": "If this process is taking more than 5 minutes, it might be due to the following:",
-          "issue": {
-            "1": "You are trying to upload file types that are not supported (the correct input types are .txt or .zip for WhatsApp and .zip for Facebook and Instagram)",
-            "2": "You have exported you WhatsApp chats from different devices",
-            "3": "The files you are trying to upload have unusually large sizes",
-            "4": "Your internet connection is slow",
-            "5": "Other unexpected issues",
-            "6": "Help us improve <a href=\"@messages(\"links.reportProblem\")\" target=\"_blank\">here</a>"
-          }
-        }
-      }
+      "wait": "Computing the anonymized data shouldn't take too long..."
     },
     "errors": {
       "NoProfile": "The uploaded data does not include profile information.",

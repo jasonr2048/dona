@@ -43,18 +43,20 @@ const SentReceivedSlidingWindowChart: React.FC<SentReceivedSlidingWindowChartPro
                 {
                     label: chartTexts("legend.sent"),
                     data: sentData,
-                    borderColor: CHART_COLORS.primaryBar,
+                    borderColor: CHART_COLORS.primary,
                     backgroundColor: CHART_COLORS.primaryTransparent,
                     fill: true,
                     pointRadius: 3,
+                    pointStyle: mode === "audio" ? "cross" : "circle",
                 },
                 {
                     label: chartTexts("legend.received"),
                     data: receivedData,
-                    borderColor: CHART_COLORS.secondaryBar,
+                    borderColor: CHART_COLORS.secondary,
                     backgroundColor: CHART_COLORS.secondaryTransparent,
                     fill: true,
                     pointRadius: 3,
+                    pointStyle: mode === "audio" ? "cross" : "circle",
                 },
             ],
         };

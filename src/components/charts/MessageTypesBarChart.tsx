@@ -1,11 +1,12 @@
 import React from "react";
 import {Bar} from "react-chartjs-2";
-import {BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Tooltip} from "chart.js";
+import {BarElement, CategoryScale, Chart as ChartJS, ChartDataset, Legend, LinearScale, Tooltip} from "chart.js";
 import DownloadButtons from "@components/charts/DownloadButtons";
 import {useTranslations} from "next-intl";
 import Box from "@mui/material/Box";
-import {BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT, COMMON_CHART_OPTIONS} from "@components/charts/chartConfig";
+import {BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT} from "@components/charts/chartConfig";
 import {BasicStatistics} from "@models/graphData";
+import useChartPattern from "@/hooks/useChartPattern";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -18,8 +19,9 @@ const MessageTypesBarChart: React.FC<MessageTypesBarChartProps> = ({
 }) => {
     const CHART_NAME = "message-types-barchart";
     const container_name = `chart-wrapper-${CHART_NAME}`;
-
     const chartTexts = useTranslations("feedback.messageComposition.messageTypesBarChart");
+    const primaryPattern = useChartPattern(CHART_COLORS.primaryLight, CHART_COLORS.primary);
+    const secondaryPattern = useChartPattern(CHART_COLORS.secondaryLight, CHART_COLORS.secondary);
 
     const generateChartData = () => {
         return {
@@ -31,7 +33,7 @@ const MessageTypesBarChart: React.FC<MessageTypesBarChartProps> = ({
                         basicStatistics.messagesTotal.textMessages.received,
                         basicStatistics.messagesTotal.audioMessages.received
                     ],
-                    backgroundColor: CHART_COLORS.secondaryBar,
+                    backgroundColor: [CHART_COLORS.primary, primaryPattern],
                     maxBarThickness: CHART_LAYOUT.maxBarThickness * CHART_LAYOUT.barPercentageNarrow
                 },
                 {
@@ -40,10 +42,10 @@ const MessageTypesBarChart: React.FC<MessageTypesBarChartProps> = ({
                         basicStatistics.messagesTotal.textMessages.sent,
                         basicStatistics.messagesTotal.audioMessages.sent
                     ],
-                    backgroundColor: CHART_COLORS.primaryBar,
+                    backgroundColor: [CHART_COLORS.secondary, secondaryPattern],
                     maxBarThickness: CHART_LAYOUT.maxBarThickness * CHART_LAYOUT.barPercentageWide,
                 },
-            ],
+            ] as ChartDataset<"bar", number[]>[],
         };
     };
 

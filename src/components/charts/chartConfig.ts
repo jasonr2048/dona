@@ -1,7 +1,9 @@
 export const CHART_COLORS = {
-    primaryBar: "#1f77b4",  // Blue
-    secondaryBar: "#ff7f0e", // Orange
+    primary: "#1f77b4",  // Blue
+    primaryLight: "#66b1e5",
     primaryTransparent: "rgba(31, 119, 180, 0.2)",
+    secondary: "#ff7f0e", // Orange
+    secondaryLight: "#ffb26e",
     secondaryTransparent: "rgba(255, 127, 14, 0.2)",
     background: "#f5f5f5",
 };

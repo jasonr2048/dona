@@ -16,7 +16,6 @@ import {useRichTranslations} from "@/hooks/useRichTranslations";
 import Box from "@mui/material/Box";
 import {DataSourceValue} from "@models/processed";
 
-
 const isFeedbackSurveyEnabled = process.env.NEXT_PUBLIC_FEEDBACK_SURVEY_ENABLED === "true";
 const feedbackSurveyLink = process.env.NEXT_PUBLIC_FEEDBACK_SURVEY_LINK;
 

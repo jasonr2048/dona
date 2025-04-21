@@ -1,10 +1,11 @@
 import React from "react";
 import {Bar} from "react-chartjs-2";
-import {BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Tooltip} from "chart.js";
+import {BarElement, CategoryScale, Chart as ChartJS, ChartDataset, Legend, LinearScale, Tooltip} from "chart.js";
 import DownloadButtons from "@components/charts/DownloadButtons";
 import {useTranslations} from "next-intl";
 import Box from "@mui/material/Box";
 import {CHART_COLORS, CHART_LAYOUT, COMMON_CHART_OPTIONS} from "@components/charts/chartConfig";
+import useChartPattern from "@/hooks/useChartPattern";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -21,6 +22,11 @@ const CountsOverallBarChart: React.FC<WordCountOverallBarChartProps> = ({
     const container_name = `chart-wrapper-${CHART_NAME}`;
 
     const property = mode === "text" ? "word" : "second";
+    const primaryPattern = useChartPattern(CHART_COLORS.primaryLight, CHART_COLORS.primary);
+    const secondaryPattern = useChartPattern(CHART_COLORS.secondaryLight, CHART_COLORS.secondary);
+    const colors = mode === "text" ?
+        [CHART_COLORS.primary, CHART_COLORS.secondary] :
+        [primaryPattern, secondaryPattern];
     const chartTexts = useTranslations(`feedback.interactionIntensity.${property}CountOverallBarChart`);
 
     const generateChartData = () => {
@@ -29,10 +35,10 @@ const CountsOverallBarChart: React.FC<WordCountOverallBarChartProps> = ({
             datasets: [
                 {
                     data: [sentWordsTotal, receivedWordsTotal],
-                    backgroundColor: [CHART_COLORS.primaryBar, CHART_COLORS.secondaryBar],
+                    backgroundColor: colors,
                     maxBarThickness: CHART_LAYOUT.maxHBarThickness
                 },
-            ],
+            ] as ChartDataset<"bar", number[]>[],
         };
     };
 

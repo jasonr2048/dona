@@ -20,7 +20,7 @@
     "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.17.16",
     "@zip.js/zip.js": "^2.7.57",
-    "chart.js": "^4.4.8",
+    "chart.js": "^4.4.9",
     "chartjs-adapter-date-fns": "^3.0.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",

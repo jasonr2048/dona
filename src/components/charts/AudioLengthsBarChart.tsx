@@ -3,9 +3,10 @@ import {Bar} from "react-chartjs-2";
 import Box from "@mui/material/Box";
 import {useTranslations} from "next-intl";
 import DownloadButtons from "@components/charts/DownloadButtons";
-import {ChartDataset} from "chart.js";
 import {BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT, PCT_TOOLTIP, TOP_LEGEND} from "@components/charts/chartConfig";
 import {AudioLengthDistribution} from "@models/graphData";
+import useChartPattern from "@/hooks/useChartPattern";
+import {ChartDataset} from "chart.js";
 
 const FIRST = "< 10 sec";
 const SECOND = "10-30 sec";
@@ -30,8 +31,9 @@ interface AudioLengthsBarChartProps {
 const AudioLengthsBarChart: React.FC<AudioLengthsBarChartProps> = ({ audioLengthDistribution }) => {
     const CHART_NAME = "audio-lengths-barchart";
     const container_name = `chart-wrapper-${CHART_NAME}`;
-
     const chartTexts = useTranslations("feedback.messageComposition.audioLengthsBarChart");
+    const primaryPattern = useChartPattern(CHART_COLORS.primaryLight, CHART_COLORS.primary);
+    const secondaryPattern = useChartPattern(CHART_COLORS.secondaryLight, CHART_COLORS.secondary);
 
     // Initialize counts for each range
     const binnedDistribution = {
@@ -73,20 +75,20 @@ const AudioLengthsBarChart: React.FC<AudioLengthsBarChartProps> = ({ audioLength
     const contactPercentages = contactCounts.map((count) => (contactTotalAudioMessages > 0 ? (count / contactTotalAudioMessages) * 100 : 0));
 
     // Create datasets for the chart
-    const datasets: ChartDataset<"bar", number[]>[] = [
+    const datasets = [
         {
             label: chartTexts("legend.contacts"),
             data: contactPercentages,
-            backgroundColor: CHART_COLORS.secondaryBar,
+            backgroundColor: secondaryPattern,
             barPercentage: CHART_LAYOUT.barPercentageNarrow,
         },
         {
             label: chartTexts("legend.donor"),
             data: donorPercentages,
-            backgroundColor: CHART_COLORS.primaryBar,
+            backgroundColor: primaryPattern,
             barPercentage: CHART_LAYOUT.barPercentageWide,
         },
-    ].filter(Boolean) as ChartDataset<"bar", number[]>[];
+    ] as ChartDataset<"bar", number[]>[];
 
     const data = {
         labels: ranges.map((range) => range.label),

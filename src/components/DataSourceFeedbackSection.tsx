@@ -124,77 +124,77 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                     {/* TODO: Emoji analysis */}
 
                     {/* Interaction Intensity */}
-                    {/*<Typography variant="h6">{ii("title")}</Typography>*/}
-                    {/*<Box>*/}
-                    {/*    <Typography variant="body1" fontWeight="fontWeightBold">*/}
-                    {/*        {ii("animatedIntensityPolarChart.title")}*/}
-                    {/*    </Typography>*/}
-                    {/*    <Typography variant="body2">*/}
-                    {/*        {ii.rich("animatedIntensityPolarChart.description", {*/}
-                    {/*            button: (label) => openModalSpan(label, ii, "animatedIntensityPolarChart"),*/}
-                    {/*        })}*/}
-                    {/*    </Typography>*/}
-                    {/*</Box>*/}
-                    {/*<ChartContainer*/}
-                    {/*    type={ChartType.AnimatedIntensityPolarChart}*/}
-                    {/*    data={graphData}*/}
-                    {/*    dataSourceValue={dataSourceValue}*/}
-                    {/*/>*/}
-                    {/*<Box>*/}
-                    {/*    <Typography variant="body1" fontWeight="fontWeightBold">*/}
-                    {/*        {ii("animatedWordsPerChatBarChart.title")}*/}
-                    {/*    </Typography>*/}
-                    {/*    <Typography variant="body2">*/}
-                    {/*        {ii.rich("animatedWordsPerChatBarChart.description", {*/}
-                    {/*            button: (label) => openModalSpan(label, ii, "animatedWordsPerChatBarChart"),*/}
-                    {/*        })}*/}
-                    {/*    </Typography>*/}
-                    {/*</Box>*/}
-                    {/*<ChartContainer*/}
-                    {/*    type={ChartType.AnimatedWordsPerChatBarChart}*/}
-                    {/*    data={graphData}*/}
-                    {/*    dataSourceValue={dataSourceValue}*/}
-                    {/*/>*/}
-                    {/*{showDetailedAudioFeedback && (*/}
-                    {/*    <>*/}
-                    {/*        <Box>*/}
-                    {/*            <Typography variant="body1" fontWeight="fontWeightBold">*/}
-                    {/*                {ii("animatedSecondsPerChatBarChart.title")}*/}
-                    {/*            </Typography>*/}
-                    {/*            <Typography variant="body2">*/}
-                    {/*                {ii.rich("animatedSecondsPerChatBarChart.description", {*/}
-                    {/*                    button: (label) => openModalSpan(label, ii, "animatedSecondsPerChatBarChart"),*/}
-                    {/*                })}*/}
-                    {/*            </Typography>*/}
-                    {/*        </Box>*/}
-                    {/*        <ChartContainer*/}
-                    {/*            type={ChartType.AnimatedSecondsPerChatBarChart}*/}
-                    {/*            data={graphData}*/}
-                    {/*            dataSourceValue={dataSourceValue}*/}
-                    {/*        />*/}
-                    {/*    </>*/}
-                    {/*)}*/}
-                    {/*<Button onClick={() => openSectionModal("interactionIntensity")}>*/}
-                    {/*    {ii("moreAbout")}*/}
-                    {/*</Button>*/}
+                    <Typography variant="h6">{ii("title")}</Typography>
+                    <Box>
+                        <Typography variant="body1" fontWeight="fontWeightBold">
+                            {ii("animatedIntensityPolarChart.title")}
+                        </Typography>
+                        <Typography variant="body2">
+                            {ii.rich("animatedIntensityPolarChart.description", {
+                                button: (label) => openModalSpan(label, ii, "animatedIntensityPolarChart"),
+                            })}
+                        </Typography>
+                    </Box>
+                    <ChartContainer
+                        type={ChartType.AnimatedIntensityPolarChart}
+                        data={graphData}
+                        dataSourceValue={dataSourceValue}
+                    />
+                    <Box>
+                        <Typography variant="body1" fontWeight="fontWeightBold">
+                            {ii("animatedWordsPerChatBarChart.title")}
+                        </Typography>
+                        <Typography variant="body2">
+                            {ii.rich("animatedWordsPerChatBarChart.description", {
+                                button: (label) => openModalSpan(label, ii, "animatedWordsPerChatBarChart"),
+                            })}
+                        </Typography>
+                    </Box>
+                    <ChartContainer
+                        type={ChartType.AnimatedWordsPerChatBarChart}
+                        data={graphData}
+                        dataSourceValue={dataSourceValue}
+                    />
+                    {showDetailedAudioFeedback && (
+                        <>
+                            <Box>
+                                <Typography variant="body1" fontWeight="fontWeightBold">
+                                    {ii("animatedSecondsPerChatBarChart.title")}
+                                </Typography>
+                                <Typography variant="body2">
+                                    {ii.rich("animatedSecondsPerChatBarChart.description", {
+                                        button: (label) => openModalSpan(label, ii, "animatedSecondsPerChatBarChart"),
+                                    })}
+                                </Typography>
+                            </Box>
+                            <ChartContainer
+                                type={ChartType.AnimatedSecondsPerChatBarChart}
+                                data={graphData}
+                                dataSourceValue={dataSourceValue}
+                            />
+                        </>
+                    )}
+                    <Button onClick={() => openSectionModal("interactionIntensity")}>
+                        {ii("moreAbout")}
+                    </Button>
 
                     {/* Daily Activity Times */}
-                    {/*<Typography variant="h6">{dat("title")}</Typography>*/}
-                    {/*<Box>*/}
-                    {/*    <Typography variant="body2">*/}
-                    {/*        {dat.rich("dailyActivityHoursChart.description", {*/}
-                    {/*            button: (label) => openModalSpan(label, dat, "dailyActivityHoursChart"),*/}
-                    {/*        })}*/}
-                    {/*    </Typography>*/}
-                    {/*</Box>*/}
-                    {/*<ChartContainer*/}
-                    {/*    type={ChartType.DailyActivityHoursChart}*/}
-                    {/*    data={graphData}*/}
-                    {/*    dataSourceValue={dataSourceValue}*/}
-                    {/*/>*/}
-                    {/*<Button onClick={() => openSectionModal("dailyActivityTimes")}>*/}
-                    {/*    {dat("moreAbout")}*/}
-                    {/*</Button>*/}
+                    <Typography variant="h6">{dat("title")}</Typography>
+                    <Box>
+                        <Typography variant="body2">
+                            {dat.rich("dailyActivityHoursChart.description", {
+                                button: (label) => openModalSpan(label, dat, "dailyActivityHoursChart"),
+                            })}
+                        </Typography>
+                    </Box>
+                    <ChartContainer
+                        type={ChartType.DailyActivityHoursChart}
+                        data={graphData}
+                        dataSourceValue={dataSourceValue}
+                    />
+                    <Button onClick={() => openSectionModal("dailyActivityTimes")}>
+                        {dat("moreAbout")}
+                    </Button>
 
                     {/* Response Times */}
                     <Typography variant="h6">{rt("title")}</Typography>

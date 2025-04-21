@@ -1,10 +1,10 @@
 import React from "react";
-import {Box, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import ChartContainer, {ChartType} from "@components/charts/ChartContainer";
 import {GraphData} from "@models/graphData";
-import {useTranslations} from "next-intl";
 import FullSizeModal from "@components/FullSizeModal";
 import {BlockTitle, MainTitle, RichText} from "@/styles/StyledTypography";
+import {useRichTranslations} from "@/hooks/useRichTranslations";
 
 interface MoreChartsModalProps {
     open: boolean;
@@ -17,7 +17,7 @@ interface MoreChartsModalProps {
 const MoreChartsModal: React.FC<MoreChartsModalProps> = ({
      open, onClose, graphData, section, showDetailedAudioFeedback
  }) => {
-    const sectionTexts = useTranslations(`feedback.${section}`);
+    const sectionTexts = useRichTranslations(`feedback.${section}`);
 
     const chartsData = (
         section == "interactionIntensity" ?
@@ -50,13 +50,13 @@ const MoreChartsModal: React.FC<MoreChartsModalProps> = ({
     return (
         <FullSizeModal open={open} onClose={onClose}>
             <MainTitle variant="h5">
-                {sectionTexts("moreAbout")}
+                {sectionTexts.t("moreAbout")}
             </MainTitle>
             <Box sx={{textAlign: "center"}}>
                 {chartsData.map(({headerKey, descriptionKey, chartType}, chartIndex) => (
                     <Box key={chartIndex} mb={4}>
                         {headerKey && (
-                            <BlockTitle>{sectionTexts(headerKey)}</BlockTitle>
+                            <BlockTitle>{sectionTexts.t(headerKey)}</BlockTitle>
                         )}
                         {descriptionKey && (
                             <RichText>{sectionTexts.rich(`${descriptionKey}.description`)}</RichText>

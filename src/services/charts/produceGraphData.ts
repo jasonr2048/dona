@@ -64,19 +64,14 @@ export default function produceGraphData(donorId: string, allConversations: Conv
                 const secondCounts = Object.values(monthlySecondsPerConversation).flat();
 
                 // Initialize audio length distribution
-                let audioLengthDistribution: { sent: Record<string, number>, received: Record<string, number> } | undefined;
+                let audioLengthDistribution: { sent: Record<string, number>, received: Record<string, number> }  = {
+                    sent: {},
+                    received: {}
+                };
 
                 // Only calculate if there are audio messages
                 const hasAudioMessages = conversations.some(conversation => conversation.messagesAudio.length > 0);
-
                 if (hasAudioMessages) {
-                    // Initialize with empty objects
-                    audioLengthDistribution = {
-                        sent: {},
-                        received: {}
-                    };
-
-                    // Count audio messages by their rounded length in seconds
                     conversations.forEach(conversation => {
                         conversation.messagesAudio.forEach(messageAudio => {
                             if (messageAudio.lengthSeconds > 0) {
@@ -95,7 +90,6 @@ export default function produceGraphData(donorId: string, allConversations: Conv
 
                 const basicStatistics = produceBasicStatistics(messageCounts, wordCounts, secondCounts);
 
-                // Create the GraphData object
                 const graphData: GraphData = {
                     focusConversations,
                     monthlyWordsPerConversation,

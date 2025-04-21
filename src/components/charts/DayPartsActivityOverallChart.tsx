@@ -45,13 +45,13 @@ const DayPartsActivityOverallChart: React.FC<DayPartsActivityOverallPlotProps> =
             {
                 label: chartTexts("legend.received"),
                 data: receivedCounts.map((count) => (totalReceived > 0 ? (count / totalReceived) * 100 : 0)),
-                backgroundColor: CHART_COLORS.secondaryBar,
+                backgroundColor: CHART_COLORS.secondary,
                 barPercentage: 0.5,
             },
             {
                 label: chartTexts("legend.sent"),
                 data: sentCounts.map((count) => (totalSent > 0 ? (count / totalSent) * 100 : 0)),
-                backgroundColor: CHART_COLORS.primaryBar,
+                backgroundColor: CHART_COLORS.primary,
                 barPercentage: 0.8,
             },
         ]

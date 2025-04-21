@@ -35,6 +35,9 @@
       "ios-documentation": "https://faq.whatsapp.com/618575946635920/?cms_platform=iphone&helpref=platform_switcher",
       "android-documentation": "https://faq.whatsapp.com/de/android/23756533"
     },
+    "imessage": {
+      "external-documentation": "https://support.apple.com/en-us/HT201287"
+    },
     "secure-delete": "https://www.bsi.bund.de/DE/Themen/Verbraucherinnen-und-Verbraucher/Informationen-und-Empfehlungen/Cyber-Sicherheitsempfehlungen/Daten-sichern-verschluesseln-und-loeschen/Daten-endgueltig-loeschen/daten-endgueltig-loeschen.html",
     "datenschutz": "https://www.datenschutz.org/daten-loeschen/",
     "cadooz-benefit": "https://www.cadooz.com/produkte/bestchoice-einkaufsgutschein-von-cadooz/"
@@ -135,8 +138,7 @@
     "continue": {
       "buttons-header": "Haben Sie Ihre Daten bereit?",
       "body": "Wenn Sie anhand dieser Anleitung Ihre Daten erhalten haben, können Sie jetzt mit der Einverständniserklärung und dem  Fragebogen beginnen. Im Anschluss können Sie dann Ihre Daten spenden."
-    },
-    "haveData": "Sie brauchen 5-7 WhatsApp-Chats (.txt-Dateien)."
+    }
   },
   "whatsapp": {
     "devices": {
@@ -223,6 +225,30 @@
     "video": "/images/instagram/instagram_ger.mp4",
     "logo": "i-logo.svg"
   },
+  "imessage": {
+    "devices": {
+      "body": "Um auf Ihre iMessage-Daten zuzugreifen, benötigen Sie Zugang zu einem iPhone oder einem Mac. Stellen Sie sicher, dass Sie die erforderlichen Berechtigungen haben, um auf die Daten zuzugreifen."
+    },
+    "duration": {
+      "title": "Wie lange dauert der Datenexport aus iMessage?",
+      "body": "Die für den Export Ihrer Daten benötigte Zeit hängt von der Datenmenge ab. Bitte haben Sie Geduld, da der Vorgang einige Zeit in Anspruch nehmen kann."
+    },
+    "data-deletion": {
+      "body": "Um Ihre iMessage-Daten zu löschen, folgen Sie den Anweisungen in der Nachrichten-App. Stellen Sie sicher, dass Sie wichtige Daten gesichert haben, bevor Sie diese löschen. Weitere Informationen zur dauerhaften Löschung von Dateien finden Sie <link>auf der Website der Universität Michigan</link>."
+    },
+    "description": "Stellen Sie eine Anfrage zum Export Ihrer iMessage-Daten. Sie benötigen Zugang zu einem iPhone oder einem Mac. Befolgen Sie die nachstehenden Schritte, um Ihre Daten zu exportieren.",
+    "external-documentation": "Detailliertere Anweisungen finden Sie in der offiziellen Dokumentation <link>hier</link>.",
+    "steps": {
+      "1": "Öffnen Sie die Nachrichten-App auf Ihrem iPhone oder Mac.",
+      "2": "Wählen Sie die Konversation aus, die Sie exportieren möchten.",
+      "3": "Tippen Sie auf dem iPhone lange auf eine Nachricht, dann auf 'Mehr...' und wählen Sie die Nachrichten aus, die Sie exportieren möchten. Auf einem Mac wählen Sie die Nachrichten aus, die Sie exportieren möchten.",
+      "4": "Tippen Sie auf das 'Teilen'-Symbol und wählen Sie 'Mail' oder eine andere Methode, um sich die Nachrichten selbst zu senden.",
+      "5": "Wiederholen Sie die Schritte für andere Konversationen, falls erforderlich.",
+      "6": "Laden Sie die exportierten Nachrichten aus Ihrer E-Mail oder einer anderen Methode auf Ihren Computer herunter."
+    },
+    "video": "/images/imessage/imessage_eng.mp4",
+    "logo": "imessage-logo.svg"
+  },
   "consent": {
     "title": "Einwilligungserklärung",
     "pdf": {
@@ -297,13 +323,10 @@
       "onlyYouInConv": "<i>Nur Sie befinden sich in diesem Chat. Es könnte z.B. sein, dass die andere Person/en den Chat verlassen haben.</i>"
     },
     "chat-selection": "Sie können bis zu {max_num} Chats auswählen, um gezieltes Feedback zu erhalten, aber Sie <b>müssen</b> mindestens {min_num} auswählen, damit das Ihnen gegebene Feedback nicht als Analyse der persönlichen Daten Ihrer Kontakte betrachtet werden kann. Derzeit sind die {default_num} mit der höchsten Wortzahl in den Nachrichten ausgewählt.",
-    "sendData": {
-      "wait": "Das Senden der Daten kann ein paar Minuten dauern. Bitte warten Sie und lassen Sie diese Seite geöffnet. Danke!"
-    },
+    "sending-wait": "Das Senden der Daten kann ein paar Minuten dauern. Bitte warten Sie und lassen Sie diese Seite geöffnet. Danke!",
     "alias-not-required": "Nicht notwendig",
     "alias": "Nutzername",
     "please-insert-alias": "Bitte geben Sie Ihren Nutzernamen ein, um das Hochladen zu ermöglichen",
-    "processing": "Daten werden extrahiert und anonymisiert...",
     "be-patient": "Das Extrahieren der Daten kann einige Minuten dauern. Haben Sie bitte Geduld...",
     "successful": "Ihre Daten wurden erfolgreich anonymisiert.",
     "error": "Es ist ein Fehler aufgetreten:",
@@ -312,25 +335,9 @@
       "contact": "Kontakt",
       "chat": "Chat",
       "contactInitial": "K",
-      "chatInitialW": "W",
-      "chatInitialF": "F",
-      "chatInitialI": "I",
       "system": "System",
-      "chooseUsername": "Bitte wählen Sie Ihren Nutzernamen aus. Ihr Nutzername wird nicht gespeichert u\"nd wir werden ihn nicht erfahren.",
-      "loading": {
-        "": "Das Senden der anonymisierten Daten kann ein paar Minuten dauern. Bitte warten Sie und lassen Sie diese Seite geöffnet. Danke!",
-        "tooLong": {
-          "title": "Wenn dieser Vorgang länger als 5 Minuten dauert, kann dies folgende Ursachen haben:",
-          "issue": {
-            "1": "Sie versuchen, Dateitypen hochzuladen, die nicht unterstützt werden (die korrekten Dateitypen sind .txt oder .zip für WhatsApp und .zip für Facebook und Instagram)",
-            "2": "Sie haben Ihre WhatsApp-Chats von verschiedenen Geräten exportiert",
-            "3": "Die Dateien, die Sie hochladen möchten, sind ungewöhnlich groß",
-            "4": "Ihre Internetverbindung ist langsam",
-            "5": "Andere unerwartete Probleme",
-            "6": "Helfen Sie uns <a href=\"https://survey.mbp.tf.uni-bielefeld.de/index.php?r=survey/index&sid=486423&lang=de\" target=\"_blank\">hier</a> diese Anwendung zu verbessern."
-          }
-        }
-      }
+      "processing": "Daten werden extrahiert und anonymisiert...",
+      "chooseUsername": "Bitte wählen Sie Ihren Nutzernamen aus. Ihr Nutzername wird nicht gespeichert und wir werden ihn nicht erfahren."
     },
     "errors": {
       "NoProfile": "Die Datei enthält keine Profildaten.",
@@ -343,7 +350,7 @@
       "NoMessagesInRange": "In dem ausgewählten Zeitraum befinden sich keine Nachrichten. Bitte wählen Sie einen größeren und validen Zeitraum.",
       "TransactionFailed": "Die Spendendaten konnten nicht gespeichert werden. Überprüfen Sie die Verbindung und versuchen Sie es erneut.",
       "UnknownError": "Es gibt einen Fehler. Bitte überprüfen Sie Ihre Datenspende.",
-
+      "TooShortTimePeriod_format": "Ihre Daten müssen einen Zeitraum von mindestens {MIN_DONATION_TIME_PERIOD_MONTHS} Monaten umfassen.",
       "no-alias": "Ein Nutzername muss angegeben werden. Sie können ihn in Ihrem WhatsApp-Profil finden."
     }
   },
@@ -443,6 +450,41 @@
       "audio": "Audio",
       "sent": "Gesendet",
       "received": "Erhalten"
+    },
+    "messageComposition": {
+      "title": "Nachrichtenzusammensetzung",
+      "messageTypesBarChart": {
+        "title": "Nachrichtentypen",
+        "description": "Dieses Diagramm zeigt die Verteilung der Nachrichtentypen (Text und Audio), die Sie gesendet und empfangen haben. Klicken Sie <button>HIER</button>, um eine Erklärung mit einem Beispiel zu sehen.",
+        "legend": {
+          "donor": "Ihre Nachrichten",
+          "contacts": "Nachrichten der Kontakte"
+        },
+        "types": {
+          "text": "Text",
+          "audio": "Audio"
+        },
+        "xAxis": "Nachrichtentypen",
+        "yAxis": "Anzahl der Nachrichten",
+        "example": {
+          "image": "images/charts/feedback_example_messageTypes_english.svg",
+          "text": "<p><b>(1)</b> Dies zeigt die Gesamtzahl der Textnachrichten, die Sie gesendet haben.</p><p><b>(2)</b> Dies zeigt die Gesamtzahl der Textnachrichten, die Sie von Ihren Kontakten erhalten haben.</p><p><b>(3)</b> Dies zeigt die Gesamtzahl der Audionachrichten, die Sie gesendet haben.</p><p><b>(4)</b> Dies zeigt die Gesamtzahl der Audionachrichten, die Sie von Ihren Kontakten erhalten haben.</p><p><b>(5)</b> Klicken Sie auf dieses Symbol, um das Diagramm herunterzuladen.</p>"
+        }
+      },
+      "audioLengthsBarChart": {
+        "title": "Länge der Audionachrichten",
+        "description": "Dieses Diagramm zeigt die Verteilung der Länge von Audionachrichten, die Sie gesendet und empfangen haben. Klicken Sie <button>HIER</button>, um eine Erklärung mit einem Beispiel zu sehen.",
+        "legend": {
+          "donor": "Ihre Audionachrichten",
+          "contacts": "Audionachrichten der Kontakte"
+        },
+        "xAxis": "Audiolänge",
+        "yAxis": "Prozentsatz der Audionachrichten",
+        "example": {
+          "image": "images/charts/feedback_example_audioLengths_english.svg",
+          "text": "<p><b>(1)</b> Dies zeigt den Prozentsatz Ihrer Audionachrichten, die weniger als 10 Sekunden lang sind.</p><p><b>(2)</b> Dies zeigt den Prozentsatz der Audionachrichten von Ihren Kontakten, die weniger als 10 Sekunden lang sind.</p><p><b>(3)</b> Dies zeigt den Prozentsatz Ihrer Audionachrichten, die zwischen 1-2 Minuten lang sind.</p><p><b>(4)</b> Dies zeigt den Prozentsatz der Audionachrichten von Ihren Kontakten, die zwischen 1-2 Minuten lang sind.</p><p><b>(5)</b> Klicken Sie auf dieses Symbol, um das Diagramm herunterzuladen.</p>"
+        }
+      }
     },
     "interactionIntensity": {
       "title": "Interaktionsintensität",
@@ -544,7 +586,29 @@
           "text": "<p><b>(1)</b> In diesem Beispiel lässt sich in diesem Bereich eine Veränderung der Aktivitätszeiten beobachten. In dem Zeitraum bei <b>(2)</b> kann man sehen, dass keine Nachrichten ungefähr zwischen 8:00 Uhr und 12:00 Uhr gesendet wurden. Dann in dem Zeitraum bei <b>(3)</b> hat sich dieser Bereich ohne Nachrichten zu den Uhrzeiten ungefähr zwischen 2:00 Uhr und 6:00 Uhr verschoben. Das könnte zum Beispiel an einem Umzug in eine andere Zeitzone oder an einer Veränderung des Schlafrhythmus liegen.</p><p><b>(4)</b> Zum Beispiel hier lassen sich vermehrt dunkle Vierecke beobachten. In diesem Bereich wurden also überdurchschnittlich viele Nachrichten gesendet.</p><p><b>(5)</b> Klicken Sie auf dieses Symbol, um den Graphen herunterzuladen.</p>"
         }
       },
-      "moreAbout": "Mehr über Ihre Täglichen Aktivitätszeiten"
+      "moreAbout": "Mehr über Ihre Täglichen Aktivitätszeiten",
+      "dayPartsOverall": {
+        "description": "In diesem Graphen können Sie sehen, wie sich die Wörter, die Sie gesendet und empfangen haben auf verschiedene Teile des Tages verteilen. Sie sehen hier gemittelte Werte über den gesamten Zeitraum Ihrer Datenspende.",
+        "legend": {
+          "sent": "Gesendete Wörter",
+          "received": "Erhaltene Wörter"
+        },
+        "yAxis": "Prozentualer Anteil aller Wörter",
+        "xAxis": "Vier Teile des Tages",
+        "example": {
+          "image": "images/feedback_example_dayPartsPlot_german.svg",
+          "text": "<p class=\"text-left\"><b>(1)</b> In diesem Beispiel wurden im gesamten Zeitraum der Datenspende jeweils weniger als 10% aller Wörter zwischen 0:00 Uhr und 6:00 Uhr und zwischen 6:00 Uhr und 12:00 Uhr gesendet und empfangen. In beiden Teilen des Tages wurden etwas mehr Wörter gesendet als empfangen.</p><p class=\"text-left\"><b>(2)</b> Hingegen zwischen 12:00 Uhr und 18:00 Uhr wurden jeweils knapp unter 40% aller Wörter gesendet und empfangen. <br>Zwischen 18:00 Uhr und 00:00 Uhr wurden sogar knapp unter 45% aller Wörter gesendet bzw. empfangen. In beiden Tagesabschnitten wurden etwas mehr Wörter empfangen als gesendet. </p>"
+        }
+      },
+      "dayPartsMonthly": {
+        "description": "Im Gegensatz zu dem Graphen oben, können Sie in diesem Graphen <u>pro Monat</u> sehen, wie sich die Wörter, die Sie gesendet haben auf verschiedene Teile des Tages verteilen.",
+        "legend": {
+          "sent": "Gesendete Wörter",
+          "received": "Erhaltene Wörter"
+        },
+        "yAxis": "Prozentualer Anteil aller Wörter",
+        "xAxis": "Vier Teile des Tages"
+      }
     },
     "responseTimes": {
       "title": "Antwortzeiten",
@@ -570,64 +634,6 @@
         },
         "yAxis": "Prozentualer Anteil aller Antwortnachrichten",
         "xAxis": "Dauer der Antwort"
-      }
-    },
-    "graph": {
-      "messages-over-time": "%s Nachrichten über die Zeit",
-      "response-times": "%s Antwortszeiten",
-      "response-time": "Antwortszeit",
-      "median-response-time": "Mediane Antwortszeit",
-      "overview": "Übersicht",
-      "detail": "Detail",
-      "example": {
-        "title": "Dies ist ein <b>Beispiel</b> mit Beispieldaten - <u>nicht</u> mit Ihren Daten."
-      },
-      "dailySentReceived": {
-        "description": "Dieser Graph zeigt die exakte Wörteranzahl Ihrer gesendeten und empfangenen Nachrichten pro Tag.",
-        "legend": {
-          "sent": "Gesendete Wörter",
-          "received": "Erhaltene Wörter"
-        },
-        "yAxis": "Anzahl Wörter"
-      },
-      "monthlySentReceived": {
-        "description": "Hier wird die Anzahl Ihrer gesendeten und empfangenen Nachrichten pro Monat angezeigt. Beachten Sie den Unterschied zwischen den hier gezeigten Anzahlen von Nachrichten und den oben gezeigten Anzahlen von Wörtern.",
-        "legend": {
-          "sent": "Gesendete Wörter",
-          "received": "Erhaltene Wörter"
-        },
-        "yAxis": "Anzahl Nachrichten"
-      },
-      "dayPartsOverall": {
-        "description": "In diesem Graphen können Sie sehen, wie sich die Wörter, die Sie gesendet und empfangen haben auf verschiedene Teile des Tages verteilen. Sie sehen hier gemittelte Werte über den gesamten Zeitraum Ihrer Datenspende.",
-        "legend": {
-          "sent": "Gesendete Wörter",
-          "received": "Erhaltene Wörter"
-        },
-        "yAxis": "Prozentualer Anteil aller Wörter",
-        "xAxis": "Vier Teile des Tages",
-        "example": {
-          "image": "images/feedback_example_dayPartsPlot_german.svg",
-          "text": "<p class=\"text-left\"><b>(1)</b> In diesem Beispiel wurden im gesamten Zeitraum der Datenspende jeweils weniger als 10% aller Wörter zwischen 0:00 Uhr und 6:00 Uhr und zwischen 6:00 Uhr und 12:00 Uhr gesendet und empfangen. In beiden Teilen des Tages wurden etwas mehr Wörter gesendet als empfangen.</p><p class=\"text-left\"><b>(2)</b> Hingegen zwischen 12:00 Uhr und 18:00 Uhr wurden jeweils knapp unter 40% aller Wörter gesendet und empfangen. <br>Zwischen 18:00 Uhr und 00:00 Uhr wurden sogar knapp unter 45% aller Wörter gesendet bzw. empfangen. In beiden Tagesabschnitten wurden etwas mehr Wörter empfangen als gesendet. </p>"
-        }
-      },
-      "dayPartsMonthly": {
-        "description": "Im Gegensatz zu dem Graphen oben, können Sie in diesem Graphen <u>pro Monat</u> sehen, wie sich die Wörter, die Sie gesendet haben auf verschiedene Teile des Tages verteilen.",
-        "legend": {
-          "sent": "Gesendete Wörter",
-          "received": "Erhaltene Wörter"
-        },
-        "yAxis": "Prozentualer Anteil aller Wörter",
-        "xAxis": "Vier Teile des Tages"
-      },
-      "breaksInConv": {
-        "description": "Dieser Graph zeigt für den ausgewählten Chat pro Monat die längste zusammenhängende Zeitperiode in Tagen, in der keine Nachricht in diesem Chat geschrieben wurde. Klicken Sie <a style=\"font-weight:bold\" href=\"#breaksInConvExplanationModal\" data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#breaksInConvExplanationModal\">HIER</a>, um eine Erklärung mit einem Beispiel zu sehen.",
-        "yAxis": "Längste Zeitperiode in Tagen ohne Nachricht",
-        "days": "Tag/e",
-        "example": {
-          "image": "images/feedback_example_breaksInConv_german.svg",
-          "text": "<p class=\"text-left\"><b>(1)</b> In diesem Beispiel waren in dem oben links angezeigten Chat in dieser ersten Phase die längsten Zeiten ohne Kontakte meistens unter 5 Tagen lang. Zum Beispiel im Januar 2019 (dem ersten Monat) liegt die Länge der längsten Periode ohne eine Nachricht bei unter 5 Tagen. D.h. in diesem Monat gab es in dem Chat keine Zeit, in der für länger als 5 Tage keine einzige Nachricht geschrieben wurde.</p><p class=\"text-left\"><b>(2)</b> Im Kontrast zu (1) sind in diesem Bereich die Längen der Konversationspausen bereits deutlich länger. In einigen Monaten liegt die längste Zeitperiode ohne eine Nachricht bei ungefähr 10 Tagen. In zwei Monaten gab es sogar für fast 20 Tage am Stück keine Aktivität in diesem Chat. </p><p class=\"text-left\"><b>(3)</b> Hier ist ein Punkt sichtbar, der zeigt, dass es für den ganzen Juli 2021 keine einzige Nachricht in dem ausgewählten Chat gab. </p><p class=\"text-left\"class=\"text-left\"><b>(4)</b> Klicken Sie auf dieses Symbol, um den Graphen herunterzuladen.</p>"
-        }
       }
     },
     "thanks": "Wir hoffen Sie hatten spannende Erkenntnisse. Danke sehr!",

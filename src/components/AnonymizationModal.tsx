@@ -41,8 +41,6 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
 
         const totalTextMessages = conversations.reduce((sum, conversation) => sum + conversation.messages.length, 0);
         const totalAudioMessages = conversations.reduce((sum, conversation) => sum + conversation.messagesAudio.length, 0);
-        console.log("Total Text Messages:", totalTextMessages);
-        console.log("Total Audio Messages:", totalAudioMessages);
 
         const filteredMessagesData = conversations.flatMap((conversation) =>
                 [...conversation.messages, ...conversation.messagesAudio].map((msg) => ({

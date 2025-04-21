@@ -115,7 +115,7 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
                                 r: {
                                     reverse: true,
                                     beginAtZero: true,
-                                    min: -Z_SCORE_LIMIT * 0.5,
+                                    min: -Z_SCORE_LIMIT * 0.8,
                                     max: Z_SCORE_LIMIT + Z_SCORE_LIMIT * 0.5,
                                     ticks: {count: 1, display: false},
                                     angleLines: {display: false},

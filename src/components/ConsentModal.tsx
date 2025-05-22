@@ -16,6 +16,7 @@ import {IdInputMethod} from "@models/settings";
 import {useRichTranslations} from "@/hooks/useRichTranslations";
 import {BlockTitle, ContactBlock} from "@/styles/StyledTypography";
 import FullSizeModal from "@components/FullSizeModal";
+import { checkDonorIdExists } from "@/app/instructions/actions";
 
 const idInputMethod = process.env.NEXT_PUBLIC_DONOR_ID_INPUT_METHOD as IdInputMethod;
 const isDonorSurveyEnabled = process.env.NEXT_PUBLIC_DONOR_SURVEY_ENABLED === "true";
@@ -26,6 +27,7 @@ export default function ConsentModal() {
     const consent = useRichTranslations("consent");
     const storage = useRichTranslations("data-storage");
     const donor = useRichTranslations("donor-id");
+    const errors = useRichTranslations("donation.errors")
     const { externalDonorId, setExternalDonorId } = useDonation();
     const locale = useLocale();
 
@@ -33,6 +35,8 @@ export default function ConsentModal() {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [manualId, setManualId] = useState("");
     const [generatedId, setGeneratedId] = useState("");
+    const [isValidating, setIsValidating] = useState(false);
+    const [idError, setIdError] = useState<string | null>(null);
 
     useEffect(() => {
         if (idInputMethod === IdInputMethod.AUTOMATED || idInputMethod === IdInputMethod.SHOW_ID) {
@@ -42,8 +46,42 @@ export default function ConsentModal() {
         }
     }, []);
 
+    const validateDonorId = async (id: string) => {
+        if (!id.trim()) {
+            return;
+        }
+
+        setIsValidating(true);
+        setIdError(null);
+
+        try {
+            const exists = await checkDonorIdExists(id);
+            if (exists) {
+                setIdError(errors.t("DuplicateDonorId"));
+            }
+        } catch (error) {
+            console.error("Error validating donor ID:", error);
+        } finally {
+            setIsValidating(false);
+        }
+    };
+
+    const handleManualIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newId = e.target.value;
+        setManualId(newId);
+
+        // Debounce validation to avoid too many requests
+        const timeoutId = setTimeout(() => {
+            validateDonorId(newId);
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
+    };
     const handleAgree = () => {
         if (idInputMethod === IdInputMethod.MANUALLY && manualId.trim()) {
+            if (idError) {
+                return; // Don't proceed if there's an error
+            }
             setExternalDonorId(manualId);
         }
 
@@ -52,7 +90,6 @@ export default function ConsentModal() {
                 ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}`
                 : "/data-donation";
     };
-
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const handleDialogClose = () => setDialogOpen(false);
@@ -116,13 +153,22 @@ export default function ConsentModal() {
                             </Typography>
                         )}
                         {idInputMethod === IdInputMethod.MANUALLY && (
-                            <TextField
-                                label={donor.t("your-id")}
-                                value={manualId}
-                                onChange={(e) => setManualId(e.target.value)}
-                                fullWidth
-                                sx={{ my: 1 }}
-                            />
+                            <>
+                                <TextField
+                                    label={donor.t("your-id")}
+                                    value={manualId}
+                                    onChange={handleManualIdChange}
+                                    fullWidth
+                                    sx={{ mt: 1 }}
+                                    error={!!idError}
+                                    helperText={
+                                        <span style={{ minHeight: "1em", display: "block" }}>
+                                            {idError || "\u00A0"}
+                                        </span>
+                                    }
+                                    disabled={isValidating}
+                                />
+                            </>
                         )}
                     </DialogContent>
                     <DialogActions sx={{ mr: 2, mb: 2 }}>
@@ -131,7 +177,11 @@ export default function ConsentModal() {
                                 <Button onClick={handleDialogClose}>{actions.t("close")}</Button>
                             </Box>
                             <Box>
-                                <Button onClick={handleAgree} variant="contained">
+                                <Button
+                                    onClick={handleAgree}
+                                    variant="contained"
+                                    disabled={idInputMethod === IdInputMethod.MANUALLY && (!!idError || !manualId.trim() || isValidating)}
+                                >
                                     {actions.t("next")}
                                 </Button>
                             </Box>

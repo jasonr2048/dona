@@ -13,6 +13,7 @@ export enum DonationErrors {
     NoProfile = "NoProfile",
     NoMessageEntries = "NoMessageEntries",
     NoDonorNameFound = "NoDonorNameFound",
+    DuplicateDonorId = "DuplicateDonorId",
     TransactionFailed = "TransactionFailed",
     UnknownError = "UnknownError"
 }

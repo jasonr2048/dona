@@ -348,6 +348,7 @@
       "NonsenseRange": "Der ausgewählte Zeitraum ist ungültig. Bitte überprüfen Sie die Richtigkeit der ausgewählten Daten.",
       "NotEnoughMonthsInRange": "Um Ihre Daten zu spenden, wählen Sie bitte einen Zeitraum von mindestens {MIN_DONATION_TIME_PERIOD_MONTHS} Monaten innerhalb des Zeitraums Ihrer Spende aus.",
       "NoMessagesInRange": "In dem ausgewählten Zeitraum befinden sich keine Nachrichten. Bitte wählen Sie einen größeren und validen Zeitraum.",
+      "DuplicateDonorId": "Diese Spender-ID existiert bereits.",
       "TransactionFailed": "Die Spendendaten konnten nicht gespeichert werden. Überprüfen Sie die Verbindung und versuchen Sie es erneut.",
       "UnknownError": "Es gibt einen Fehler. Bitte überprüfen Sie Ihre Datenspende.",
       "TooShortTimePeriod_format": "Ihre Daten müssen einen Zeitraum von mindestens {MIN_DONATION_TIME_PERIOD_MONTHS} Monaten umfassen.",

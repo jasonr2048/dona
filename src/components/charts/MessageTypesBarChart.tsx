@@ -33,7 +33,7 @@ const MessageTypesBarChart: React.FC<MessageTypesBarChartProps> = ({
                         basicStatistics.messagesTotal.textMessages.received,
                         basicStatistics.messagesTotal.audioMessages.received
                     ],
-                    backgroundColor: [CHART_COLORS.primary, primaryPattern],
+                    backgroundColor: [CHART_COLORS.secondary, secondaryPattern],
                     maxBarThickness: CHART_LAYOUT.maxBarThickness * CHART_LAYOUT.barPercentageNarrow
                 },
                 {
@@ -42,7 +42,7 @@ const MessageTypesBarChart: React.FC<MessageTypesBarChartProps> = ({
                         basicStatistics.messagesTotal.textMessages.sent,
                         basicStatistics.messagesTotal.audioMessages.sent
                     ],
-                    backgroundColor: [CHART_COLORS.secondary, secondaryPattern],
+                    backgroundColor: [CHART_COLORS.primary, primaryPattern],
                     maxBarThickness: CHART_LAYOUT.maxBarThickness * CHART_LAYOUT.barPercentageWide,
                 },
             ] as ChartDataset<"bar", number[]>[],

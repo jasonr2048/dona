@@ -5,8 +5,8 @@ import {
     monthlyCountsPerConversation,
     produceAllDays,
     produceAnswerTimesPerConversation,
-    produceDailyCountsPerConversation, produceMessagesSentReceivedPerType,
-    produceMonthlySentReceived,
+    produceDailyCountsPerConversation,
+    produceMessagesSentReceivedPerType,
     produceSlidingWindowMean,
     produceWordCountDailyHours
 } from "@services/charts/timeAggregates";

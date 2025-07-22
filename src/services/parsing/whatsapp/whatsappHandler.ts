@@ -24,18 +24,23 @@ export default async function handleWhatsappTxtFiles(fileList: File[]): Promise<
         const parsedFiles = files.map(file => readFile(file)
             .then(data => data.split('\n'))
             .then(makeArrayOfMessages)
-            .then(messages => parseMessages(messages))
+            .then(parseMessages)
         );
 
         Promise.all(parsedFiles).then((parsed: ParsingResult[]) => {
 
+            console.log("Parsed files:", parsed);
             const parsedConversations = parsed.map((obj) => obj.texts);
             const contacts = parsed.map((obj) => obj.contacts);
-            const possibleUserNames = _.intersection(...contacts);
 
-            resolve(deIdentify(parsedConversations, possibleUserNames[0]));
+            // Determine donor name
+            const guessedDonorName = determineDonorName(contacts);
+            if (!guessedDonorName) {
+                reject(DonationValidationError(DonationErrors.NoDonorNameFound));
+                return;
+            }
 
-            // TODO: How to ask user for username? Is it required?
+            resolve(deIdentify(parsedConversations, guessedDonorName));
 
         }).catch((error) => reject(error));
     });
@@ -48,4 +53,20 @@ async function readFile(file: File): Promise<string> {
         reader.onerror = error => reject(error);
         reader.readAsText(file);
     });
+}
+
+function determineDonorName(contacts: string[][]): string | undefined {
+    // Find intersection of all contacts arrays
+    const intersection = _.intersection(...contacts);
+    if (intersection.length === 1) {
+        return intersection[0];
+    }
+    // If no single person is in all chats, pick the one in the most chats
+    const allNames = _.flatten(contacts);
+    const nameCounts = _.countBy(allNames);
+    const sortedNames = Object.entries(nameCounts).sort((a, b) => b[1] - a[1]);
+    if (sortedNames.length > 0) {
+        return sortedNames[0][0];
+    }
+    return undefined;
 }

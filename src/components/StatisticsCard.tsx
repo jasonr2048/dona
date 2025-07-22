@@ -97,12 +97,12 @@ export default function StatisticsCard({ stats }: { stats: BasicStatistics }) {
                     t("active-months-explanation_format", { months: stats.numberOfActiveMonths }),
                     [
                         renderStatBox(
-                            stats.wordsPerActiveMonth.sent,
+                            stats.messagesPerActiveMonth.allMessages.sent,
                             t("messages"), t("sent"),
                             CARD_COLOR_PRIMARY
                         ),
                         renderStatBox(
-                            stats.wordsPerActiveMonth.received,
+                            stats.messagesPerActiveMonth.allMessages.received,
                             t("messages"), t("received"),
                             CARD_COLOR_SECONDARY
                         ),

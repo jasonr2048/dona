@@ -69,7 +69,6 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({dataSourceValue, onDon
             setFilteredConversations(result.anonymizedConversations);
             onDonatedConversationsChange(result.anonymizedConversations); // Update data for parent
         } catch (err) {
-            console.log(err)
             const errorMessage = getErrorMessage(donation.t, err as Error, CONFIG);
             setError(errorMessage);
         } finally {

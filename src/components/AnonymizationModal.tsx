@@ -38,10 +38,6 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
     const [downloadUrl] = useState(() => createJsonDownloadUrl(conversations));
 
     useEffect(() => {
-
-        const totalTextMessages = conversations.reduce((sum, conversation) => sum + conversation.messages.length, 0);
-        const totalAudioMessages = conversations.reduce((sum, conversation) => sum + conversation.messagesAudio.length, 0);
-
         const filteredMessagesData = conversations.flatMap((conversation) =>
                 [...conversation.messages, ...conversation.messagesAudio].map((msg) => ({
                     message: msg,

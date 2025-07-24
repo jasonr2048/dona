@@ -1,11 +1,11 @@
 import {Conversation} from "@models/processed";
 
-
 export const createConversation = (
     dataSource: string,
     messages: Array<[number, number, number, string]>, // Format: [year, month, date, sender]
     audioMessages: Array<[number, number, number, string, number]> = [], // Format: [year, month, date, sender, lengthSeconds]
-    focusInFeedback: boolean = true
+    focusInFeedback: boolean = true,
+    conversationPseudonym: string = "test-convo"
 ): Conversation => {
     const parsedMessages = messages.map(([year, month, date, sender]) => ({
         timestamp: new Date(year, month - 1, date, 12, 0).getTime(),
@@ -28,7 +28,7 @@ export const createConversation = (
         messages: parsedMessages,
         messagesAudio: parsedAudioMessages,
         dataSource,
-        conversationPseudonym: "test-convo",
+        conversationPseudonym,
         focusInFeedback
     };
 };

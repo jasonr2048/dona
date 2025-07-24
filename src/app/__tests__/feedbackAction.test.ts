@@ -1,4 +1,3 @@
-
 import {fetchGraphDataByDonationId, getDonationId} from "@/app/donation-feedback/actions";
 import {db} from "@/db/drizzle";
 import headers from "next/headers";
@@ -10,24 +9,36 @@ jest.mock("next/headers");
 
 const mockGraphData: Record<string, GraphData> = {
     Facebook: {
-        monthlyWordsPerConversation: [],
-        dailyWords: [],
+        focusConversations: [],
+        monthlyWordsPerConversation: {},
+        monthlySecondsPerConversation: {},
         dailyWordsPerConversation: [],
-        slidingWindowMeanPerConversation: [],
-        dailySentHoursPerConversation: [],
-        dailyReceivedHoursPerConversation: [],
+        participantsPerConversation: [],
+        dailyWords: [],
+        slidingWindowMeanDailyWords: [],
+        slidingWindowMeanDailySeconds: [],
+        dailySentHours: [],
+        dailyReceivedHours: [],
         answerTimes: [],
+        audioLengthDistribution: { sent: {}, received: {} },
         basicStatistics: {
-            sentMessagesTotal: 0,
-            receivedMessagesTotal: 0,
-            sentWordsTotal: 0,
-            receivedWordsTotal: 0,
+            messagesTotal: {
+                textMessages: { sent: 0, received: 0 },
+                audioMessages: { sent: 0, received: 0 },
+                allMessages: { sent: 0, received: 0 }
+            },
+            wordsTotal: { sent: 0, received: 0 },
+            secondsTotal: { sent: 0, received: 0 },
             numberOfActiveMonths: 0,
             numberOfActiveYears: 0,
-            sentWordsPerActiveMonth: 0,
-            receivedWordsPerActiveMonth: 0,
-        },
-        participantsPerConversation: [],
+            messagesPerActiveMonth: {
+                textMessages: { sent: 0, received: 0 },
+                audioMessages: { sent: 0, received: 0 },
+                allMessages: { sent: 0, received: 0 }
+            },
+            wordsPerActiveMonth: { sent: 0, received: 0 },
+            secondsPerActiveMonth: { sent: 0, received: 0 }
+        }
     },
 };
 

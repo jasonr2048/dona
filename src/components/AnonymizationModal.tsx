@@ -39,13 +39,14 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
 
     useEffect(() => {
         const filteredMessagesData = conversations.flatMap((conversation) =>
-            [...conversation.messages, ...conversation.messagesAudio].map((msg) => ({
-                message: msg,
-                participants: conversation.participants,
-                isGroup: conversation.isGroupConversation || false,
-            }))
-        )
+                [...conversation.messages, ...conversation.messagesAudio].map((msg) => ({
+                    message: msg,
+                    participants: conversation.participants,
+                    isGroup: conversation.isGroupConversation || false,
+                }))
+            )
             .slice(0, n_messages);
+
         setMessagesData(filteredMessagesData);
     }, [conversations, n_messages]);
 

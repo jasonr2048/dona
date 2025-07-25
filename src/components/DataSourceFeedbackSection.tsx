@@ -3,26 +3,24 @@ import {useTranslations} from "next-intl";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import StatisticsCard from "@components/StatisticsCard";
-import ChartContainer from "@components/charts/ChartContainer";
+import ChartContainer, {ChartType} from "@components/charts/ChartContainer";
 import ChartExplanationModal from "@components/charts/ChartExplanationModal";
 import MoreChartsModal from "@components/charts/MoreChartsModal";
 import {DataSourceValue} from "@models/processed";
 import {GraphData} from "@models/graphData";
-import {createListOfConversations} from "@services/charts/preprocessing";
 
-export default function DataSourceFeedbackSection({ dataSourceValue, graphData }: { dataSourceValue: string; graphData: GraphData }) {
-    const showCustomDataSourceAlert = [DataSourceValue.Facebook, DataSourceValue.Instagram] as string[];
+type SectionName = "responseTimes" | "dailyActivityTimes" | "interactionIntensity";
 
+export default function DataSourceFeedbackSection({ dataSourceValue, graphData }: { dataSourceValue: DataSourceValue; graphData: GraphData }) {
+    const showDetailedAudioFeedback = [DataSourceValue.Facebook, DataSourceValue.Instagram].includes(dataSourceValue);
+    console.log("DataSourceFeedbackSection graphData", graphData);
     let t = useTranslations("feedback");
-    const labels = useTranslations("feedback.chartLabels");
-    const anon = useTranslations("donation.anonymisation");
     const ii = useTranslations("feedback.interactionIntensity");
     const dat = useTranslations("feedback.dailyActivityTimes");
     const rt = useTranslations("feedback.responseTimes");
@@ -33,7 +31,7 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
 
     // State for MoreChartsModal
     const [isSectionModalOpen, setIsSectionModalOpen] = useState(false);
-    const [currentSection, setCurrentSection] = useState<"responseTimes" | "dailyActivityTimes" | "interactionIntensity" | null>(null);
+    const [currentSection, setCurrentSection] = useState<SectionName | null>(null);
 
     // Handlers for ChartExplanationModal
     const openExplanationModal = (title: string, contentHtml: string, imageSrc?: string) => {
@@ -46,7 +44,7 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
     };
 
     // Handlers for MoreChartsModal
-    const openSectionModal = (section: "responseTimes" | "dailyActivityTimes" | "interactionIntensity") => {
+    const openSectionModal = (section: SectionName) => {
         setCurrentSection(section);
         setIsSectionModalOpen(true);
     };
@@ -81,15 +79,49 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                     spacing={2}
                     sx={{ display: "flex", textAlign: "center", bgcolor: "background.paper" }}
                 >
-                    {showCustomDataSourceAlert.includes(dataSourceValue) && (
-                        <Alert severity="info" sx={{ my: 2 }}>
-                            {t("selectedDataMessage", { source: dataSourceValue })}
-                        </Alert>
-                    )}
-
                     {/* Statistics card */}
                     <Typography variant="h6">{t("statisticsCard.title")}</Typography>
                     <StatisticsCard stats={graphData.basicStatistics} />
+
+                    {/* Message composition */}
+                    <Typography variant="h6">{t("messageComposition.title")}</Typography>
+                    {/* TODO: Add media as type */}
+                    <Box>
+                        <Typography variant="body1" fontWeight="fontWeightBold">
+                            {t("messageComposition.messageTypesBarChart.title")}
+                        </Typography>
+                        <Typography variant="body2">
+                            {t.rich("messageComposition.messageTypesBarChart.description", {
+                                button: (label) => openModalSpan(label, t, "messageComposition.messageTypesBarChart"),
+                            })}
+                        </Typography>
+                    </Box>
+                    <ChartContainer
+                        type={ChartType.MessageTypesBarChart}
+                        data={graphData}
+                        dataSourceValue={dataSourceValue}
+                    />
+                    {showDetailedAudioFeedback && (
+                        <>
+                            <Box>
+                            <Typography variant="body1" fontWeight="fontWeightBold">
+                                {t("messageComposition.audioLengthsBarChart.title")}
+                            </Typography>
+                            <Typography variant="body2">
+                                {t.rich("messageComposition.audioLengthsBarChart.description", {
+                                    button: (label) => openModalSpan(label, t, "messageComposition.audioLengthsBarChart"),
+                                })}
+                            </Typography>
+                        </Box>
+                        <ChartContainer
+                            type={ChartType.AudioLengthsBarChart}
+                            data={graphData}
+                            dataSourceValue={dataSourceValue}
+                        />
+                        </>
+                    )}
+                    {/* TODO: Histogram word counts? */}
+                    {/* TODO: Emoji analysis */}
 
                     {/* Interaction Intensity */}
                     <Typography variant="h6">{ii("title")}</Typography>
@@ -104,25 +136,44 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                         </Typography>
                     </Box>
                     <ChartContainer
-                        type="animatedIntensityPolarChart"
+                        type={ChartType.AnimatedIntensityPolarChart}
                         data={graphData}
                         dataSourceValue={dataSourceValue}
                     />
                     <Box>
                         <Typography variant="body1" fontWeight="fontWeightBold">
-                            {ii("animatedWordCountBarChart.title")}
+                            {ii("animatedWordsPerChatBarChart.title")}
                         </Typography>
                         <Typography variant="body2">
-                            {ii.rich("animatedWordCountBarChart.description", {
-                                button: (label) => openModalSpan(label, ii, "animatedWordCountBarChart"),
+                            {ii.rich("animatedWordsPerChatBarChart.description", {
+                                button: (label) => openModalSpan(label, ii, "animatedWordsPerChatBarChart"),
                             })}
                         </Typography>
                     </Box>
                     <ChartContainer
-                        type="animatedWordCountBarChart"
+                        type={ChartType.AnimatedWordsPerChatBarChart}
                         data={graphData}
                         dataSourceValue={dataSourceValue}
                     />
+                    {showDetailedAudioFeedback && (
+                        <>
+                            <Box>
+                                <Typography variant="body1" fontWeight="fontWeightBold">
+                                    {ii("animatedSecondsPerChatBarChart.title")}
+                                </Typography>
+                                <Typography variant="body2">
+                                    {ii.rich("animatedSecondsPerChatBarChart.description", {
+                                        button: (label) => openModalSpan(label, ii, "animatedSecondsPerChatBarChart"),
+                                    })}
+                                </Typography>
+                            </Box>
+                            <ChartContainer
+                                type={ChartType.AnimatedSecondsPerChatBarChart}
+                                data={graphData}
+                                dataSourceValue={dataSourceValue}
+                            />
+                        </>
+                    )}
                     <Button onClick={() => openSectionModal("interactionIntensity")}>
                         {ii("moreAbout")}
                     </Button>
@@ -137,7 +188,7 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                         </Typography>
                     </Box>
                     <ChartContainer
-                        type="dailyActivityHoursChart"
+                        type={ChartType.DailyActivityHoursChart}
                         data={graphData}
                         dataSourceValue={dataSourceValue}
                     />
@@ -155,7 +206,7 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                         </Typography>
                     </Box>
                     <ChartContainer
-                        type="responseTimeBarChart"
+                        type={ChartType.ResponseTimeBarChart}
                         data={graphData}
                         dataSourceValue={dataSourceValue}
                     />
@@ -181,6 +232,7 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                     onClose={closeSectionModal}
                     graphData={graphData}
                     section={currentSection}
+                    showDetailedAudioFeedback={showDetailedAudioFeedback}
                 />
             )}
         </Accordion>

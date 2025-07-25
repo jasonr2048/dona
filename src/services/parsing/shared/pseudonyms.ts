@@ -31,6 +31,7 @@ export class ContactPseudonyms {
     setPseudonym(name: string, pseudonym: string) {
         const decodedName = decode(name);
         this.namesToPseudonyms[decodedName] = pseudonym;
+        this.pseudonymsToNames[pseudonym] = decodedName;
     }
 
     getPseudonymMap(): Record<string, string> {

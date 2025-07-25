@@ -1,5 +1,11 @@
-import {Conversation} from "@models/processed";
-import {AnswerTimePoint, DailyHourPoint, DailySentReceivedPoint, SentReceivedPoint} from "@models/graphData";
+import {Conversation, Message, MessageAudio} from "@models/processed";
+import {
+    AnswerTimePoint,
+    CountOption,
+    DailyHourPoint,
+    DailySentReceivedPoint, MessageCounts,
+    SentReceivedPoint
+} from "@models/graphData";
 
 type DatePoint = {
     year: number;
@@ -7,20 +13,81 @@ type DatePoint = {
     date: number;
 };
 
-const produceMonthlySentReceived = (
-    donorId: string, conversations: Conversation[], toCount: "words" | "messages"
+/**
+ * Returns the appropriate getters for messages and message value based on the provided toCount option.
+ * @param toCount - The type of count to aggregate: "words" or "seconds".
+ * @returns An object containing the getters for messages and toCount.
+ */
+const gettersFromToCount = (toCount: CountOption) => {
+    let getMessages, getToCount: (message: any) => number;
+    if (toCount === "words") {
+        getMessages = (conversation: Conversation) => conversation.messages;
+        getToCount = (message: Message) => message.wordCount;
+    } else {
+        getMessages = (conversation: Conversation) => conversation.messagesAudio;
+        getToCount = (message: MessageAudio) => message.lengthSeconds;
+    }
+    return {getMessages, getToCount};
+}
+
+export const produceMessagesSentReceivedPerType = (
+    donorId: string,
+    conversations: Conversation[]
+): MessageCounts => {
+    const result: MessageCounts = {
+        textMessages: { sent: 0, received: 0 },
+        audioMessages: { sent: 0, received: 0 },
+        allMessages: { sent: 0, received: 0 },
+    };
+
+    conversations.forEach((conversation) => {
+        conversation.messages.forEach((message) => {
+            if (message.sender === donorId) {
+                result.textMessages.sent++;
+                result.allMessages.sent++;
+            } else {
+                result.textMessages.received++;
+                result.allMessages.received++;
+            }
+        });
+
+        conversation.messagesAudio.forEach((messageAudio) => {
+            if (messageAudio.sender === donorId) {
+                result.audioMessages.sent++;
+                result.allMessages.sent++;
+            } else {
+                result.audioMessages.received++;
+                result.allMessages.received++;
+            }
+        });
+    });
+
+    return result;
+}
+
+/**
+ * Aggregates the total sent and received for a various count types (words, seconds, messages) per month for a set of conversations.
+ * @param donorId - The ID of the donor whose messages are being analyzed, in order to differentiate between sent and received.
+ * @param conversations - A list of conversations to process.
+ * @param toCount - The type of count to aggregate: "words", "seconds", or "messages".
+ * @returns An array of SentReceivedPoint objects, each representing word counts for a specific month.
+ */
+export const produceMonthlySentReceived = (
+    donorId: string, conversations: Conversation[], toCount: CountOption
 ): SentReceivedPoint[] => {
     const monthlyMap = new Map<string, { sent: number; received: number }>();
+    const {getMessages, getToCount} = gettersFromToCount(toCount);
 
     conversations.forEach(conversation => {
-        conversation.messages.forEach(message => {
+        const selectedMessages = getMessages(conversation);
+        selectedMessages.forEach(message => {
             const date = new Date(message.timestamp);
             const key = `${date.getFullYear()}-${date.getMonth() + 1}`;
 
             if (!monthlyMap.has(key)) monthlyMap.set(key, { sent: 0, received: 0 });
 
             const stats = monthlyMap.get(key)!;
-            const toAdd: number = toCount == "words" ? message.wordCount : 1;
+            const toAdd = getToCount(message);
             if (message.sender === donorId) stats.sent += toAdd;
             else stats.received += toAdd;
         });
@@ -33,53 +100,46 @@ const produceMonthlySentReceived = (
 }
 
 /**
- * Aggregates the total sent and received message counts per month for a set of conversations.
+ * Calculates the total sent and received word counts per month for each conversation separately.
  *
- * @param donorId - The ID of the donor whose messages are being analyzed.
+ * @param donorId - The ID of the donor whose messages are being analyzed, in order to differentiate between sent and received.
  * @param conversations - A list of conversations to process.
- * @returns An array of SentReceivedPoint objects, each representing message counts for a specific month.
+ * @param toCount - The type of count to aggregate: "words", "seconds", or "messages".
+ * @returns An object where each key is a conversation pseudonym and the value is an array of SentReceivedPoint objects.
  */
-export const produceMonthlySentReceivedMessages = (
-    donorId: string, conversations: Conversation[]
-): SentReceivedPoint[] => {
-    return produceMonthlySentReceived(donorId, conversations, "messages");
-}
-
-/**
- * Aggregates the total sent and received word counts per month for a set of conversations.
- *
- * @param donorId - The ID of the donor whose messages are being analyzed.
- * @param conversations - A list of conversations to process.
- * @returns An array of SentReceivedPoint objects, each representing word counts for a specific month.
- */
-export const produceMonthlySentReceivedWords = (
-    donorId: string, conversations: Conversation[]
-): SentReceivedPoint[] => {
-    return produceMonthlySentReceived(donorId, conversations, "words");
-}
+export const monthlyCountsPerConversation = (
+    donorId: string, conversations: Conversation[], toCount: CountOption
+) => Object.fromEntries(
+    conversations.map((conversation) => [
+        conversation.conversationPseudonym,
+        produceMonthlySentReceived(donorId, [conversation], toCount),
+    ])
+);
 
 /**
  * Aggregates the total sent and received word counts per day for a specific conversation.
  *
  * @param donorId - The ID of the donor whose messages are being analyzed.
  * @param conversation - The conversation to process.
+ * @param toCount - The type of count to aggregate: "words" or "seconds".
  * @returns An array of DailySentReceivedPoint objects, each representing word counts for a specific day.
  */
-export const produceDailyWordsPerConversation = (
-    donorId: string,
-    conversation: Conversation
+export const produceDailyCountsPerConversation = (
+    donorId: string, conversation: Conversation, toCount: CountOption
 ): DailySentReceivedPoint[] => {
     const dailyMap = new Map<string, { sent: number; received: number }>();
+    const {getMessages, getToCount} = gettersFromToCount(toCount);
 
-    conversation.messages.forEach((message) => {
+    getMessages(conversation).forEach((message) => {
         const date = new Date(message.timestamp);
         const key = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
         if (!dailyMap.has(key)) dailyMap.set(key, { sent: 0, received: 0 });
 
         const stats = dailyMap.get(key)!;
-        if (message.sender === donorId) stats.sent += message.wordCount;
-        else stats.received += message.wordCount;
+        const value = getToCount(message);
+        if (message.sender === donorId) stats.sent += value;
+        else stats.received += value;
     });
 
     return Array.from(dailyMap.entries()).map(([key, { sent, received }]) => {
@@ -90,12 +150,12 @@ export const produceDailyWordsPerConversation = (
 }
 
 /**
- * Aggregates the total sent and received word counts per day for a set of conversations.
+ * Aggregates the total sent and received counts per day for a set of conversations.
  *
- * @param perConversationData - An array of DailySentReceivedPoint objects, each representing word counts for a specific day.
+ * @param perConversationData - An array of DailySentReceivedPoint objects, each representing counts for a specific day.
  * @returns An array of DailySentReceivedPoint objects, each representing word counts for a specific day across all conversations.
  */
-export const aggregateDailyWords = (
+export const aggregateDailyCounts = (
     perConversationData: DailySentReceivedPoint[][]
 ): DailySentReceivedPoint[] => {
     const aggregateMap = new Map<string, { sent: number; received: number }>();
@@ -152,7 +212,7 @@ export const produceWordCountDailyHours = (
 }
 
 /**
- * Calculates the answer times between messages in a specific conversation.
+ * Calculates the answer times between messages (of any type) in a specific conversation.
  *
  * @param donorId - The ID of the donor whose messages are being analyzed.
  * @param conversation - The conversation to process.
@@ -162,7 +222,7 @@ export const produceAnswerTimesPerConversation = (
     donorId: string,
     conversation: Conversation
 ): AnswerTimePoint[] => {
-    const sortedMessages = [...conversation.messages].sort((a, b) => a.timestamp - b.timestamp);
+    const sortedMessages = [...conversation.messages, ...conversation.messagesAudio].sort((a, b) => a.timestamp - b.timestamp);
 
     return sortedMessages
         .slice(1)

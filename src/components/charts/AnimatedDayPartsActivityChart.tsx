@@ -70,8 +70,8 @@ const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps
                 {
                     label: chartTexts("legend.sent"),
                     data: preparedData?.[monthKey] || [],
-                    backgroundColor: CHART_COLORS.primaryBar,
-                    barThickness: CHART_LAYOUT.barThickness,
+                    backgroundColor: CHART_COLORS.primary,
+                    barThickness: CHART_LAYOUT.hBarThickness,
                 },
             ],
         };

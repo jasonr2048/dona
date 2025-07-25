@@ -4,19 +4,25 @@ import {getAliasConfig} from "@services/parsing/shared/aliasConfig";
 import wordCount from "@services/parsing/shared/wordCount";
 import {ChatPseudonyms, ContactPseudonyms} from "@services/parsing/shared/pseudonyms";
 
-const SYSTEM_MESSAGE = "Messages to this chat and calls are now secured with end-to-end encryption.";
-
 export default async function deIdentify(parsedFiles: ParsedMessage[][], donorName: string): Promise<AnonymizationResult> {
     const aliasConfig = getAliasConfig();
     const contactPseudonyms = new ContactPseudonyms(aliasConfig.contactAlias, aliasConfig.systemAlias);
     const chatPseudonyms = new ChatPseudonyms(aliasConfig.donorAlias, aliasConfig.chatAlias, DataSourceValue.WhatsApp);
     chatPseudonyms.setDonorName(donorName);
+    contactPseudonyms.setPseudonym(donorName, aliasConfig.donorAlias);
 
     const deIdentifiedConversations: Conversation[] = [];
-    parsedFiles.forEach((lines) => {
+    parsedFiles.forEach((parsedMessaged, conv_idx) => {
         const participantPseudonyms = new Set<string>();
-        const messages: Message[] = lines
-            .filter(line => line.message && !line.message.includes(SYSTEM_MESSAGE)) // Filter first to exclude unwanted lines
+
+        // Filter out system messages
+        const filteredMessages: ParsedMessage[] = parsedMessaged
+            .filter(parsedMessage => parsedMessage.message && parsedMessage.author != aliasConfig.systemAlias) // Filter out system messages
+
+        console.log("Processing conversation", conv_idx + 1, "with", parsedMessaged.length, "messages");
+        console.log("Filtered messages count:", filteredMessages.length);
+
+        const messages: Message[]  = filteredMessages
             .map(line => {
                 const participant = contactPseudonyms.getPseudonym(line.author);
                 participantPseudonyms.add(participant);
@@ -26,15 +32,8 @@ export default async function deIdentify(parsedFiles: ParsedMessage[][], donorNa
                     wordCount: wordCount(line.message),
                 };
             })
-
         const participants = Array.from(participantPseudonyms);
-        const isGroupConversation = (
-            participants.length === 3 && !participantPseudonyms.has(aliasConfig.systemAlias)
-            || participants.length > 2
-        );
-
-        // Add to chats to show
-        contactPseudonyms.setPseudonym(donorName, aliasConfig.donorAlias);
+        const isGroupConversation = participants.length > 2;
         const conversationPseudonym = chatPseudonyms.getPseudonym(contactPseudonyms.getOriginalNames(participants));
 
         // Add to conversations

@@ -4,7 +4,7 @@ import {useTranslations} from "next-intl";
 import {DailyHourPoint} from "@models/graphData";
 import Box from "@mui/material/Box";
 import DownloadButtons from "@components/charts/DownloadButtons";
-import {BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT, TOOLTIP, TOP_LEGEND} from "@components/charts/chartConfig";
+import {BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT, PCT_TOOLTIP, TOP_LEGEND} from "@components/charts/chartConfig";
 
 interface DayPartsActivityOverallPlotProps {
     dailySentHours: DailyHourPoint[];
@@ -45,13 +45,13 @@ const DayPartsActivityOverallChart: React.FC<DayPartsActivityOverallPlotProps> =
             {
                 label: chartTexts("legend.received"),
                 data: receivedCounts.map((count) => (totalReceived > 0 ? (count / totalReceived) * 100 : 0)),
-                backgroundColor: CHART_COLORS.secondaryBar,
+                backgroundColor: CHART_COLORS.secondary,
                 barPercentage: 0.5,
             },
             {
                 label: chartTexts("legend.sent"),
                 data: sentCounts.map((count) => (totalSent > 0 ? (count / totalSent) * 100 : 0)),
-                backgroundColor: CHART_COLORS.primaryBar,
+                backgroundColor: CHART_COLORS.primary,
                 barPercentage: 0.8,
             },
         ]
@@ -61,7 +61,7 @@ const DayPartsActivityOverallChart: React.FC<DayPartsActivityOverallPlotProps> =
         ...BARCHART_OPTIONS,
         plugins: {
             legend: TOP_LEGEND,
-            tooltip: TOOLTIP,
+            tooltip: PCT_TOOLTIP,
         },
         scales: {
             x: {

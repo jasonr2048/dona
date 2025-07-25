@@ -1,10 +1,12 @@
 import {Conversation, DataSourceValue} from "@models/processed";
 import {DailySentReceivedPoint, GraphData} from "@models/graphData";
 import {
-    aggregateDailyWords, produceAllDays,
+    aggregateDailyCounts,
+    monthlyCountsPerConversation,
+    produceAllDays,
     produceAnswerTimesPerConversation,
-    produceDailyWordsPerConversation, produceMonthlySentReceivedMessages,
-    produceMonthlySentReceivedWords,
+    produceDailyCountsPerConversation,
+    produceMessagesSentReceivedPerType,
     produceSlidingWindowMean,
     produceWordCountDailyHours
 } from "@services/charts/timeAggregates";
@@ -23,30 +25,31 @@ export default function produceGraphData(donorId: string, allConversations: Conv
 
                 // Per conversation data
                 const dailyWordsPerConversation = conversations.map((conversation) =>
-                    produceDailyWordsPerConversation(donorId, conversation)
+                    produceDailyCountsPerConversation(donorId, conversation, "words")
                 );
-
-                const monthlySentReceivedPerConversation = Object.fromEntries(
-                    conversations.map((conversation) => [
-                        conversation.conversationPseudonym,
-                        produceMonthlySentReceivedWords(donorId, [conversation]),
-                    ])
+                const dailySecondsPerConversation = conversations.map((conversation) =>
+                    produceDailyCountsPerConversation(donorId, conversation, "seconds")
                 );
                 const participantsPerConversation = conversations.map((conversation) =>
                     conversation.participants.filter((participant) => participant !== donorId)
                 );
+                const monthlyWordsPerConversation = monthlyCountsPerConversation(donorId, conversations, "words");
+                const monthlySecondsPerConversation = monthlyCountsPerConversation(donorId, conversations, "seconds");
 
                 // Aggregated conversations data
-                const dailyWords = aggregateDailyWords(dailyWordsPerConversation);
+                const dailyWords = aggregateDailyCounts(dailyWordsPerConversation);
+                const dailySeconds = aggregateDailyCounts(dailySecondsPerConversation);
 
                 // Determine the global date range using calculateMinMaxDates
                 const { minDate, maxDate } = calculateMinMaxDates(conversations, true);
                 let slidingWindowMeanDailyWords: DailySentReceivedPoint[] = [];
+                let slidingWindowMeanDailySeconds: DailySentReceivedPoint[] = [];
                 if (minDate && maxDate) {
                     // Generate the complete list of all days within the global date range
                     const completeDaysList = produceAllDays(minDate, maxDate);
                     // Create sliding window mean using the complete days list
                     slidingWindowMeanDailyWords = produceSlidingWindowMean(dailyWords, completeDaysList);
+                    slidingWindowMeanDailySeconds = produceSlidingWindowMean(dailySeconds, completeDaysList);
                 }
                 const dailySentHours = produceWordCountDailyHours(donorId, conversations, true);
                 const dailyReceivedHours = produceWordCountDailyHours(donorId, conversations, false);
@@ -54,26 +57,58 @@ export default function produceGraphData(donorId: string, allConversations: Conv
                 const answerTimes = conversations.flatMap((conversation) =>
                     produceAnswerTimesPerConversation(donorId, conversation)
                 );
-                // General statistics
-                const messageCounts = produceMonthlySentReceivedMessages(donorId, conversations);
-                const wordCounts = Object.values(monthlySentReceivedPerConversation).flat();
-                const basicStatistics = produceBasicStatistics(messageCounts, wordCounts);
 
-                // Return all graph data for the data source
+                // General statistics
+                const messageCounts = produceMessagesSentReceivedPerType(donorId, conversations);
+                const wordCounts = Object.values(monthlyWordsPerConversation).flat();
+                const secondCounts = Object.values(monthlySecondsPerConversation).flat();
+
+                // Initialize audio length distribution
+                let audioLengthDistribution: { sent: Record<string, number>, received: Record<string, number> }  = {
+                    sent: {},
+                    received: {}
+                };
+
+                // Only calculate if there are audio messages
+                const hasAudioMessages = conversations.some(conversation => conversation.messagesAudio.length > 0);
+                if (hasAudioMessages) {
+                    conversations.forEach(conversation => {
+                        conversation.messagesAudio.forEach(messageAudio => {
+                            if (messageAudio.lengthSeconds > 0) {
+                                // Round the length to the nearest second
+                                const roundedLength = Math.round(messageAudio.lengthSeconds).toString();
+
+                                if (messageAudio.sender === donorId) {
+                                    audioLengthDistribution!.sent[roundedLength] = (audioLengthDistribution!.sent[roundedLength] || 0) + 1;
+                                } else {
+                                    audioLengthDistribution!.received[roundedLength] = (audioLengthDistribution!.received[roundedLength] || 0) + 1;
+                                }
+                            }
+                        });
+                    });
+                }
+
+                const basicStatistics = produceBasicStatistics(messageCounts, wordCounts, secondCounts);
+
+                const graphData: GraphData = {
+                    focusConversations,
+                    monthlyWordsPerConversation,
+                    monthlySecondsPerConversation,
+                    dailyWords,
+                    slidingWindowMeanDailyWords,
+                    slidingWindowMeanDailySeconds,
+                    dailyWordsPerConversation,
+                    dailySentHours,
+                    dailyReceivedHours,
+                    answerTimes,
+                    basicStatistics,
+                    participantsPerConversation,
+                    audioLengthDistribution
+                };
+
                 return [
                     dataSourceValue,
-                    {
-                        focusConversations,
-                        monthlySentReceivedPerConversation,
-                        dailyWords,
-                        slidingWindowMeanDailyWords,
-                        dailyWordsPerConversation,
-                        dailySentHours,
-                        dailyReceivedHours,
-                        answerTimes,
-                        basicStatistics,
-                        participantsPerConversation,
-                    },
+                    graphData,
                 ];
             })
     ) as Record<DataSourceValue, GraphData>;

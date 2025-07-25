@@ -1,9 +1,16 @@
 export const CHART_COLORS = {
-    primaryBar: "#1f77b4",  // Blue
-    secondaryBar: "#ff7f0e", // Orange
+    primary: "#1f77b4",  // Blue
+    primaryLight: "#66b1e5",
     primaryTransparent: "rgba(31, 119, 180, 0.2)",
+    secondary: "#ff7f0e", // Orange
+    secondaryLight: "#ffb26e",
     secondaryTransparent: "rgba(255, 127, 14, 0.2)",
     background: "#f5f5f5",
+};
+
+export const POLAR_CHART_COLORS = {
+    drawing: "#FFFFFF",
+    highlight: "#FFD700"
 };
 
 const MOBILE_HEIGHT = 250;
@@ -17,8 +24,11 @@ export const CHART_BOX_PROPS = {
 };
 
 export const CHART_LAYOUT = {
-    barThickness: 20,
+    maxBarThickness: 80,
+    hBarThickness: 20,
     maxHBarThickness: 40,
+    barPercentageNarrow: 0.6,
+    barPercentageWide: 1.,
     maxWidth: "900px",
     mobileChartHeight: MOBILE_HEIGHT,
     desktopChartHeight: DESKTOP_HEIGHT,
@@ -28,7 +38,7 @@ export const CHART_LAYOUT = {
     labelFontSize: { xs: "0.8rem", sm: "1rem" },
 };
 
-export const TOOLTIP  = {
+export const PCT_TOOLTIP  = {
     callbacks: { label: (context: any) => `${context.raw?.toFixed(2)}%` },
 };
 
@@ -57,7 +67,7 @@ export const BARCHART_OPTIONS = {
     maintainAspectRatio: false,
     plugins: {
         legend: { display: true },
-        tooltip: TOOLTIP,
+        tooltip: PCT_TOOLTIP,
     },
     scales: {
         x: {
@@ -72,5 +82,11 @@ export const BARCHART_OPTIONS = {
             beginAtZero: true,
             max: 100,
         },
+        y_no_pct: {
+            ticks: {
+                ...Y_TICKS,
+                callback: (value: number | string) => value // Display actual numbers, not percentages
+            }
+        }
     }
 };

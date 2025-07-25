@@ -4,80 +4,119 @@ import Typography from "@mui/material/Typography";
 import {GraphData} from "@models/graphData";
 import pick from "@services/basicHelpers";
 import ResponseTimeBarChart from "@components/charts/ResponseTimeBarChart";
-import AnimatedWordCountBarChart from "@components/charts/AnimatedWordCountBarChart";
-import AnimatedIntensityPolarChart from "@components/charts/AnimatedIntensityPolarChart";
-import DailyActivityChart from "@components/charts/DailyActivityChart";
-import AnimatedResponseTimeBarChart from "@components/charts/AnimatedResponseTimeBarChart";
-import DayPartsActivityOverallChart from "@components/charts/DayPartsActivityOverallChart";
+import AnimatedCountsPerChatBarChart from "@components/charts/AnimatedCountsPerChatBarChart";
 import AnimatedDayPartsActivityChart from "@components/charts/AnimatedDayPartsActivityChart";
-import WordCountOverallBarChart from "@components/charts/WordCountOverallBarChart";
+import AnimatedIntensityPolarChart from "@components/charts/AnimatedIntensityPolarChart";
+import AnimatedResponseTimeBarChart from "@components/charts/AnimatedResponseTimeBarChart";
+import DailyActivityChart from "@components/charts/DailyActivityChart";
+import DayPartsActivityOverallChart from "@components/charts/DayPartsActivityOverallChart";
 import SentReceivedSlidingWindowChart from "@components/charts/SentReceivedSlidingWindowChart";
+import CountsOverallBarChart from "@components/charts/CountsOverallBarChart";
+import MessageTypesBarChart from "@components/charts/MessageTypesBarChart";
+import AudioLengthsBarChart from "@components/charts/AudioLengthsBarChart";
 
+export enum ChartType {
+    MessageTypesBarChart = "messageTypesBarChart",
+    AudioLengthsBarChart = "audioLengthsBarChart",
+    AnimatedIntensityPolarChart = "animatedIntensityPolarChart",
+    AnimatedWordsPerChatBarChart = "animatedWordsPerChatBarChart",
+    AnimatedSecondsPerChatBarChart = "animatedSecondsPerChatBarChart",
+    WordCountOverallBarChart = "wordCountOverallBarChart",
+    SecondCountOverallBarChart = "secondCountOverallBarChart",
+    WordCountSlidingWindowMean = "wordCountSlidingWindowMean",
+    SecondCountSlidingWindowMean = "secondCountSlidingWindowMean",
+    ResponseTimeBarChart = "responseTimeBarChart",
+    AnimatedResponseTimeBarChart = "animatedResponseTimeBarChart",
+    DailyActivityHoursChart = "dailyActivityHoursChart",
+    DayPartsActivityOverallChart = "dayPartsActivityOverallChart",
+    AnimatedDayPartsActivityChart = "animatedDayPartsActivityChart",
+}
 
 interface ChartContainerProps {
-    type: string;
+    type: ChartType;
     data: GraphData;
     dataSourceValue?: string;
 }
 
 export default function ChartContainer({ type, data }: ChartContainerProps) {
     // For charts that show data per conversation, keep only the ones selected by the user
-    const selectedConversations = pick(data.monthlySentReceivedPerConversation, data.focusConversations);
+    const selectedChatsWordsData = pick(data.monthlyWordsPerConversation, data.focusConversations);
+    const selectedChatsSecondsData = pick(data.monthlySecondsPerConversation, data.focusConversations);
 
     const renderChart = () => {
         switch (type) {
 
             // Focus conversations only
-            case "animatedIntensityPolarChart":
+            case ChartType.AnimatedIntensityPolarChart:
+                return <AnimatedIntensityPolarChart dataMonthlyPerConversation={selectedChatsWordsData}/>;
+            case ChartType.AnimatedWordsPerChatBarChart:
+                return <AnimatedCountsPerChatBarChart dataMonthlyPerConversation={selectedChatsWordsData} mode="text"/>;
+            case ChartType.AnimatedSecondsPerChatBarChart:
+                return <AnimatedCountsPerChatBarChart dataMonthlyPerConversation={selectedChatsSecondsData} mode="audio"/>;
+
+            // Message composition
+            case ChartType.MessageTypesBarChart:
                 return (
-                    <AnimatedIntensityPolarChart
-                        dataMonthlyPerConversation={selectedConversations}
+                    <MessageTypesBarChart
+                        basicStatistics={data.basicStatistics}
                     />
                 );
-            case "animatedWordCountBarChart":
+            case ChartType.AudioLengthsBarChart:
                 return (
-                    <AnimatedWordCountBarChart
-                        dataMonthlyPerConversation={selectedConversations}
+                    <AudioLengthsBarChart
+                        audioLengthDistribution={data.audioLengthDistribution}
                     />
                 );
 
             // Aggregated data only
-            case "wordCountOverallBarChart":
+            case ChartType.WordCountOverallBarChart:
                 return (
-                    <WordCountOverallBarChart
-                        sentWordsTotal={data.basicStatistics.sentWordsTotal}
-                        receivedWordsTotal={data.basicStatistics.receivedWordsTotal}
+                    <CountsOverallBarChart
+                        sentWordsTotal={data.basicStatistics.wordsTotal.sent}
+                        receivedWordsTotal={data.basicStatistics.wordsTotal.received}
+                        mode="text"
                     />
                 );
-            case "sentReceivedSlidingWindowMean":
+            case ChartType.SecondCountOverallBarChart:
+                return (
+                    <CountsOverallBarChart
+                        sentWordsTotal={data.basicStatistics.secondsTotal.sent}
+                        receivedWordsTotal={data.basicStatistics.secondsTotal.received}
+                        mode="audio"
+                    />
+                );
+            case ChartType.WordCountSlidingWindowMean:
                 return (
                     <SentReceivedSlidingWindowChart
-                        slidingWindowMeanDailyWords={data.slidingWindowMeanDailyWords}
+                        slidingWindowMeanDailyWords={data.slidingWindowMeanDailyWords} mode="text"
                     />
                 );
-            case "responseTimeBarChart":
+            case ChartType.SecondCountSlidingWindowMean:
                 return (
-                    <ResponseTimeBarChart responseTimes={data.answerTimes}/>
+                    <SentReceivedSlidingWindowChart
+                        slidingWindowMeanDailyWords={data.slidingWindowMeanDailySeconds} mode="audio"
+                    />
                 );
-            case "animatedResponseTimeBarChart":
-                return (
-                    <AnimatedResponseTimeBarChart answerTimes={data.answerTimes}/>
-                );
-            case "dailyActivityHoursChart":
-                return (
-                    <DailyActivityChart dataSent={data.dailySentHours}/>
-                );
-            case "dayPartsActivityOverallChart":
+
+            // Response times
+            case ChartType.ResponseTimeBarChart:
+                return <ResponseTimeBarChart responseTimes={data.answerTimes}/>;
+            case ChartType.AnimatedResponseTimeBarChart:
+                return <AnimatedResponseTimeBarChart answerTimes={data.answerTimes}/>;
+
+            // Daily activity times
+            case ChartType.DailyActivityHoursChart:
+                return <DailyActivityChart dataSent={data.dailySentHours}/>;
+            case ChartType.DayPartsActivityOverallChart:
                 return (
                     <DayPartsActivityOverallChart
                         dailySentHours={data.dailySentHours}
                         dailyReceivedHours={data.dailyReceivedHours}
                     />
                 );
-            case "animatedDayPartsActivityChart":
-                return (
-                    <AnimatedDayPartsActivityChart dailySentHours={data.dailySentHours}/>
-                );
+            case ChartType.AnimatedDayPartsActivityChart:
+                return <AnimatedDayPartsActivityChart dailySentHours={data.dailySentHours}/>;
+
             default:
                 return (
                     <Box

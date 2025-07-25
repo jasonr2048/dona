@@ -9,6 +9,7 @@ import {prepareCountsOverTimeData} from "@services/charts/animations";
 import DownloadButtons from "@components/charts/DownloadButtons";
 import {useTranslations} from "next-intl";
 import {calculateZScores} from "@services/charts/zScores";
+import {POLAR_CHART_COLORS, PCT_TOOLTIP} from "@components/charts/chartConfig";
 
 ChartJS.register(RadialLinearScale, Tooltip, Legend, LineElement, PointElement);
 
@@ -20,8 +21,8 @@ interface AnimatedIntensityPolarChartProps {
 }
 
 const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = ({
-                                                                   dataMonthlyPerConversation,
-                                                               }) => {
+                                                                                     dataMonthlyPerConversation,
+                                                                                 }) => {
     const CHART_NAME = "intensity-interaction-polar";
     const container_name = `chart-wrapper-${CHART_NAME}`;
 
@@ -31,17 +32,14 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
     const [currentFrame, setCurrentFrame] = useState<number>(0);
     const [labels, setLabels] = useState<string[]>([]);
     const [frames, setFrames] = useState<Record<string, number[]>>({});
+    const [counts, setCounts] = useState<Record<string, number[]>>({});
 
     useEffect(() => {
-        const { counts, sortedMonths } = prepareCountsOverTimeData(
-            dataMonthlyPerConversation,
-            "sent+received"
-        );
-
-        const zScoreFrames = calculateZScores(counts, Z_SCORE_LIMIT) as Record<string, number[]>;
-
+        const {counts: preparedCounts, sortedMonths} = prepareCountsOverTimeData(dataMonthlyPerConversation);
+        const zScoreFrames = calculateZScores(preparedCounts, Z_SCORE_LIMIT) as Record<string, number[]>;
         setLabels(sortedMonths);
         setFrames(zScoreFrames);
+        setCounts(preparedCounts); // Store original counts for tooltip usage
     }, [dataMonthlyPerConversation]);
 
     const generateChartData = (frameIndex: number) => {
@@ -54,7 +52,7 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
                 {
                     label: chartTexts("legend.others"),
                     data: conversationData, // Radial values (z-scores)
-                    pointBackgroundColor: "#FFFFFF",
+                    pointBackgroundColor: POLAR_CHART_COLORS.drawing,
                     pointRadius: 10,
                     pointHoverRadius: 12,
                     borderWidth: 0,
@@ -63,7 +61,7 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
                 {
                     label: chartTexts("legend.donor"),
                     data: [Z_SCORE_LIMIT + Z_SCORE_LIMIT * 0.5],
-                    pointBackgroundColor: "#FFD700",
+                    pointBackgroundColor: POLAR_CHART_COLORS.highlight,
                     pointRadius: 15,
                     pointHoverRadius: 17,
                     borderWidth: 0,
@@ -112,22 +110,22 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
                         options={{
                             responsive: true,
                             maintainAspectRatio: false,
-                            animation: { duration: 300 },
+                            animation: {duration: 300},
                             scales: {
                                 r: {
                                     reverse: true,
                                     beginAtZero: true,
-                                    min: -Z_SCORE_LIMIT * 0.5,
+                                    min: -Z_SCORE_LIMIT * 0.8,
                                     max: Z_SCORE_LIMIT + Z_SCORE_LIMIT * 0.5,
-                                    ticks: { count: 1, display: false},
-                                    angleLines: { display: false },
+                                    ticks: {count: 1, display: false},
+                                    angleLines: {display: false},
                                     grid: {
                                         circular: true,
-                                        color: "#FFFFFF",
+                                        color: POLAR_CHART_COLORS.drawing,
                                     },
                                     pointLabels: {
-                                        color: "#FFFFFF",
-                                        font: { size: 14 }
+                                        color: POLAR_CHART_COLORS.drawing,
+                                        font: {size: 14}
                                     }
                                 },
                             },
@@ -139,7 +137,18 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
                                     labels: {
                                         usePointStyle: true,
                                         textAlign: "left",
-                                        color: "#FFFFFF"
+                                        color: POLAR_CHART_COLORS.drawing
+                                    },
+                                },
+                                tooltip: {
+                                    ...PCT_TOOLTIP,
+                                    callbacks: {
+                                        label: (context: any) => {
+                                            const dataIndex = context.dataIndex;
+                                            const monthKey = labels[currentFrame];
+                                            const value = counts[monthKey]?.[dataIndex] ?? 0;
+                                            return `${labelTexts("numberMessages")}: ${value}`;
+                                        },
                                     },
                                 },
                             },
@@ -150,7 +159,7 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
 
             <SliderWithButtons
                 value={currentFrame}
-                marks={labels.map((label, index) => ({ value: index, label }))}
+                marks={labels.map((label, index) => ({value: index, label}))}
                 setCurrentFrame={setCurrentFrame}
             />
         </Box>

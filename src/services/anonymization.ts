@@ -1,11 +1,14 @@
 import {AnonymizationResult, DataSourceValue} from "@models/processed";
 import handleWhatsappTxtFiles from "@services/parsing/whatsapp/whatsappHandler";
 import {extractTxtFilesFromZip} from "@services/parsing/shared/zipExtraction";
-import {DonationValidationError, DonationErrors} from "@services/errors";
+import {DonationErrors, DonationValidationError} from "@services/errors";
 import {handleFacebookZipFiles, handleInstagramZipFiles} from "@services/parsing/meta/metaHandlers";
 import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
-import {validateMinChatsForDonation, validateMinImportantChatsForDonation} from "@services/validation";
-import {CONFIG} from "@/config";
+import {
+    validateMinChatsForDonation,
+    validateMinImportantChatsForDonation,
+    validateMinTimePeriodForDonation
+} from "@services/validation";
 
 export async function anonymizeData(dataSourceValue: DataSourceValue, files: File[]): Promise<AnonymizationResult> {
     let resultPromise;
@@ -41,11 +44,15 @@ export async function anonymizeData(dataSourceValue: DataSourceValue, files: Fil
 
     // Validation for the number of conversations
     if (!validateMinChatsForDonation(result.anonymizedConversations)) {
-        throw DonationValidationError(DonationErrors.TooFewChats, { minChats: CONFIG.MIN_CHATS_FOR_DONATION });
+        throw DonationValidationError(DonationErrors.TooFewChats);
     }
     // Validation for the number of "important" conversations (based on number of messages and contacts)
     if (!validateMinImportantChatsForDonation(result.anonymizedConversations)) {
-        throw DonationValidationError(DonationErrors.TooFewContactsOrMessages, { minChats: CONFIG.MIN_CHATS_FOR_DONATION });
+        throw DonationValidationError(DonationErrors.TooFewContactsOrMessages);
+    }
+    // Validation for the time period of the conversations
+    if (!validateMinTimePeriodForDonation(result.anonymizedConversations)) {
+        throw DonationValidationError(DonationErrors.TooShortTimePeriod);
     }
 
     return result;

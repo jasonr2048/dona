@@ -20,7 +20,6 @@ export default async function deIdentify(
     chatPseudonyms.setDonorName(donorName);
     contactPseudonyms.setPseudonym(donorName, aliasConfig.donorAlias);
 
-
     const deIdentifiedConversations: Conversation[] = await Promise.all(
         parsedConversations.map(async (jsonContent): Promise<Conversation | null> => {
 

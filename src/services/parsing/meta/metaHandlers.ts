@@ -95,6 +95,7 @@ async function handleMetaZipFiles(
     }
     // Select audio entries
     const audioEntries = allEntries.filter(entry => isMatchingEntry(entry, ".wav"));
+    console.log("Audio entries found:", audioEntries.length);
 
     try {
         // Extract donor name from profile

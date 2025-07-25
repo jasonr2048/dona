@@ -139,9 +139,9 @@
     "continue": {
       "buttons-header": "Do you have your data ready?",
       "body": "If you have received your data using these instructions, you can now start with the declaration of consent and survey. Afterwards you can donate your data."
-    },
-    "haveData": "You need 5-7 WhatsApp chat files."
+    }
   },
+
   "whatsapp": {
     "devices": {
       "body": "You need your smartphone, on which you use WhatsApp. Please make sure that you are storing the data on a device that no one but you has access to."
@@ -327,13 +327,10 @@
       "onlyYouInConv": "<i>You are the only member in this chat. This could be because the other people have left the chat.</i>"
     },
     "chat-selection": "You can select up to {max_num} chats to receive focused feedback on, but you <b>must</b> select at least {min_num}, so that the feedback given to you cannot be considered the analysis of your contacts' personal data. The ones currently selected are the {default_num} with the highest word count in messages.",
-    "sendData": {
-      "wait": "Sending the data could take a few minutes. Please wait and keep this website open. Thanks!"
-    },
+    "sending-wait": "Sending the data could take a few minutes. Please wait and keep this website open. Thanks!",
     "alias-not-required": "Not required",
     "alias": "Username",
     "please-insert-alias": "Please enter your username to enable anonymization.",
-    "processing": "Your data is being extracted and anonymized...",
     "be-patient": "The data extraction process may take some time. Please be patient...",
     "successful": "Your data has been successfully anonymized.",
     "error": "An error occurred:",
@@ -343,21 +340,8 @@
       "chat": "Chat",
       "contactInitial": "C",
       "system": "System",
-      "chooseUsername": "Please choose your username. Your username will not be saved and we will not know it.",
-      "loading": {
-        "": "Sending the anonymized data could take a few minutes. Please wait and keep this website open. Thanks!",
-        "tooLong": {
-          "title": "If this process is taking more than 5 minutes, it might be due to the following:",
-          "issue": {
-            "1": "You are trying to upload file types that are not supported (the correct input types are .txt or .zip for WhatsApp and .zip for Facebook and Instagram)",
-            "2": "You have exported you WhatsApp chats from different devices",
-            "3": "The files you are trying to upload have unusually large sizes",
-            "4": "Your internet connection is slow",
-            "5": "Other unexpected issues",
-            "6": "Help us improve <a href=\"@messages(\"links.reportProblem\")\" target=\"_blank\">here</a>"
-          }
-        }
-      }
+      "processing": "Your data is being extracted and anonymized...",
+      "chooseUsername": "Please choose your username. Your username will not be saved and we will not know it."
     },
     "errors": {
       "NoProfile": "The uploaded data does not include profile information.",
@@ -365,12 +349,13 @@
       "NotSingleFile": "Please choose a single .db file. You can only donate one file of this type at a time.",
       "TooFewChats_format": "There must be at least {MIN_CHATS_FOR_DONATION} chats.",
       "TooFewContactsOrMessages_format": "There are less than {MIN_CHATS_FOR_DONATION} chats with at least {MIN_MESSAGES_PER_CHAT} messages and at least {MIN_CONTACTS_PER_CHAT} contacts (yourself included).",
+      "TooShortTimePeriod_format": "Your data must cover a time period of at least {MIN_DONATION_TIME_PERIOD_MONTHS} months.",
       "NonsenseDateRange": "The selected period is not valid. Please check the correctness of the selected dates.",
       "NoMessagesInRange": "There are no messages in the selected period. Please select a longer and valid period.",
       "NotEnoughMonthsInRange_format": "To donate your data, please select a period of at least {MIN_DONATION_TIME_PERIOD_MONTHS} months within the period of your donation.",
+      "DuplicateDonorId": "This donor ID already exists.",
       "TransactionFailed": "The donation data couldn't be saved. Check the connection and try again.",
       "UnknownError": "There is an error somewhere. Please check your data donation.",
-
       "no-alias": "Please enter your username. You can find it in your WhatsApp profile."
     }
   },
@@ -445,6 +430,18 @@
     "selectedDataMessage": "The potentially high number of {source} contacts could lead to a cluttered visualization. Therefore, in the following, only visualizations for your 1-10 selected {source} chats are shown.",
     "reminder": "Don't forget to register for the voucher raffle at the bottom of the page.",
     "sourceTitle": "Feedback on your {source} Messages",
+    "chartLabels": {
+      "start": "Start",
+      "pause": "Pause",
+      "resetView": "Reset view",
+      "you": "You",
+      "contacts": "Contacts",
+      "yearMonth": "Year-Month:",
+      "chatWith": "Chat with:",
+      "time": "Time",
+      "overallData": "All chats",
+      "numberMessages": "Number of messages"
+    },
     "statisticsCard": {
       "title": "Overview of all Activity",
       "total-messages": "Total messages",
@@ -452,8 +449,134 @@
       "active-years-explanation_format": "In total, there are {years} years in which you participated in conversation (i.e. you sent or received at least one message during the year)",
       "active-months-explanation_format": "In total, there are {months} months in which you participated in conversation (i.e. you sent or received at least one message during the month)",
       "messages": "Messages",
+      "total-breakdown": "Total by type",
+      "average-breakdown": "Average per active month by type",
+      "text": "Text",
+      "audio": "Audio",
       "sent": "Sent",
       "received": "Received"
+    },
+    "messageComposition": {
+      "title": "Message Composition",
+      "messageTypesBarChart": {
+        "title": "Message Types",
+        "description": "This chart shows the distribution of message types (text and audio) that you sent and received. Click <button>HERE</button> to see an explanation with an example.",
+        "legend": {
+          "donor": "Your Messages",
+          "contacts": "Contacts Messages"
+        },
+        "types": {
+          "text": "Text",
+          "audio": "Audio"
+        },
+        "xAxis": "Message types",
+        "yAxis": "Number of messages",
+        "example": {
+          "image": "images/charts/feedback_example_messageTypes_english.svg",
+          "text": "<p><b>(1)</b> This shows the total number of text messages you sent.</p><p><b>(2)</b> This shows the total number of text messages you received from your contacts.</p><p><b>(3)</b> This shows the total number of audio messages you sent.</p><p><b>(4)</b> This shows the total number of audio messages you received from your contacts.</p><p><b>(5)</b> Click this icon to download the graph.</p>"
+        }
+      },
+      "audioLengthsBarChart": {
+        "title": "Audio Message Lengths",
+        "description": "This chart shows the distribution of audio message lengths that you sent and received. Click <button>HERE</button> to see an explanation with an example.",
+        "legend": {
+          "donor": "Your Audio Messages",
+          "contacts": "Contacts Audio Messages"
+        },
+        "xAxis": "Audio length",
+        "yAxis": "Percentage of audio messages",
+        "example": {
+          "image": "images/charts/feedback_example_audioLengths_english.svg",
+          "text": "<p><b>(1)</b> This shows the percentage of your audio messages that are less than 10 seconds long.</p><p><b>(2)</b> This shows the percentage of audio messages from your contacts that are less than 10 seconds long.</p><p><b>(3)</b> This shows the percentage of your audio messages that are between 1-2 minutes long.</p><p><b>(4)</b> This shows the percentage of audio messages from your contacts that are between 1-2 minutes long.</p><p><b>(5)</b> Click this icon to download the graph.</p>"
+        }
+      }
+    },
+    "interactionIntensity": {
+      "title": "Interaction Intensity",
+      "textHeader": "In text messages",
+      "audioHeader": "In audio messages",
+      "animatedIntensityPolarChart": {
+        "title": "Planet representation",
+        "description": "This visualization displays you as the yellow dot in the middle. The chats you donated are the white dots around you. The closer a dot is to you, the more words you have written in this chat. In the time-slider below you can see and select the month and year for which the data is shown. The smaller lighter white dots show the activity in the respective chats in other months. Click <button>HERE</button> to see an explanation with an example.",
+        "legend": {
+          "donor": "You",
+          "others": "Chat Intensity"
+        },
+        "example": {
+          "image": "images/charts/feedback_example_polarPlot_english.svg",
+          "text": "<p><b>(1)</b> Here the white solid dot is very close to the large yellow dot in the center. This means that in the month shown below, the communication in this chat was very intense compared to the previous months and the other chats. In this example, there are only a few transparent small dots on the trajectory. This is because the data only covers a few months.</p><p><b>(2)</b> Hardly any transparent history dots can be seen here, as they all lie on top of each other in roughly the same place. This is because the intensity has been very stable over the months in this chat.</p><p><b>(3)</b> In contrast to (2), many transparent points are visible here. So the intensity of this chat has changed a lot over the months. In the currently displayed month, the big intense white dot is further away than some other transparent small points: Accordingly, there were months before in which more words were exchanged in this chat. However, there have also been months when the intensity was lower.</p><p><b>(4)</b> Click this icon to download the graph.</p>"
+        }
+      },
+      "animatedWordsPerChatBarChart": {
+        "title": "Total sent words",
+        "description": "Here you can see the total amount of words you sent in your different chats adding up per month. In the time-slider below you can see and select the month and year for which the data is shown. Click <button>HERE</button> to see an explanation with an example.",
+        "legend": "Sent words",
+        "xAxis": "Number of sent words",
+        "example": {
+          "image": "images/charts/feedback_example_horizontalBarChart_english.svg",
+          "text": "<p><b>(1)</b> In this example, over the entire period the most words were sent in the chat with F9, F10: just over 140 thousand.</p><p><b>(2)</b> In contrast to (1), this example chat had the fewest sent words.</p><p><b>(3)</b> The year and month are displayed here. You can see how many words were sent in the chats per month. Try out the time slider!</p><p><b>(4)</b> Click this icon to download the graph.</p>"
+        }
+      },
+      "animatedSecondsPerChatBarChart": {
+        "title": "Total sent seconds of audio",
+        "description": "Here you can see the total amount of audio you sent in your different chats adding up per month. In the time-slider below you can see and select the month and year for which the data is shown. Click <button>HERE</button> to see an explanation with an example.",
+        "legend": "Sent seconds of audio",
+        "xAxis": "Number of sent seconds of audio",
+        "example": {
+          "image": "images/charts/feedback_example_horizontalBarChart_english.svg",
+          "text": "<p><b>(1)</b> In this example, over the entire period the most words were sent in the chat with F9, F10: just over 140 thousand.</p><p><b>(2)</b> In contrast to (1), this example chat had the fewest sent words.</p><p><b>(3)</b> The year and month are displayed here. You can see how many words were sent in the chats per month. Try out the time slider!</p><p><b>(4)</b> Click this icon to download the graph.</p>"
+        }
+      },
+      "moreAbout": "More about your Interaction Intensity",
+      "wordCountOverallBarChart": {
+        "description": "This graph shows the total number of words you received and sent across all your donated chats.",
+        "legend": {
+          "sent": "Sent words",
+          "received": "Received words"
+        },
+        "xAxis": "Number of words",
+        "yAxis": {
+          "sent": "Sent",
+          "received": "Received"
+        }
+      },
+      "secondCountOverallBarChart": {
+        "description": "This graph shows the total number of seconds of audio you received and sent across all your donated chats.",
+        "legend": {
+          "sent": "Sent seconds of audio",
+          "received": "Received seconds of audio"
+        },
+        "xAxis": "Number of seconds",
+        "yAxis": {
+          "sent": "Sent",
+          "received": "Received"
+        }
+      },
+      "wordCountSlidingWindowMean": {
+        "description": "Here you can see the average number of your sent and received words per day (more precisely, we calculate a so-called sliding window average with a window size of 30 days).",
+        "legend": {
+          "sent": "Sent words",
+          "received": "Received words",
+          "receivedNotShown": "Privacy: Received words are not displayed"
+        },
+        "yAxis": "Average number of words",
+        "example": {
+          "image": "images/feedback_example_slidingWindowMean_english.svg",
+          "text": "<p class=\"text-left\"><b>(1)</b> In this example, a significant increase in the number of sent and received words can be observed. In this period the sent words were more than the received words. </p><p class=\"text-left\"><b>(2)</b> Here you can see an even bigger increase in sent and received words. But in that period, across all chats, more words were received.</p>"
+        }
+      },
+      "secondCountSlidingWindowMean": {
+        "description": "Here you can see the average number of your sent and received seconds of audio per day (more precisely, we calculate a so-called sliding window average with a window size of 30 days).",
+        "legend": {
+          "sent": "Sent seconds of audio",
+          "received": "Received seconds of audio"
+        },
+        "yAxis": "Average seconds of audio",
+        "example": {
+          "image": "images/feedback_example_slidingWindowMean_english.svg",
+          "text": "<p class=\"text-left\"><b>(1)</b> In this example, a significant increase in the number of sent and received words can be observed. In this period the sent words were more than the received words. </p><p class=\"text-left\"><b>(2)</b> Here you can see an even bigger increase in sent and received words. But in that period, across all chats, more words were received.</p>"
+        }
+      }
     },
     "dailyActivityTimes": {
       "title": "Daily Activity Times",
@@ -516,105 +639,6 @@
         },
         "yAxis": "Percentage of all responses",
         "xAxis": "Time until response"
-      }
-    },
-    "interactionIntensity": {
-      "title": "Interaction Intensity",
-      "animatedIntensityPolarChart": {
-        "title": "Planet representation",
-        "description": "This visualization displays you as the yellow dot in the middle. The chats you donated are the white dots around you. The closer a dot is to you, the more words you have written in this chat. In the time-slider below you can see and select the month and year for which the data is shown. The smaller lighter white dots show the activity in the respective chats in other months. Click <button>HERE</button> to see an explanation with an example.",
-        "legend": {
-          "donor": "You",
-          "others": "Chat Intensity"
-        },
-        "example": {
-          "image": "images/charts/feedback_example_polarPlot_english.svg",
-          "text": "<p><b>(1)</b> Here the white solid dot is very close to the large yellow dot in the center. This means that in the month shown below, the communication in this chat was very intense compared to the previous months and the other chats. In this example, there are only a few transparent small dots on the trajectory. This is because the data only covers a few months.</p><p><b>(2)</b> Hardly any transparent history dots can be seen here, as they all lie on top of each other in roughly the same place. This is because the intensity has been very stable over the months in this chat.</p><p><b>(3)</b> In contrast to (2), many transparent points are visible here. So the intensity of this chat has changed a lot over the months. In the currently displayed month, the big intense white dot is further away than some other transparent small points: Accordingly, there were months before in which more words were exchanged in this chat. However, there have also been months when the intensity was lower.</p><p><b>(4)</b> Click this icon to download the graph.</p>"
-        }
-      },
-      "animatedWordCountBarChart": {
-        "title": "Total sent words",
-        "description": "Here you can see the total amount of words you sent in your different chats adding up per month. In the time-slider below you can see and select the month and year for which the data is shown. Click <button>HERE</button> to see an explanation with an example.",
-        "legend": "Sent words",
-        "xAxis": "Number of sent words",
-        "example": {
-          "image": "images/charts/feedback_example_horizontalBarChart_english.svg",
-          "text": "<p><b>(1)</b> In this example, over the entire period the most words were sent in the chat with F9, F10: just over 140 thousand.</p><p><b>(2)</b> In contrast to (1), this example chat had the fewest sent words.</p><p><b>(3)</b> The year and month are displayed here. You can see how many words were sent in the chats per month. Try out the time slider!</p><p><b>(4)</b> Click this icon to download the graph.</p>"
-        }
-      },
-      "moreAbout": "More about your Interaction Intensity",
-      "wordCountOverallBarChart": {
-        "description": "This graph shows the total number of words you received and sent across all your donated chats.",
-        "legend": {
-          "sent": "Sent words",
-          "received": "Received words"
-        },
-        "xAxis": "Number of words",
-        "yAxis": {
-          "sent": "Sent",
-          "received": "Received"
-        }
-      },
-      "sentReceivedSlidingWindowMean": {
-        "description": "Here you can see the average number of your sent and received words per day (more precisely, we calculate a so-called sliding window average with a window size of 30 days). At the top left you can also select your individual chats to see the graph of your sent words for the selected chat.<br/><br/><i>If there is no value for the <u>received words</u> in the overview for one or more days, then it has been hidden due to data protection reasons. Only aggregated information from which no direct conclusions can be drawn about your individual contacts is displayed.</i>",
-        "legend": {
-          "sent": "Sent words",
-          "received": "Received words",
-          "receivedNotShown": "Privacy: Received words are not displayed"
-        },
-        "yAxis": "Average number of words",
-        "example": {
-          "image": "images/feedback_example_slidingWindowMean_english.svg",
-          "text": "<p class=\"text-left\"><b>(1)</b> In this example, a significant increase in the number of sent and received words can be observed. In this period the sent words were more than the received words. </p><p class=\"text-left\"><b>(2)</b> Here you can see an even bigger increase in sent and received words. But in that period, across all chats, more words were received.</p>"
-        }
-      }
-    },
-    "chartLabels": {
-      "start": "Start",
-      "pause": "Pause",
-      "resetView": "Reset view",
-      "you": "You",
-      "contacts": "Contacts",
-      "yearMonth": "Year-Month:",
-      "chatWith": "Chat with:",
-      "time": "Time",
-      "overallData": "All chats"
-    },
-    "graph": {
-      "messages-over-time": "%s messages over time",
-      "number-of-messages": "Number of messages",
-      "response-times": "%s response times",
-      "response-time": "Response time",
-      "median-response-time": "Median response time",
-      "overview": "Overview",
-      "detail": "Detail",
-      "example": {
-        "title": "This is an <b>example</b> created from example data - <u>not</u> from your data."
-      },
-      "dailySentReceived": {
-        "description": "This graph shows the exact word count of your sent and received messages per day.",
-        "legend": {
-          "sent": "Sent words",
-          "received": "Received words"
-        },
-        "yAxis": "Number of words"
-      },
-      "monthlySentReceived": {
-        "description": "This graph shows the exact word count of your sent and received messages per day. At the top left you can also select your individual chats to see the graph of your sent words for the selected chat.",
-        "legend": {
-          "sent": "Sent messages",
-          "received": "Received messages"
-        },
-        "yAxis": "Number of messages"
-      },
-      "breaksInConv": {
-        "description": "This graph shows for the selected chat per month the longest consecutive period in days, in which no message was written in this chat. Click <a style=\"font-weight:bold\" href=\"#breaksInConvExplanationModal\" data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#breaksInConvExplanationModal\">HERE</a> to see an explanation with an example.",
-        "yAxis": "Longest period in days without a message",
-        "days": "Day/s",
-        "example": {
-          "image": "images/feedback_example_breaksInConv_english.svg",
-          "text": "<p class=\"text-left\"><b>(1)</b> In this example, in the on the top left selected chat, the longest periods without contact in this first period were mostly under 5 days. For example, in January 2019 (the first month), the length of the longest period without a message is less than 5 days. I.e. in that month, there was no time in the chat when not a single message was written for more than 5 days.</p><p class=\"text-left\"><b>(2)</b> In contrast to (1), the lengths of the conversation pauses are already significantly longer in this area. In some months the longest period without a message is about 10 days. In two months in this time period, there was no activity in this chat for almost 20 days straight.</p><p class=\"text-left\"><b>(3)</b> A dot is visible here, showing that there was not a single message in the selected chat for the whole of July 2021.</p><p class=\"text-left\"><b>(4)</b> Click this icon to download the graph.</p>"
-        }
       }
     },
     "thanks": "We hope you had exciting insights. Thanks a lot!",

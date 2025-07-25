@@ -6,7 +6,8 @@ import _ from "lodash";
 import {AnswerTimePoint} from "@models/graphData";
 import DownloadButtons from "@components/charts/DownloadButtons";
 import {ChartDataset} from "chart.js";
-import {BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT, TOOLTIP, TOP_LEGEND} from "@components/charts/chartConfig";
+import {BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT, PCT_TOOLTIP, TOP_LEGEND} from "@components/charts/chartConfig";
+
 
 const FIRST = "< 1 min";
 const SECOND = "1-2 min";
@@ -33,7 +34,6 @@ interface ResponseTimeBarChartProps {
 const ResponseTimeBarChart: React.FC<ResponseTimeBarChartProps> = ({ responseTimes }) => {
     const CHART_NAME = "response-times-barchart";
     const container_name = `chart-wrapper-${CHART_NAME}`;
-
     const chartTexts = useTranslations("feedback.responseTimes.responseTimeBarChart");
 
     const categorizeResponseTime = (timeInMs: number) => {
@@ -63,16 +63,16 @@ const ResponseTimeBarChart: React.FC<ResponseTimeBarChartProps> = ({ responseTim
         {
             label: chartTexts("legend.contacts"),
             data: contactPercentages,
-            backgroundColor: CHART_COLORS.secondaryBar,
-            barPercentage: 0.5,
+            barPercentage: CHART_LAYOUT.barPercentageNarrow,
+            backgroundColor: CHART_COLORS.secondary
         },
         {
             label: chartTexts("legend.donor"),
             data: donorPercentages,
-            backgroundColor: CHART_COLORS.primaryBar,
-            barPercentage: 0.8,
+            barPercentage: CHART_LAYOUT.barPercentageWide,
+            backgroundColor: CHART_COLORS.primary,
         },
-    ].filter(Boolean) as ChartDataset<"bar", number[]>[];
+    ] as ChartDataset<"bar", number[]>[];
 
     const data = {
         labels: ranges.map((range) => range.label),
@@ -83,7 +83,7 @@ const ResponseTimeBarChart: React.FC<ResponseTimeBarChartProps> = ({ responseTim
         ...BARCHART_OPTIONS,
         plugins: {
             legend: TOP_LEGEND,
-            tooltip: TOOLTIP,
+            tooltip: PCT_TOOLTIP,
         },
         scales: {
             x: {

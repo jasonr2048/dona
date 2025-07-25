@@ -93,7 +93,23 @@ export default function DataDonationPage() {
     };
 
     return (
-        <Container maxWidth="md" sx={{ flexGrow: 1 }}>
+        <Container maxWidth="md" sx={{ flexGrow: 1, position: "relative" }}>
+            {/* Full-page overlay to freeze the page */}
+            {loading && (
+                <Box
+                    sx={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "rgba(255, 255, 255, 0.8)",
+                        zIndex: 9999,
+                        pointerEvents: "none", // Prevent interactions
+                    }}
+                />
+            )}
+
             <Stack
                 sx={{
                     display: "flex",
@@ -104,10 +120,18 @@ export default function DataDonationPage() {
                 }}
             >
                 <MainTitle variant="h4">{donation.t("select-data.title")}</MainTitle>
+
                 <RichText>{donorStrings.t("your-id")}: {externalDonorId}</RichText>
 
-                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                {loading && <CircularProgress />}
+                {/* Loading spinner and alert  */}
+                {loading && (
+                    <Stack spacing={2} sx={{ zIndex: 10000, alignItems: "center" }}>
+                        <CircularProgress color="inherit" />
+                        <Alert severity="info">{donation.t("sending-wait")}</Alert>
+                    </Stack>
+                )}
+
+                {errorMessage && !loading && <Alert severity="error">{errorMessage}</Alert>}
 
                 {!errorMessage && !loading && (
                     <Box>

@@ -1,17 +1,21 @@
 import {daysBeforeMonths, normalizeDate, NumericDate} from './utils/date';
 import {convertTime12to24, normalizeAMPM, normalizeTime} from './utils/time';
+import {getAliasConfig} from "@services/parsing/shared/aliasConfig";
 
-const regexParser = /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),? (\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?: ([ap]\.?m\.?))?\]?(?: -|:)? (.+?): ((?:.|\s)*)/i;
-const regexParserSystem = /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),? (\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?: ([ap]\.?m\.?))?\]?(?: -|:)? ((?:.|\s)+)/i;
-const regexStartsWithDateTime = /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),? (\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?: ([ap]\.?m\.?))?\]?/i;
+
+const regexStartsWithDateTime = /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),? (\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?: ([ap]\.?m\.?))?]?/i;
+const regexMessageEntryParser = /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),? (\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?: ([ap]\.?m\.?))?]?(?: -|:)? (?:(.+?): )?((?:.|\s)*)/i;
 
 type Options = {
     daysFirst?: boolean;
 };
 
-type MessageObj = {
-    system: boolean;
-    msg: string;
+export type ParsedLine = {
+    date: string;
+    time: string;
+    ampm: string | null;
+    author: string;
+    message: string;
 };
 
 export type ParsedMessage = {
@@ -67,58 +71,51 @@ function computeDateTime(date: string, time: string, ampm: string | null, daysFi
 /**
  * Given an array of lines, detects the lines that are part of a previous
  * message (multiline messages) and merges them.
- * It also labels the system messages.
- * The result is an array of messages.
  */
-export function makeArrayOfMessages(lines: string[]): MessageObj[] {
-    return lines.reduce((acc: MessageObj[], line: string) => {
+export function makeArrayOfMessages(lines: string[]): string[] {
+    return lines.reduce((acc: string[], line: string) => {
         /**
          * If the line doesn't conform to the regex, it's probably part of the
          * previous message or a "WhatsApp event."
          */
-        if (!regexParser.test(line)) {
-            /**
-             * If it doesn't match the first regex but still starts with a datetime,
-             * it should be considered a "WhatsApp event," so it gets labeled "system."
-             */
-            if (regexStartsWithDateTime.test(line) && regexParserSystem.exec(line) !== null) {
-                return acc.concat({system: true, msg: line});
-            }
+        if (!regexStartsWithDateTime.test(line)) {
 
-            // Last element not set, just skip this (might be an empty file).
+            // If last element isn't set, just skip this (likely empty file)
             if (typeof acc.slice(-1)[0] === 'undefined') return acc;
 
             // Else it's part of the previous message and should be concatenated.
-            return acc.slice(0, -1).concat({
-                system: acc.slice(-1)[0].system,
-                msg: `${acc.slice(-1)[0].msg}\n${line}`,
-            });
+            return acc.slice(0, -1).concat(`${acc.slice(-1)[0]}\n${line}`);
         }
 
-        return acc.concat({system: false, msg: line});
+        return acc.concat(line);
     }, []);
 }
 
 /**
- * Given an array of messages, parses them and returns an object with the fields
+ * Given an array of messages, parses them and returns an object with the field's
  * date, author, and message.
  */
-export function parseMessages(messages: MessageObj[], options: Options = {}): ParsingResult {
+export function parseMessages(messages: string[], options: Options = {}): ParsingResult {
+    const aliasConfig = getAliasConfig();
     let allContactNames: string[] = [];
 
-    const parsed = messages.map(obj => {
-        const {system, msg} = obj;
+    const parsed = messages.map(msg => {
 
-        // If it's a system message, use another regex to parse it.
-        if (system) {
-            const [, date, time, ampm, message] = regexParserSystem.exec(msg) ?? [];
-            return {date, time, ampm: ampm || null, author: 'System', message};
+        // Extract date, time, ampm, and the rest of the message
+        const match = regexMessageEntryParser.exec(msg);
+        if (!match) return null;
+
+        const [, date, time, ampm, author, messageText] = match;
+
+        // System messages
+        if (!author) {
+            return { date, time, ampm: ampm || null, author: aliasConfig.systemAlias, message: messageText };
         }
 
-        const [, date, time, ampm, author, message] = regexParser.exec(msg) ?? [];
         allContactNames.push(author);
-        return {date, time, ampm: ampm || null, author, message};
-    });
+        return { date, time, ampm: ampm || null, author, message: messageText };
+    })
+    .filter(Boolean) as ParsedLine[];
 
     // Remove duplicate contact names.
     allContactNames = [...new Set(allContactNames)];

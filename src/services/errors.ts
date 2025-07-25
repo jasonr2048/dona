@@ -9,9 +9,11 @@ export enum DonationErrors {
     NotSingleDBFile = "NotSingleDBFile",
     TooFewChats = "TooFewChats",
     TooFewContactsOrMessages = "TooFewContactsOrMessages",
+    TooShortTimePeriod = "TooShortTimePeriod",
     NoProfile = "NoProfile",
     NoMessageEntries = "NoMessageEntries",
     NoDonorNameFound = "NoDonorNameFound",
+    DuplicateDonorId = "DuplicateDonorId",
     TransactionFailed = "TransactionFailed",
     UnknownError = "UnknownError"
 }

@@ -1,5 +1,26 @@
 import {Conversation} from "@models/processed";
 
+
+type ConversationStats = { participants: number; messages: number; audioMessages: number };
+
+export const computeConversationStats = (
+    conversations: Conversation[]
+): Map<string, ConversationStats> => {
+
+    const conversationStats = new Map<string, { participants: number, messages: number, audioMessages: number }>();
+    conversations.forEach(conversation => {
+        if (conversation.id != null) {
+            conversationStats.set(conversation.id, {
+                participants: new Set(conversation.participants).size,
+                messages: conversation.messages.length,
+                audioMessages: conversation.messagesAudio.length
+            });
+        }
+    });
+    return conversationStats;
+}
+
+
 export const createConversation = (
     dataSource: string,
     messages: Array<[number, number, number, string]>, // Format: [year, month, date, sender]

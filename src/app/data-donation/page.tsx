@@ -15,7 +15,8 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import {Conversation, DataSourceValue} from "@models/processed";
-import {addDonation} from "./actions";
+import { startDonation, appendConversationBatch, finalizeDonation } from "./actions";
+import produceGraphData from "@/services/charts/produceGraphData";
 import {useAliasConfig} from "@/services/parsing/shared/aliasConfig";
 import MultiFileSelect from "@/components/MultiFileSelect";
 import {useDonation} from "@/context/DonationContext";
@@ -23,6 +24,8 @@ import {useTranslations} from "next-intl";
 import {MainTitle, RichText} from "@/styles/StyledTypography";
 import {getErrorMessage} from "@services/errors";
 import {FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon} from "@components/CustomIcon";
+
+const CONVERSATION_BATCH_SIZE = 250;
 
 type ConversationsBySource = Record<DataSourceValue, Conversation[]>;
 type SelectedChatsBySource = Record<DataSourceValue, Set<string>>;
@@ -76,16 +79,33 @@ export default function DataDonationPage() {
         });
 
         if (allConversations.length > 0) {
+            console.log(`[DONATION][CLIENT] Starting donation with ${allConversations.length} conversations.`);
             try {
-                const result = await addDonation(allConversations, aliasConfig.donorAlias, externalDonorId);
-                if (result.success && result.donationId && result.graphDataRecord) {
-                    setDonationData(result.donationId, result.graphDataRecord);
-                    router.push("/donation-feedback");
-                } else {
-                    setErrorMessage(getErrorMessage(donation.t, result.error));
+                // 1) Start donation and get IDs
+                const start = await startDonation(externalDonorId);
+                if (!start.success || !start.data) throw start.error;
+                const { donationId, donorId } = start.data;
+
+                // 2) Append in batches
+                const totalBatches = Math.ceil(allConversations.length / CONVERSATION_BATCH_SIZE);
+                for (let i = 0; i < allConversations.length; i += CONVERSATION_BATCH_SIZE) {
+                    const batchNumber = Math.floor(i / CONVERSATION_BATCH_SIZE) + 1;
+                    const batch = allConversations.slice(i, i + CONVERSATION_BATCH_SIZE);
+                    console.log(`[DONATION][CLIENT] Uploading batch ${batchNumber}/${totalBatches} (size=${batch.length})`);
+                    const res = await appendConversationBatch(donationId, donorId, batch, aliasConfig.donorAlias);
+                    if (!res.success) throw res.error;
                 }
+
+                // 3) Compute graph data client-side and finalize
+                const graphDataRecord = produceGraphData(aliasConfig.donorAlias, allConversations);
+                const fin = await finalizeDonation(donationId, graphDataRecord as any);
+                if (!fin.success || !fin.data) throw fin.error;
+
+                setDonationData(fin.data.donationId, graphDataRecord);
+                router.push("/donation-feedback");
             } catch (err) {
-                setErrorMessage(getErrorMessage(donation.t, err));
+                console.log(`[DONATION][CLIENT] Error during donation:`, err);
+                setErrorMessage(getErrorMessage(donation.t, err as any));
             } finally {
                 setLoading(false);
             }

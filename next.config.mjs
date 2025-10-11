@@ -18,7 +18,7 @@ const nextConfig = {
     },
     experimental: {
         serverActions: {
-            bodySizeLimit: 50 * 1024 * 1024, // Optional limit (50MB)
+            bodySizeLimit: '500mb',
             allowedOrigins: ['nyu.dona.tf.uni-bielefeld.de', '127.0.0.1:9012'],
         }
     },

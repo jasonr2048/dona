@@ -4,71 +4,71 @@ import {db} from "@/db/drizzle";
 import {v4 as uuidv4} from 'uuid';
 import {conversationParticipants, conversations, donations, graphData, messages} from "@/db/schema";
 import {NewConversation, NewMessage} from "@models/persisted";
-import {Conversation, DataSource, DataSourceValue, DonationStatus} from "@models/processed";
-import produceGraphData from "@services/charts/produceGraphData";
-import {GraphData} from "@models/graphData";
+import {Conversation, DonationStatus} from "@models/processed";
 import {DonationErrors, DonationProcessingError, SerializedDonationError} from "@services/errors";
+import { eq } from 'drizzle-orm';
 
 
 function generateExternalDonorId(): string {
     return Math.random().toString(36).substring(2, 8);
 }
 
-interface AddDonationResult {
+
+interface ActionResult<T = unknown> {
     success: boolean;
-    donationId?: string;
-    graphDataRecord?: Record<DataSourceValue, GraphData>
+    data?: T;
     error?: SerializedDonationError;
 }
 
-export async function addDonation(
-    donatedConversations: Conversation[],
-    donorAlias: string,
+export async function startDonation(
     externalDonorId?: string
-): Promise<AddDonationResult> {
+): Promise<ActionResult<{ donationId: string; donorId: string }>> {
     const donorId = uuidv4();
-
+    const externalIdToUse = externalDonorId || generateExternalDonorId();
+    console.log(`[DONATION][SERVER] startDonation: donorId=${donorId} externalDonorId=${externalIdToUse}`);
     try {
-        const dataSourceOptions: DataSource[] = await db.query.dataSources.findMany() as DataSource[];
-        const transactionResult = await db.transaction(async (tx) => {
-            const insertedDonation = await tx.insert(donations).values({
-                donorId,
-                externalDonorId: externalDonorId || generateExternalDonorId(),
-                status: DonationStatus.Complete,
-            }).returning({ id: donations.id });
+        const inserted = await db.insert(donations).values({
+            donorId,
+            externalDonorId: externalIdToUse,
+            status: DonationStatus.Pending,
+        }).returning({id: donations.id});
 
-            const donationId = insertedDonation[0]?.id;
+        const donationId = inserted[0]?.id!;
+        return {success: true, data: {donationId, donorId}};
+    } catch (err) {
+        return {success: false, error: DonationProcessingError(DonationErrors.TransactionFailed, {originalError: err})};
+    }
+}
 
-            if (!donationId) {
-                throw new Error("Failed to insert donation.");
-            }
-
-            for (const convo of donatedConversations) {
+export async function appendConversationBatch(
+    donationId: string,
+    donorId: string,
+    batch: Conversation[],
+    donorAlias: string
+): Promise<ActionResult<{ inserted: number }>> {
+    console.log(`[DONATION][SERVER] appendConversationBatch: donationId=${donationId} donorId=${donorId} batchSize=${batch.length}`);
+    try {
+        await db.transaction(async (tx) => {
+            for (const convo of batch) {
                 const newConversation: NewConversation = NewConversation.create(
                     donationId,
                     convo,
-                    dataSourceOptions
+                    (await db.query.dataSources.findMany()) as any // reuse as in existing code
                 );
-
-                const insertedConversation = await tx
+                const [{ id: conversationId }] = await tx
                     .insert(conversations)
                     .values(newConversation)
                     .returning({ id: conversations.id });
 
-                const conversationId = insertedConversation[0]?.id;
-
-                if (!conversationId) {
-                    throw new Error("Failed to insert conversation.");
-                }
-
                 const participantIdMap: Record<string, string> = {};
                 const resolveParticipantId = (participant: string): string => {
+                    // Preserve current donorId mapping behavior: donor === donorAlias
                     if (participant === donorAlias) return donorId;
                     if (!participantIdMap[participant]) participantIdMap[participant] = uuidv4();
                     return participantIdMap[participant];
                 };
 
-                // Insert messages
+                // Messages
                 for (const message of convo.messages) {
                     const senderId = resolveParticipantId(message.sender);
                     const newMessage: NewMessage = NewMessage.create(conversationId, {
@@ -78,7 +78,7 @@ export async function addDonation(
                     await tx.insert(messages).values(newMessage);
                 }
 
-                // Insert participants
+                // Participants
                 for (const participant of convo.participants) {
                     const participantId = resolveParticipantId(participant);
                     await tx.insert(conversationParticipants).values({
@@ -88,26 +88,27 @@ export async function addDonation(
                     });
                 }
             }
-
-            // Compute Graph Data
-            const graphDataRecord = produceGraphData(donorAlias, donatedConversations);
-
-            // Store Graph Data
-            await tx.insert(graphData).values({
-                donationId,
-                data: graphDataRecord, // JSON data
-            });
-
-            return { donationId, graphDataRecord };
         });
-
-        return { success: true, donationId: transactionResult.donationId, graphDataRecord: transactionResult.graphDataRecord };
+        return { success: true, data: { inserted: batch.length } };
     } catch (err) {
-        console.error('Error in addDonation:', err);
+        return { success: false, error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err }) };
+    }
+}
 
-        return {
-            success: false,
-            error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err })
-        };
+export async function finalizeDonation(
+    donationId: string,
+    graphDataRecord: Record<string, any>
+): Promise<ActionResult<{ donationId: string }>> {
+    console.log(`[DONATION][SERVER] finalizeDonation: donationId=${donationId}`);
+    try {
+        await db.transaction(async (tx) => {
+            await tx.insert(graphData).values({ donationId, data: graphDataRecord });
+            await tx.update(donations)
+                .set({ status: DonationStatus.Complete })
+                .where(eq(donations.id, donationId));
+        });
+        return { success: true, data: { donationId } };
+    } catch (err) {
+        return { success: false, error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err }) };
     }
 }

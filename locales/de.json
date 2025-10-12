@@ -441,6 +441,7 @@
     },
     "statisticsCard": {
       "title": "Überblick über die gesamte Aktivität",
+      "thousand-separator": ".",
       "total-messages": "Gesamtzahl an Nachrichten",
       "average-per-active-month": "Durchschnitt pro aktiver Monat",
       "active-years-explanation_format": "Insgesamt haben Sie in {years} Jahren an Unterhaltungen teilgenommen (d.h. mindestens eine Nachricht innerhalb des Jahres gesendet oder erhalten)",

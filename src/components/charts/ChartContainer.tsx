@@ -106,7 +106,7 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
 
             // Daily activity times
             case ChartType.DailyActivityHoursChart:
-                return <DailyActivityChart dataSent={data.dailySentHours}/>;
+                return <DailyActivityChart dataSentPerConversation={data.dailySentHoursPerConversation} listOfConversations={data.focusConversations} />;
             case ChartType.DayPartsActivityOverallChart:
                 return (
                     <DayPartsActivityOverallChart

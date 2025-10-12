@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, {useMemo, useState} from "react";
 import { Scatter } from "react-chartjs-2";
 import { Box } from "@mui/material";
 import { useTranslations } from "next-intl";
@@ -13,17 +13,21 @@ import { DailyHourPoint } from "@models/graphData";
 import { CHART_LAYOUT, COMMON_CHART_OPTIONS } from "@components/charts/chartConfig";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 ChartJS.register(Title, Tooltip, Legend, LinearScale, PointElement, TimeScale);
 
+const ALL_CHATS = "ALL_CHATS";
 const Z_SCORE_LIMIT = 1.39;
 const backgroundColor = (a: number): string => `rgba(18, 90, 180, ${a})`;
 
 interface DailyActivityChartProps {
-    dataSent: DailyHourPoint[];
+    dataSentPerConversation: DailyHourPoint[][];
+    listOfConversations: string[];
 }
 
-const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSent }) => {
+const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSentPerConversation, listOfConversations }) => {
     const CHART_NAME = "daily-activity-times-scatter-plot";
     const container_name = `chart-wrapper-${CHART_NAME}`;
     const selection_label_name = `select-label-${CHART_NAME}`;
@@ -33,6 +37,7 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSent }) => 
 
     const labelTexts = useTranslations("feedback.chartLabels");
     const chartTexts = useTranslations("feedback.dailyActivityTimes.dailyActivityHoursChart");
+    const [selectedConversation, setSelectedConversation] = useState<string>(ALL_CHATS);
 
     const preprocessData = (data: DailyHourPoint[]) => {
         const allData = data.map((point) => ({
@@ -48,23 +53,40 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSent }) => 
         }));
     };
 
-    const preparedData = useMemo(() => preprocessData(dataSent), [dataSent]);
+    // For all data available (flatten all conversations)
+    const preparedData = useMemo(() => {
+        const flat: DailyHourPoint[] = dataSentPerConversation.flat();
+        return preprocessData(flat);
+    }, [dataSentPerConversation]);
+
+    // For the selection by dropdown
+    const filteredData = useMemo(() => {
+        if (selectedConversation === ALL_CHATS) return preparedData;
+        const conversationIndex = listOfConversations.indexOf(selectedConversation);
+        const selectedArray = dataSentPerConversation[conversationIndex] || [];
+        return preprocessData(selectedArray);
+    }, [preparedData, selectedConversation, dataSentPerConversation, listOfConversations]);
 
     const { xMin, xMax } = adjustRange(
-        preparedData.map((point) => point.x),
+        filteredData.map((point) => point.x),
         0.05
     );
 
     const data = {
         datasets: [
             {
-                data: preparedData,
+                data: filteredData,
                 backgroundColor: (context: any) => {
                     const value = context.raw?.z || 0;
-                    return backgroundColor(Math.abs((value + Z_SCORE_LIMIT) / (2 * Z_SCORE_LIMIT)));
+                    // Adjust opacity based on number of points (max 1, min 0.25)
+                    const baseOpacity = Math.abs((value + Z_SCORE_LIMIT) / (2 * Z_SCORE_LIMIT));
+                    const pointCount = filteredData.length;
+                    const opacity = pointCount < 200 ? 1 : 0.25;
+                    return backgroundColor(baseOpacity * opacity);
                 },
+                borderWidth: 0,
                 pointStyle: "circle",
-                pointRadius: 6,
+                // pointRadius: 6,
             },
         ],
     };
@@ -112,6 +134,22 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSent }) => 
     return (
         <Box sx={{ display: "flex", flexDirection: "row", gap: 2, alignItems: "center", width: "100%" }}>
             <Box sx={{ flex: 1, position: "relative", width: "100%" }}>
+
+                <Select
+                    value={selectedConversation}
+                    onChange={(e) => setSelectedConversation(e.target.value)}
+                    size="small"
+                    variant="outlined"
+                    sx={{ mb: -2, pb: 0, fontSize: CHART_LAYOUT.labelFontSize }}
+                >
+                    <MenuItem value={ALL_CHATS} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>{labelTexts("overallData")}</MenuItem>
+                    {listOfConversations.map((conversation) => (
+                        <MenuItem sx={{ fontSize: CHART_LAYOUT.labelFontSize }} key={conversation} value={conversation}>
+                            {conversation}
+                        </MenuItem>
+                    ))}
+                </Select>
+
                 <Box id={container_name} p={CHART_LAYOUT.paddingX} sx={{ mt: -2, pt: 0 }}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                         <Typography id={selection_label_name} variant="body2" align="right">

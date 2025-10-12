@@ -8,7 +8,8 @@ import {
     produceDailyCountsPerConversation,
     produceMessagesSentReceivedPerType,
     produceSlidingWindowMean,
-    produceWordCountDailyHours
+    produceWordCountDailyHours,
+    aggregateDailyHours
 } from "@services/charts/timeAggregates";
 import produceBasicStatistics from "@services/charts/produceBasicStatistics";
 import {calculateMinMaxDates} from "@services/rangeFiltering";
@@ -51,7 +52,8 @@ export default function produceGraphData(donorId: string, allConversations: Conv
                     slidingWindowMeanDailyWords = produceSlidingWindowMean(dailyWords, completeDaysList);
                     slidingWindowMeanDailySeconds = produceSlidingWindowMean(dailySeconds, completeDaysList);
                 }
-                const dailySentHours = produceWordCountDailyHours(donorId, conversations, true);
+                const dailySentHoursPerConversation = conversations.map((c) => produceWordCountDailyHours(donorId, [c], true));
+                const dailySentHours = aggregateDailyHours(dailySentHoursPerConversation);
                 const dailyReceivedHours = produceWordCountDailyHours(donorId, conversations, false);
 
                 const answerTimes = conversations.flatMap((conversation) =>
@@ -99,6 +101,7 @@ export default function produceGraphData(donorId: string, allConversations: Conv
                     slidingWindowMeanDailySeconds,
                     dailyWordsPerConversation,
                     dailySentHours,
+                    dailySentHoursPerConversation,
                     dailyReceivedHours,
                     answerTimes,
                     basicStatistics,

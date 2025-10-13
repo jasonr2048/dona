@@ -21,7 +21,7 @@ export function validateMinImportantChatsForDonation(conversations: Conversation
 
 export function validateMinTimePeriodForDonation(conversations: Conversation[]): boolean {
     const { minDate, maxDate } = calculateMinMaxDates(conversations);
-    console.log(`[VALIDATION] Min Date: ${minDate} -> Max Date: ${maxDate}`);
+    console.log(`[VALIDATION] Date Range: ${minDate?.toISOString()} - ${maxDate?.toISOString()}`);
     if (!minDate || !maxDate) return false;
 
     const diffTime = Math.abs(maxDate.getTime() - minDate.getTime());

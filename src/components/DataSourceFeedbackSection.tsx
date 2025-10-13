@@ -19,7 +19,7 @@ type SectionName = "responseTimes" | "dailyActivityTimes" | "interactionIntensit
 
 export default function DataSourceFeedbackSection({ dataSourceValue, graphData }: { dataSourceValue: DataSourceValue; graphData: GraphData }) {
     const showDetailedAudioFeedback = [DataSourceValue.Facebook, DataSourceValue.Instagram].includes(dataSourceValue);
-    console.log("DataSourceFeedbackSection graphData", graphData);
+    // console.log("[FEEDBACK][CLIENT] Full graph data:", graphData);  # For development only
     let t = useTranslations("feedback");
     const ii = useTranslations("feedback.interactionIntensity");
     const dat = useTranslations("feedback.dailyActivityTimes");

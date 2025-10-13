@@ -3,7 +3,7 @@
 import {db} from "@/db/drizzle";
 import {v4 as uuidv4} from 'uuid';
 import {conversationParticipants, conversations, donations, graphData, messages, messagesAudio} from "@/db/schema";
-import {NewConversation, NewMessage} from "@models/persisted";
+import {NewConversation, NewMessage, NewMessageAudio} from "@models/persisted";
 import {Conversation, DonationStatus} from "@models/processed";
 import {DonationErrors, DonationProcessingError, SerializedDonationError} from "@services/errors";
 import { eq } from 'drizzle-orm';
@@ -111,7 +111,7 @@ export async function appendConversationBatch(
                     return participantIdMap[participant];
                 };
 
-                // text messages
+                // Text messages
                 for (const message of convo.messages || []) {
                     const senderId = resolveParticipantId(message.sender);
                     const newMessage = NewMessage.create(conversationId, {
@@ -121,19 +121,17 @@ export async function appendConversationBatch(
                     messagesToInsert.push(newMessage);
                 }
 
-                // audio messages (map to messages_audio shape)
+                // Audio messages
                 for (const audio of convo.messagesAudio || []) {
                     const senderId = resolveParticipantId(audio.sender);
-                    audioToInsert.push({
-                        id: uuidv4(),
-                        senderId,
-                        dateTime: new Date(audio.timestamp), // ensure timestamp type matches schema
-                        lengthSeconds: audio.lengthSeconds ?? null,
-                        conversationId,
+                    const newAudio = NewMessageAudio.create(conversationId, {
+                        ...audio,
+                        sender: senderId,
                     });
+                    audioToInsert.push(newAudio);
                 }
 
-                // participants
+                // Participants
                 for (const participant of convo.participants || []) {
                     const participantId = resolveParticipantId(participant);
                     participantsToInsert.push({

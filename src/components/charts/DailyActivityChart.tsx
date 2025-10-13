@@ -30,7 +30,6 @@ interface DailyActivityChartProps {
 const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSentPerConversation, listOfConversations }) => {
     const CHART_NAME = "daily-activity-times-scatter-plot";
     const container_name = `chart-wrapper-${CHART_NAME}`;
-    const selection_label_name = `select-label-${CHART_NAME}`;
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -80,13 +79,11 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSentPerConv
                     const value = context.raw?.z || 0;
                     // Adjust opacity based on number of points (max 1, min 0.25)
                     const baseOpacity = Math.abs((value + Z_SCORE_LIMIT) / (2 * Z_SCORE_LIMIT));
-                    const pointCount = filteredData.length;
-                    const opacity = pointCount < 200 ? 1 : 0.25;
+                    const opacity = filteredData.length < 200 ? 1 : 0.25;
                     return backgroundColor(baseOpacity * opacity);
                 },
                 borderWidth: 0,
                 pointStyle: "circle",
-                // pointRadius: 6,
             },
         ],
     };
@@ -152,10 +149,14 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSentPerConv
 
                 <Box id={container_name} p={CHART_LAYOUT.paddingX} sx={{ mt: -2, pt: 0 }}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                        <Typography id={selection_label_name} variant="body2" align="right">
-                            <b>{labelTexts("overallData")}</b>
+                        <Typography variant="body2" align="right" fontWeight="bold" mt={1} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
+                            {selectedConversation === ALL_CHATS ? labelTexts("overallData") : selectedConversation}
                         </Typography>
-                        <DownloadButtons chartId={container_name} fileNamePrefix={CHART_NAME} currentLabel={labelTexts("overallData")} labelToShowId={selection_label_name} />
+                        <DownloadButtons
+                            chartId={container_name}
+                            fileNamePrefix={CHART_NAME}
+                            currentLabel={selectedConversation}
+                        />
                     </Box>
 
                     <Box sx={{ display: "flex", flexDirection: "row", width: "100%", height: CHART_LAYOUT.responsiveChartHeight, ml: -1.5 }}>

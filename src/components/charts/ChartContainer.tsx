@@ -115,7 +115,7 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
                     />
                 );
             case ChartType.AnimatedDayPartsActivityChart:
-                return <AnimatedDayPartsActivityChart dailySentHours={data.dailySentHours}/>;
+                return <AnimatedDayPartsActivityChart dataSentPerConversation={data.dailySentHoursPerConversation} listOfConversations={data.focusConversations} />;
 
             default:
                 return (

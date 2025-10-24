@@ -43,6 +43,10 @@ export default function DataDonationPage() {
     const [validated, setValidated] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+    // New state for batch progress display
+    const [totalBatches, setTotalBatches] = useState<number>(0);
+    const [currentBatchIndex, setCurrentBatchIndex] = useState<number | null>(null);
+
     useEffect(() => {
         if (!externalDonorId) {
             loadExternalDonorIdFromCookie();
@@ -79,7 +83,7 @@ export default function DataDonationPage() {
         });
 
         if (allConversations.length > 0) {
-            console.log(`[DONATION][CLIENT] Starting donation with ${allConversations.length} conversations.`);
+            console.log(`[DONATION] Starting donation with ${allConversations.length} conversations.`);
             try {
                 // 1) Start donation and get IDs
                 const start = await startDonation(externalDonorId);
@@ -87,11 +91,13 @@ export default function DataDonationPage() {
                 const { donationId, donorId } = start.data;
 
                 // 2) Append in batches
-                const totalBatches = Math.ceil(allConversations.length / CONVERSATION_BATCH_SIZE);
+                const total = Math.ceil(allConversations.length / CONVERSATION_BATCH_SIZE);
+                setTotalBatches(total); // set total batches for UI
                 for (let i = 0; i < allConversations.length; i += CONVERSATION_BATCH_SIZE) {
                     const batchNumber = Math.floor(i / CONVERSATION_BATCH_SIZE) + 1;
+                    setCurrentBatchIndex(batchNumber); // update current batch for UI
                     const batch = allConversations.slice(i, i + CONVERSATION_BATCH_SIZE);
-                    console.log(`[DONATION][CLIENT] Uploading batch ${batchNumber}/${totalBatches} (size=${batch.length})`);
+                    console.log(`[DONATION] Uploading batch ${batchNumber}/${total} (size=${batch.length})`);
                     const res = await appendConversationBatch(donationId, donorId, batch, aliasConfig.donorAlias);
                     if (!res.success) throw res.error;
                 }
@@ -104,11 +110,16 @@ export default function DataDonationPage() {
                 setDonationData(fin.data.donationId, graphDataRecord);
                 router.push("/donation-feedback");
             } catch (err) {
-                console.log(`[DONATION][CLIENT] Error during donation:`, err);
+                console.log(`[DONATION] Error during donation:`, err);
                 setErrorMessage(getErrorMessage(donation.t, err as any));
             } finally {
+                // clear batch UI state and loading
+                setCurrentBatchIndex(null);
+                setTotalBatches(0);
                 setLoading(false);
             }
+        } else {
+            setLoading(false);
         }
     };
 
@@ -125,7 +136,7 @@ export default function DataDonationPage() {
                         height: "100%",
                         backgroundColor: "rgba(255, 255, 255, 0.8)",
                         zIndex: 9999,
-                        pointerEvents: "none", // Prevent interactions
+                        pointerEvents: "none",
                     }}
                 />
             )}
@@ -147,7 +158,16 @@ export default function DataDonationPage() {
                 {loading && (
                     <Stack spacing={2} sx={{ zIndex: 10000, alignItems: "center" }}>
                         <CircularProgress color="inherit" />
-                        <Alert severity="info">{donation.t("sending-wait")}</Alert>
+                        <Alert severity="info">
+                            {donation.t("sending-wait")}
+                            {/* Show batch progress only when there are multiple batches */}
+                            {totalBatches > 1 && currentBatchIndex != null && (
+                                <Typography variant="body2" sx={{ mt: 1 }}>
+                                    {donation.t("sending-batch-progress", {current: currentBatchIndex, total: totalBatches})}
+                                </Typography>
+                            )}
+                        </Alert>
+
                     </Stack>
                 )}
 

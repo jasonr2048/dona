@@ -42,10 +42,11 @@ export async function startDonation(
     } catch (err) {
         console.error(`[DONATION][donorId=${donorId}] ❌ startDonation:`, {
             error: err,
-            name: (err as any)?.name,
-            message: (err as any)?.message,
             stack: (err as any)?.stack,
         });
+        if ((err as any)?.constraint === 'donations_external_donor_id_unique') {
+            return { success: false, error: DonationProcessingError(DonationErrors.DuplicateDonorId, { originalError: err }) };
+        }
         return {success: false, error: DonationProcessingError(DonationErrors.TransactionFailed, {originalError: err})};
     }
 }
@@ -191,8 +192,6 @@ export async function appendConversationBatch(
     } catch (err) {
         console.error(`[DONATION][donorId=${donorId}][donationId=${donationId}] ❌ appendConversationBatch:`, {
             error: err,
-            name: (err as any)?.name,
-            message: (err as any)?.message,
             stack: (err as any)?.stack,
         });
         return { success: false, error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err }) };
@@ -218,8 +217,6 @@ export async function finalizeDonation(
     } catch (err) {
         console.error(`[DONATION][donationId=${donationId}] ❌ finalizeDonation:`, {
             error: err,
-            name: (err as any)?.name,
-            message: (err as any)?.message,
             stack: (err as any)?.stack,
         });
         return { success: false, error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err }) };

@@ -3,12 +3,10 @@ import {validateEnv} from "./src/services/validateEnv.mjs";
 
 const env = validateEnv();
 const devOrigins = env.NEXT_ALLOWED_DEV_ORIGINS?.split(',') ?? [
-    'https://127.0.0.1:9012',
-    'https://localhost:9012',
-    'https://127.0.0.1:3000',
-    'https://localhost:3000',
-    'https://127.0.0.1',
-    'https://localhost',
+    '127.0.0.1',
+    '127.0.0.1:3000',
+    '127.0.0.1:9012',
+    'localhost:3000',
 ];
 const withNextIntl = createNextIntlPlugin();
 

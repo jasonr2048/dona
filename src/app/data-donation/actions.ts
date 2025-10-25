@@ -3,16 +3,14 @@
 import {db} from "@/db/drizzle";
 import {v4 as uuidv4} from 'uuid';
 import {conversationParticipants, conversations, donations, graphData, messages, messagesAudio} from "@/db/schema";
-import {NewConversation, NewMessage} from "@models/persisted";
+import {NewConversation, NewMessage, NewMessageAudio} from "@models/persisted";
 import {Conversation, DonationStatus} from "@models/processed";
 import {DonationErrors, DonationProcessingError, SerializedDonationError} from "@services/errors";
-import { eq } from 'drizzle-orm';
+import {eq} from 'drizzle-orm';
+import {DbClient} from "@/db/types";
 
-
-function generateExternalDonorId(): string {
-    return Math.random().toString(36).substring(2, 8);
-}
-
+const MAX_MESSAGES_PER_TX = 10000; // max messages (text + audio) per DB transaction
+const BULK_CHUNK = 2000; // chunk size for large bulk inserts
 
 interface ActionResult<T = unknown> {
     success: boolean;
@@ -20,14 +18,19 @@ interface ActionResult<T = unknown> {
     error?: SerializedDonationError;
 }
 
+function generateExternalDonorId(): string {
+    return Math.random().toString(36).substring(2, 8);
+}
+
 export async function startDonation(
-    externalDonorId?: string
+    externalDonorId?: string,
+    dbClient: DbClient = db
 ): Promise<ActionResult<{ donationId: string; donorId: string }>> {
     const donorId = uuidv4();
     const externalIdToUse = externalDonorId || generateExternalDonorId();
     console.log(`[DONATION][donorId=${donorId}] startDonation: externalDonorId=${externalIdToUse}`);
     try {
-        const inserted = await db.insert(donations).values({
+        const inserted = await dbClient.insert(donations).values({
             donorId,
             externalDonorId: externalIdToUse,
             status: DonationStatus.Pending,
@@ -47,20 +50,17 @@ export async function startDonation(
     }
 }
 
-// typescript
 export async function appendConversationBatch(
     donationId: string,
     donorId: string,
     batch: Conversation[],
-    donorAlias: string
+    donorAlias: string,
+    dbClient: DbClient = db
 ): Promise<ActionResult<{ inserted: number }>> {
     console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`);
 
-    const MAX_MESSAGES_PER_TX = 10000; // max messages (text + audio) per DB transaction
-    const BULK_CHUNK = 2000; // chunk size for large bulk inserts
-
     try {
-        const dataSources = (await db.query.dataSources.findMany()) as any;
+        const dataSources = (await dbClient.query.dataSources.findMany()) as any;
 
         // Build sub-batches so total (text + audio) messages per sub-batch <= MAX_MESSAGES_PER_TX
         const subBatches: Conversation[][] = [];
@@ -89,7 +89,7 @@ export async function appendConversationBatch(
             const audioCount = sub.reduce((acc, c) => acc + ((c.messagesAudio?.length) ?? 0), 0);
 
             // 1) Insert conversations in one transaction and get IDs (so messages can be inserted in later txs)
-            const insertedConvos = await db.transaction(async (tx) => {
+            const insertedConvos = await dbClient.transaction(async (tx) => {
                 const newConvos = sub.map((convo) => NewConversation.create(donationId, convo, dataSources));
                 return tx.insert(conversations).values(newConvos).returning({ id: conversations.id });
             });
@@ -111,7 +111,7 @@ export async function appendConversationBatch(
                     return participantIdMap[participant];
                 };
 
-                // text messages
+                // Text messages
                 for (const message of convo.messages || []) {
                     const senderId = resolveParticipantId(message.sender);
                     const newMessage = NewMessage.create(conversationId, {
@@ -121,19 +121,17 @@ export async function appendConversationBatch(
                     messagesToInsert.push(newMessage);
                 }
 
-                // audio messages (map to messages_audio shape)
+                // Audio messages
                 for (const audio of convo.messagesAudio || []) {
                     const senderId = resolveParticipantId(audio.sender);
-                    audioToInsert.push({
-                        id: uuidv4(),
-                        senderId,
-                        dateTime: new Date(audio.timestamp), // ensure timestamp type matches schema
-                        lengthSeconds: audio.lengthSeconds ?? null,
-                        conversationId,
+                    const newAudio = NewMessageAudio.create(conversationId, {
+                        ...audio,
+                        sender: senderId,
                     });
+                    audioToInsert.push(newAudio);
                 }
 
-                // participants
+                // Participants
                 for (const participant of convo.participants || []) {
                     const participantId = resolveParticipantId(participant);
                     participantsToInsert.push({
@@ -149,7 +147,7 @@ export async function appendConversationBatch(
             if (messagesToInsert.length > 0) {
                 for (let start = 0; start < messagesToInsert.length; start += MAX_MESSAGES_PER_TX) {
                     const window = messagesToInsert.slice(start, start + MAX_MESSAGES_PER_TX);
-                    await db.transaction(async (tx) => {
+                    await dbClient.transaction(async (tx) => {
                         for (let j = 0; j < window.length; j += BULK_CHUNK) {
                             await tx.insert(messages).values(window.slice(j, j + BULK_CHUNK));
                         }
@@ -163,7 +161,7 @@ export async function appendConversationBatch(
             if (audioToInsert.length > 0) {
                 for (let start = 0; start < audioToInsert.length; start += MAX_MESSAGES_PER_TX) {
                     const window = audioToInsert.slice(start, start + MAX_MESSAGES_PER_TX);
-                    await db.transaction(async (tx) => {
+                    await dbClient.transaction(async (tx) => {
                         for (let j = 0; j < window.length; j += BULK_CHUNK) {
                             await tx.insert(messagesAudio).values(window.slice(j, j + BULK_CHUNK));
                         }
@@ -177,7 +175,7 @@ export async function appendConversationBatch(
             if (participantsToInsert.length > 0) {
                 for (let i = 0; i < participantsToInsert.length; i += BULK_CHUNK) {
                     const chunk = participantsToInsert.slice(i, i + BULK_CHUNK);
-                    await db.insert(conversationParticipants).values(chunk);
+                    await dbClient.insert(conversationParticipants).values(chunk);
                     insertedParticipants += chunk.length;
                 }
             }
@@ -204,11 +202,12 @@ export async function appendConversationBatch(
 
 export async function finalizeDonation(
     donationId: string,
-    graphDataRecord: Record<string, any>
+    graphDataRecord: Record<string, any>,
+    dbClient: DbClient = db
 ): Promise<ActionResult<{ donationId: string }>> {
     console.log(`[DONATION][donationId=${donationId}] finalizeDonation`);
     try {
-        await db.transaction(async (tx) => {
+        await dbClient.transaction(async (tx) => {
             await tx.insert(graphData).values({ donationId, data: graphDataRecord });
             await tx.update(donations)
                 .set({ status: DonationStatus.Complete })

@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import {Conversation, DataSourceValue} from "@models/processed";
-import { startDonation, appendConversationBatch, finalizeDonation } from "./actions";
+import {appendConversationBatch, finalizeDonation, startDonation} from "./actions";
 import produceGraphData from "@/services/charts/produceGraphData";
 import {useAliasConfig} from "@/services/parsing/shared/aliasConfig";
 import MultiFileSelect from "@/components/MultiFileSelect";

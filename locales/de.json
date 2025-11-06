@@ -324,6 +324,7 @@
     },
     "chat-selection": "Sie können bis zu {max_num} Chats auswählen, um gezieltes Feedback zu erhalten, aber Sie <b>müssen</b> mindestens {min_num} auswählen, damit das Ihnen gegebene Feedback nicht als Analyse der persönlichen Daten Ihrer Kontakte betrachtet werden kann. Derzeit sind die {default_num} mit der höchsten Wortzahl in den Nachrichten ausgewählt.",
     "sending-wait": "Das Senden der Daten kann ein paar Minuten dauern. Bitte warten Sie und lassen Sie diese Seite geöffnet. Danke!",
+    "sending-batch-progress": "Stapel {current} von {total} wird hochgeladen...",
     "alias-not-required": "Nicht notwendig",
     "alias": "Nutzername",
     "please-insert-alias": "Bitte geben Sie Ihren Nutzernamen ein, um das Hochladen zu ermöglichen",

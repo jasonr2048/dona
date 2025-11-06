@@ -2,7 +2,12 @@ import createNextIntlPlugin from "next-intl/plugin";
 import {validateEnv} from "./src/services/validateEnv.mjs";
 
 const env = validateEnv();
-
+const devOrigins = env.NEXT_ALLOWED_DEV_ORIGINS?.split(',') ?? [
+    '127.0.0.1',
+    '127.0.0.1:3000',
+    '127.0.0.1:9012',
+    'localhost:3000',
+];
 const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
@@ -16,10 +21,14 @@ const nextConfig = {
         NEXT_PUBLIC_FEEDBACK_SURVEY_ENABLED: env.FEEDBACK_SURVEY_ENABLED,
         NEXT_PUBLIC_FEEDBACK_SURVEY_LINK: env.FEEDBACK_SURVEY_LINK
     },
+    allowedDevOrigins: devOrigins,
     experimental: {
         serverActions: {
-            bodySizeLimit: 50 * 1024 * 1024, // Optional limit (50MB)
-            allowedOrigins: ['nyu.dona.tf.uni-bielefeld.de', '127.0.0.1:9012'],
+            bodySizeLimit: '500mb',
+            allowedOrigins: [
+                ...devOrigins,
+                'https://nyu.dona.tf.uni-bielefeld.de'
+            ]
         }
     },
     webpack: (config) => {

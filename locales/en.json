@@ -328,6 +328,7 @@
     },
     "chat-selection": "You can select up to {max_num} chats to receive focused feedback on, but you <b>must</b> select at least {min_num}, so that the feedback given to you cannot be considered the analysis of your contacts' personal data. The ones currently selected are the {default_num} with the highest word count in messages.",
     "sending-wait": "Sending the data could take a few minutes. Please wait and keep this website open. Thanks!",
+    "sending-batch-progress": "Uploading batch {current} of {total}...",
     "alias-not-required": "Not required",
     "alias": "Username",
     "please-insert-alias": "Please enter your username to enable anonymization.",

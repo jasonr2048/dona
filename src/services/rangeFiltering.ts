@@ -4,22 +4,31 @@ import {CONFIG} from "@/config";
 
 export type NullableRange = [Date | null, Date | null];
 
-export function calculateMinMaxDates(conversations: Conversation[], textOnly: boolean = false): { minDate: Date | null; maxDate: Date | null } {
-    const timestamps = conversations.flatMap(conversation =>
-        (
-            textOnly ?
-                conversation.messages
-                : [...conversation.messages, ...conversation.messagesAudio]
-        ).map(message => message.timestamp)
-    );
+export function calculateMinMaxDates(
+    conversations: Conversation[],
+    textOnly: boolean = false
+): { minDate: Date | null; maxDate: Date | null } {
+    let min = Infinity;
+    let max = -Infinity;
 
-    if (timestamps.length === 0) return { minDate: null, maxDate: null };
+    for (const conversation of conversations) {
+        const msgs = textOnly
+            ? conversation.messages
+            : [...conversation.messages, ...conversation.messagesAudio];
 
-    return {
-        minDate: new Date(Math.min(...timestamps)),
-        maxDate: new Date(Math.max(...timestamps)),
-    };
-}
+        for (const msg of msgs) {
+            const t = msg.timestamp;
+            if (t < min) min = t;
+            if (t > max) max = t;
+        }
+    }
+
+    if (!Number.isFinite(min) || !Number.isFinite(max)) {
+        return { minDate: null, maxDate: null };
+    }
+
+    return { minDate: new Date(min), maxDate: new Date(max) };
+};
 
 export const filterDataByRange = (conversations: Conversation[], range: NullableRange): Conversation[] => {
     if (range[0] == null || range[1] == null) return conversations;

@@ -15,7 +15,8 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import {Conversation, DataSourceValue} from "@models/processed";
-import {addDonation} from "./actions";
+import {appendConversationBatch, finalizeDonation, startDonation} from "./actions";
+import produceGraphData from "@/services/charts/produceGraphData";
 import {useAliasConfig} from "@/services/parsing/shared/aliasConfig";
 import MultiFileSelect from "@/components/MultiFileSelect";
 import {useDonation} from "@/context/DonationContext";
@@ -23,6 +24,8 @@ import {useTranslations} from "next-intl";
 import {MainTitle, RichText} from "@/styles/StyledTypography";
 import {getErrorMessage} from "@services/errors";
 import {FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon} from "@components/CustomIcon";
+
+const CONVERSATION_BATCH_SIZE = 250;
 
 type ConversationsBySource = Record<DataSourceValue, Conversation[]>;
 type SelectedChatsBySource = Record<DataSourceValue, Set<string>>;
@@ -39,6 +42,10 @@ export default function DataDonationPage() {
     const [loading, setLoading] = useState(false);
     const [validated, setValidated] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    // New state for batch progress display
+    const [totalBatches, setTotalBatches] = useState<number>(0);
+    const [currentBatchIndex, setCurrentBatchIndex] = useState<number | null>(null);
 
     useEffect(() => {
         if (!externalDonorId) {
@@ -76,19 +83,43 @@ export default function DataDonationPage() {
         });
 
         if (allConversations.length > 0) {
+            console.log(`[DONATION] Starting donation with ${allConversations.length} conversations.`);
             try {
-                const result = await addDonation(allConversations, aliasConfig.donorAlias, externalDonorId);
-                if (result.success && result.donationId && result.graphDataRecord) {
-                    setDonationData(result.donationId, result.graphDataRecord);
-                    router.push("/donation-feedback");
-                } else {
-                    setErrorMessage(getErrorMessage(donation.t, result.error));
+                // 1) Start donation and get IDs
+                const start = await startDonation(externalDonorId);
+                if (!start.success || !start.data) throw start.error;
+                const { donationId, donorId } = start.data;
+
+                // 2) Append in batches
+                const total = Math.ceil(allConversations.length / CONVERSATION_BATCH_SIZE);
+                setTotalBatches(total); // set total batches for UI
+                for (let i = 0; i < allConversations.length; i += CONVERSATION_BATCH_SIZE) {
+                    const batchNumber = Math.floor(i / CONVERSATION_BATCH_SIZE) + 1;
+                    setCurrentBatchIndex(batchNumber); // update current batch for UI
+                    const batch = allConversations.slice(i, i + CONVERSATION_BATCH_SIZE);
+                    console.log(`[DONATION] Uploading batch ${batchNumber}/${total} (size=${batch.length})`);
+                    const res = await appendConversationBatch(donationId, donorId, batch, aliasConfig.donorAlias);
+                    if (!res.success) throw res.error;
                 }
+
+                // 3) Compute graph data client-side and finalize
+                const graphDataRecord = produceGraphData(aliasConfig.donorAlias, allConversations);
+                const fin = await finalizeDonation(donationId, graphDataRecord as any);
+                if (!fin.success || !fin.data) throw fin.error;
+
+                setDonationData(fin.data.donationId, graphDataRecord);
+                router.push("/donation-feedback");
             } catch (err) {
-                setErrorMessage(getErrorMessage(donation.t, err));
+                console.log(`[DONATION] Error during donation:`, err);
+                setErrorMessage(getErrorMessage(donation.t, err as any));
             } finally {
+                // clear batch UI state and loading
+                setCurrentBatchIndex(null);
+                setTotalBatches(0);
                 setLoading(false);
             }
+        } else {
+            setLoading(false);
         }
     };
 
@@ -105,7 +136,7 @@ export default function DataDonationPage() {
                         height: "100%",
                         backgroundColor: "rgba(255, 255, 255, 0.8)",
                         zIndex: 9999,
-                        pointerEvents: "none", // Prevent interactions
+                        pointerEvents: "none",
                     }}
                 />
             )}
@@ -127,7 +158,16 @@ export default function DataDonationPage() {
                 {loading && (
                     <Stack spacing={2} sx={{ zIndex: 10000, alignItems: "center" }}>
                         <CircularProgress color="inherit" />
-                        <Alert severity="info">{donation.t("sending-wait")}</Alert>
+                        <Alert severity="info">
+                            {donation.t("sending-wait")}
+                            {/* Show batch progress only when there are multiple batches */}
+                            {totalBatches > 1 && currentBatchIndex != null && (
+                                <Typography variant="body2" sx={{ mt: 1 }}>
+                                    {donation.t("sending-batch-progress", {current: currentBatchIndex, total: totalBatches})}
+                                </Typography>
+                            )}
+                        </Alert>
+
                     </Stack>
                 )}
 

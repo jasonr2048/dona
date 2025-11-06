@@ -1,0 +1,356 @@
+{
+  "id": "eab2cee2-0587-4f4a-b00d-a1bc1beebc0a",
+  "prevId": "9dd066f0-c323-4e3d-a889-a90a4e829616",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.conversation_participants": {
+      "name": "conversation_participants",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "conversation_id": {
+          "name": "conversation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "participant_id": {
+          "name": "participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "participant_pseudonym": {
+          "name": "participant_pseudonym",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conversation_participants_conversation_id_conversations_id_fk": {
+          "name": "conversation_participants_conversation_id_conversations_id_fk",
+          "tableFrom": "conversation_participants",
+          "columnsFrom": [
+            "conversation_id"
+          ],
+          "tableTo": "conversations",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.conversations": {
+      "name": "conversations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "is_group_conversation": {
+          "name": "is_group_conversation",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "data_source_id": {
+          "name": "data_source_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "donation_id": {
+          "name": "donation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "conversation_pseudonym": {
+          "name": "conversation_pseudonym",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conversations_data_source_id_data_sources_id_fk": {
+          "name": "conversations_data_source_id_data_sources_id_fk",
+          "tableFrom": "conversations",
+          "columnsFrom": [
+            "data_source_id"
+          ],
+          "tableTo": "data_sources",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "conversations_donation_id_donations_id_fk": {
+          "name": "conversations_donation_id_donations_id_fk",
+          "tableFrom": "conversations",
+          "columnsFrom": [
+            "donation_id"
+          ],
+          "tableTo": "donations",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.data_sources": {
+      "name": "data_sources",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "name": "data_sources_id_seq",
+            "increment": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "startWith": "1",
+            "cache": "1",
+            "cycle": false,
+            "schema": "public",
+            "type": "byDefault"
+          }
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.donations": {
+      "name": "donations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "external_donor_id": {
+          "name": "external_donor_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "donor_id": {
+          "name": "donor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "donation_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "donations_external_donor_id_unique": {
+          "name": "donations_external_donor_id_unique",
+          "columns": [
+            "external_donor_id"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.messages": {
+      "name": "messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "sender_id": {
+          "name": "sender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "datetime": {
+          "name": "datetime",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "word_count": {
+          "name": "word_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "conversation_id": {
+          "name": "conversation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "messages_conversation_id_conversations_id_fk": {
+          "name": "messages_conversation_id_conversations_id_fk",
+          "tableFrom": "messages",
+          "columnsFrom": [
+            "conversation_id"
+          ],
+          "tableTo": "conversations",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.messages_audio": {
+      "name": "messages_audio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "sender_id": {
+          "name": "sender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "datetime": {
+          "name": "datetime",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "length_seconds": {
+          "name": "length_seconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conversation_id": {
+          "name": "conversation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "messages_audio_conversation_id_conversations_id_fk": {
+          "name": "messages_audio_conversation_id_conversations_id_fk",
+          "tableFrom": "messages_audio",
+          "columnsFrom": [
+            "conversation_id"
+          ],
+          "tableTo": "conversations",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.donation_status": {
+      "name": "donation_status",
+      "schema": "public",
+      "values": [
+        "notstarted",
+        "pending",
+        "complete",
+        "deleted"
+      ]
+    }
+  },
+  "schemas": {},
+  "views": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -8,7 +8,6 @@ interface DownloadButtonsProps {
     chartId: string;
     fileNamePrefix: string;
     currentLabel?: string;
-    labelToShowId?: string;
     color?: string;
     labelsBelow?: boolean;
 }

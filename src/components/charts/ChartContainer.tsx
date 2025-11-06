@@ -106,7 +106,7 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
 
             // Daily activity times
             case ChartType.DailyActivityHoursChart:
-                return <DailyActivityChart dataSent={data.dailySentHours}/>;
+                return <DailyActivityChart dataSentPerConversation={data.dailySentHoursPerConversation} listOfConversations={data.focusConversations} />;
             case ChartType.DayPartsActivityOverallChart:
                 return (
                     <DayPartsActivityOverallChart
@@ -115,7 +115,7 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
                     />
                 );
             case ChartType.AnimatedDayPartsActivityChart:
-                return <AnimatedDayPartsActivityChart dailySentHours={data.dailySentHours}/>;
+                return <AnimatedDayPartsActivityChart dataSentPerConversation={data.dailySentHoursPerConversation} listOfConversations={data.focusConversations} />;
 
             default:
                 return (

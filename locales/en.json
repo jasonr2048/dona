@@ -445,6 +445,7 @@
     },
     "statisticsCard": {
       "title": "Overview of all Activity",
+      "thousand-separator": ",",
       "total-messages": "Total messages",
       "average-per-active-month": "Average messages per active month",
       "active-years-explanation_format": "In total, there are {years} years in which you participated in conversation (i.e. you sent or received at least one message during the year)",

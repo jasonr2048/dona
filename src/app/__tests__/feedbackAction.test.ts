@@ -19,6 +19,7 @@ const mockGraphData: Record<string, GraphData> = {
         slidingWindowMeanDailySeconds: [],
         dailySentHours: [],
         dailyReceivedHours: [],
+        dailySentHoursPerConversation: [],
         answerTimes: [],
         audioLengthDistribution: { sent: {}, received: {} },
         basicStatistics: {

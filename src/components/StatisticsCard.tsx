@@ -15,10 +15,15 @@ const formatPercentage = (value: number, total: number): string => {
 
 export default function StatisticsCard({ stats }: { stats: BasicStatistics }) {
     const t = useTranslations("feedback.statisticsCard");
+    const thousandSeparator = t("thousand-separator");
+
+    const formatWithSeparator = (num: number): string => {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+    };
 
     const renderStatBox = (value: number, label: string, caption: string, bgcolor: string) => (
         <Box sx={{ textAlign: "center", bgcolor, p: 2, borderRadius: 1 }}>
-            <Typography variant="h6">{value}</Typography>
+            <Typography variant="h6">{formatWithSeparator(value)}</Typography>
             <Typography variant="body2">{label.toUpperCase()}</Typography>
             <Typography variant="caption">{caption}</Typography>
         </Box>
@@ -26,10 +31,10 @@ export default function StatisticsCard({ stats }: { stats: BasicStatistics }) {
     const renderTypeBreakdownBox = (valueText: number, valueAudio: number, valueTotal: number, bgcolor: string) => (
         <Box sx={{ textAlign: "center", bgcolor, p: 2, borderRadius: 1 }}>
             <Typography variant="body2">
-                ✏️ {valueText} {t("text")} ({formatPercentage(valueText, valueTotal)})
+                ✏️ {formatWithSeparator(valueText)} {t("text")} ({formatPercentage(valueText, valueTotal)})
             </Typography>
             <Typography variant="body2">
-                🎙️ {valueAudio} {t("audio")} ({formatPercentage(valueAudio, valueTotal)})
+                🎙️ {formatWithSeparator(valueAudio)} {t("audio")} ({formatPercentage(valueAudio, valueTotal)})
             </Typography>
         </Box>
     );

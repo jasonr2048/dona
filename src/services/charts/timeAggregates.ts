@@ -212,6 +212,28 @@ export const produceWordCountDailyHours = (
 }
 
 /**
+ * Aggregates DailyHourPoint entries across multiple conversations by summing wordCount for identical timestamps.
+ * @param perConversationHours - Array of DailyHourPoint arrays, one per conversation.
+ * @returns Aggregated DailyHourPoint array.
+ */
+export const aggregateDailyHours = (
+    perConversationHours: DailyHourPoint[][]
+): DailyHourPoint[] => {
+    const hourlyMap = new Map<string, number>();
+
+    perConversationHours.flat().forEach(({ year, month, date, hour, minute, wordCount }) => {
+        const key = `${year}-${month}-${date}-${hour}-${minute}`;
+        hourlyMap.set(key, (hourlyMap.get(key) || 0) + wordCount);
+    });
+
+    return Array.from(hourlyMap.entries()).map(([key, wordCount]) => {
+        const [year, month, date, hour, minute] = key.split("-").map(Number);
+        const epochSeconds = Math.floor(new Date(year, month - 1, date, hour, minute).getTime() / 1000);
+        return { year, month, date, hour, minute, wordCount, epochSeconds };
+    });
+};
+
+/**
  * Calculates the answer times between messages (of any type) in a specific conversation.
  *
  * @param donorId - The ID of the donor whose messages are being analyzed.

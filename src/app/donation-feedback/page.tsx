@@ -8,7 +8,7 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useDonation } from "@/context/DonationContext";
-import {fetchGraphDataByDonationId, getDonationId} from "./actions";
+import {fetchOrComputeGraphDataByDonationId, getDonationId} from "./actions";
 import LoadingSpinner from "@components/LoadingSpinner";
 import DataSourceFeedbackSection from "@components/DataSourceFeedbackSection";
 import {MainTitle, RichText} from "@/styles/StyledTypography";
@@ -32,7 +32,7 @@ export default function DonationFeedbackPage() {
                 try {
                     const donationIdFromCookie = await getDonationId();
                     if (donationIdFromCookie) {
-                        const fetchedGraphData = await fetchGraphDataByDonationId(donationIdFromCookie);
+                        const fetchedGraphData = await fetchOrComputeGraphDataByDonationId(donationIdFromCookie);
                         setDonationData(donationIdFromCookie, fetchedGraphData);
                     }
                 } catch (error) {

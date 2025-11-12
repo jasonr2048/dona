@@ -14,10 +14,12 @@ import SentReceivedSlidingWindowChart from "@components/charts/SentReceivedSlidi
 import CountsOverallBarChart from "@components/charts/CountsOverallBarChart";
 import MessageTypesBarChart from "@components/charts/MessageTypesBarChart";
 import AudioLengthsBarChart from "@components/charts/AudioLengthsBarChart";
+import EmojiBarChart from "@components/charts/EmojiBarChart";
 
 export enum ChartType {
     MessageTypesBarChart = "messageTypesBarChart",
     AudioLengthsBarChart = "audioLengthsBarChart",
+    EmojiBarChart = "emojiBarChart",
     AnimatedIntensityPolarChart = "animatedIntensityPolarChart",
     AnimatedWordsPerChatBarChart = "animatedWordsPerChatBarChart",
     AnimatedSecondsPerChatBarChart = "animatedSecondsPerChatBarChart",
@@ -67,6 +69,12 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
                         audioLengthDistribution={data.audioLengthDistribution}
                     />
                 );
+            case ChartType.EmojiBarChart:
+                return data.emojiDistribution ? (
+                    <EmojiBarChart
+                        emojiDistribution={data.emojiDistribution}
+                    />
+                ) : null;
 
             // Aggregated data only
             case ChartType.WordCountOverallBarChart:

@@ -120,8 +120,27 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                         />
                         </>
                     )}
+                    {/* Emoji analysis */}
+                    {graphData.emojiDistribution && (
+                        <>
+                            <Box>
+                                <Typography variant="body1" fontWeight="fontWeightBold">
+                                    {t("messageComposition.emojiBarChart.title")}
+                                </Typography>
+                                <Typography variant="body2">
+                                    {t.rich("messageComposition.emojiBarChart.description", {
+                                        button: (label) => openModalSpan(label, t, "messageComposition.emojiBarChart"),
+                                    })}
+                                </Typography>
+                            </Box>
+                            <ChartContainer
+                                type={ChartType.EmojiBarChart}
+                                data={graphData}
+                                dataSourceValue={dataSourceValue}
+                            />
+                        </>
+                    )}
                     {/* TODO: Histogram word counts? */}
-                    {/* TODO: Emoji analysis */}
 
                     {/* Interaction Intensity */}
                     <Typography variant="h6">{ii("title")}</Typography>

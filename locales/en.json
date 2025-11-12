@@ -491,6 +491,21 @@
           "image": "images/charts/feedback_example_audioLengths_english.svg",
           "text": "<p><b>(1)</b> This shows the percentage of your audio messages that are less than 10 seconds long.</p><p><b>(2)</b> This shows the percentage of audio messages from your contacts that are less than 10 seconds long.</p><p><b>(3)</b> This shows the percentage of your audio messages that are between 1-2 minutes long.</p><p><b>(4)</b> This shows the percentage of audio messages from your contacts that are between 1-2 minutes long.</p><p><b>(5)</b> Click this icon to download the graph.</p>"
         }
+      },
+      "emojiBarChart": {
+        "title": "Most Used Emojis",
+        "description": "This chart shows the top 20 most frequently used emojis in your messages. Click <button>HERE</button> to see an explanation with an example.",
+        "legend": {
+          "donor": "Your Emojis",
+          "contacts": "Contacts Emojis"
+        },
+        "xAxis": "Emoji",
+        "yAxis": "Count",
+        "noData": "No emoji data available",
+        "example": {
+          "image": "images/charts/feedback_example_emojis_english.svg",
+          "text": "<p><b>(1)</b> This shows how many times you used this emoji.</p><p><b>(2)</b> This shows how many times your contacts used this emoji.</p><p><b>(3)</b> The chart displays the top 20 most used emojis overall.</p><p><b>(4)</b> Click this icon to download the graph.</p>"
+        }
       }
     },
     "interactionIntensity": {

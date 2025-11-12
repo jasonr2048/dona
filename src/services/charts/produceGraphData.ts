@@ -90,7 +90,47 @@ export default function produceGraphData(donorId: string, allConversations: Conv
                     });
                 }
 
-                const basicStatistics = produceBasicStatistics(messageCounts, wordCounts, secondCounts);
+                // Initialize emoji distribution
+                let emojiDistribution: { sent: Record<string, number>, received: Record<string, number> } | undefined;
+                let totalEmojisSent = 0;
+                let totalEmojisReceived = 0;
+
+                // Calculate emoji distribution across all conversations
+                const hasEmojis = conversations.some(conversation => 
+                    conversation.messages.some(message => message.emojiCounts && Object.keys(message.emojiCounts).length > 0)
+                );
+                
+                if (hasEmojis) {
+                    emojiDistribution = {
+                        sent: {},
+                        received: {}
+                    };
+
+                    conversations.forEach(conversation => {
+                        conversation.messages.forEach(message => {
+                            if (message.emojiCounts) {
+                                const isSent = message.sender === donorId;
+                                const target = isSent ? emojiDistribution!.sent : emojiDistribution!.received;
+                                
+                                for (const [emoji, count] of Object.entries(message.emojiCounts)) {
+                                    target[emoji] = (target[emoji] || 0) + count;
+                                    if (isSent) {
+                                        totalEmojisSent += count;
+                                    } else {
+                                        totalEmojisReceived += count;
+                                    }
+                                }
+                            }
+                        });
+                    });
+                }
+
+                const basicStatistics = produceBasicStatistics(
+                    messageCounts, 
+                    wordCounts, 
+                    secondCounts,
+                    hasEmojis ? { sent: totalEmojisSent, received: totalEmojisReceived } : undefined
+                );
 
                 const graphData: GraphData = {
                     focusConversations,
@@ -106,7 +146,8 @@ export default function produceGraphData(donorId: string, allConversations: Conv
                     answerTimes,
                     basicStatistics,
                     participantsPerConversation,
-                    audioLengthDistribution
+                    audioLengthDistribution,
+                    emojiDistribution
                 };
 
                 return [

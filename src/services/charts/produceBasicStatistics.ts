@@ -1,9 +1,10 @@
-import {BasicStatistics, MessageCounts, SentReceivedPoint} from "@models/graphData";
+import {BasicStatistics, MessageCounts, SentReceived, SentReceivedPoint} from "@models/graphData";
 
 const produceBasicStatistics = (
     messageCounts: MessageCounts, 
     wordCounts: SentReceivedPoint[], 
-    secondCounts: SentReceivedPoint[]
+    secondCounts: SentReceivedPoint[],
+    emojiTotals?: SentReceived
 ): BasicStatistics => {
     // Totals
     const calculateTotal = (data: SentReceivedPoint[], key: keyof SentReceivedPoint): number =>
@@ -28,6 +29,7 @@ const produceBasicStatistics = (
         messagesTotal: messageCounts,
         wordsTotal: {sent: sentWordsTotal, received: receivedWordsTotal},
         secondsTotal: {sent: sentSecondsTotal, received: receivedSecondsTotal},
+        emojisTotal: emojiTotals,
 
         numberOfActiveMonths: activeMonths,
         numberOfActiveYears: activeYears,

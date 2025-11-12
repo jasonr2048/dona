@@ -49,6 +49,11 @@ export interface AudioLengthDistribution {
     received: Record<string, number>;
 }
 
+export interface EmojiDistribution {
+    sent: Record<string, number>;
+    received: Record<string, number>;
+}
+
 export interface BasicStatistics {
     messagesTotal: MessageCounts;
     wordsTotal: SentReceived;
@@ -58,6 +63,7 @@ export interface BasicStatistics {
     messagesPerActiveMonth: MessageCounts;
     wordsPerActiveMonth: SentReceived;
     secondsPerActiveMonth: SentReceived;
+    emojisTotal?: SentReceived;
 }
 
 export interface GraphData {
@@ -75,5 +81,6 @@ export interface GraphData {
     dailyReceivedHours: DailyHourPoint[];
     answerTimes: AnswerTimePoint[];
     audioLengthDistribution: AudioLengthDistribution;
+    emojiDistribution?: EmojiDistribution;
     basicStatistics: BasicStatistics;
 }

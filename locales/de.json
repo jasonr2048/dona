@@ -487,6 +487,21 @@
           "image": "images/charts/feedback_example_audioLengths_english.svg",
           "text": "<p><b>(1)</b> Dies zeigt den Prozentsatz Ihrer Audionachrichten, die weniger als 10 Sekunden lang sind.</p><p><b>(2)</b> Dies zeigt den Prozentsatz der Audionachrichten von Ihren Kontakten, die weniger als 10 Sekunden lang sind.</p><p><b>(3)</b> Dies zeigt den Prozentsatz Ihrer Audionachrichten, die zwischen 1-2 Minuten lang sind.</p><p><b>(4)</b> Dies zeigt den Prozentsatz der Audionachrichten von Ihren Kontakten, die zwischen 1-2 Minuten lang sind.</p><p><b>(5)</b> Klicken Sie auf dieses Symbol, um das Diagramm herunterzuladen.</p>"
         }
+      },
+      "emojiBarChart": {
+        "title": "Meist verwendete Emojis",
+        "description": "Dieses Diagramm zeigt die 20 am häufigsten verwendeten Emojis in Ihren Nachrichten. Klicken Sie <button>HIER</button>, um eine Erklärung mit einem Beispiel zu sehen.",
+        "legend": {
+          "donor": "Ihre Emojis",
+          "contacts": "Emojis der Kontakte"
+        },
+        "xAxis": "Emoji",
+        "yAxis": "Anzahl",
+        "noData": "Keine Emoji-Daten verfügbar",
+        "example": {
+          "image": "images/charts/feedback_example_emojis_english.svg",
+          "text": "<p><b>(1)</b> Dies zeigt, wie oft Sie dieses Emoji verwendet haben.</p><p><b>(2)</b> Dies zeigt, wie oft Ihre Kontakte dieses Emoji verwendet haben.</p><p><b>(3)</b> Das Diagramm zeigt die 20 am häufigsten verwendeten Emojis insgesamt.</p><p><b>(4)</b> Klicken Sie auf dieses Symbol, um das Diagramm herunterzuladen.</p>"
+        }
       }
     },
     "interactionIntensity": {

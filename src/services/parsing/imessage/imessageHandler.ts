@@ -4,6 +4,7 @@ import {AnonymizationResult, Conversation, DataSourceValue, Message, MessageAudi
 import {ChatPseudonyms, ContactPseudonyms} from '@/services/parsing/shared/pseudonyms';
 import {getAliasConfig} from '@services/parsing/shared/aliasConfig';
 import {DonationErrors, DonationValidationError} from '@services/errors';
+import emojiCount from '@services/parsing/shared/emojiCount';
 
 export default async function handleImessageDBFiles(files: File[]): Promise<AnonymizationResult> {
     if (files.length !== 1) {
@@ -70,9 +71,12 @@ export default async function handleImessageDBFiles(files: File[]): Promise<Anon
                     sender: pseudonym
                 } as MessageAudio);
             } else {
+                const messageText = row.text as string;
+                const emojis = emojiCount(messageText);
                 conversation.messages.push({
                     id: row.id?.toString(),
-                    wordCount: (row.text as string).split(/\s+/).length,
+                    wordCount: messageText.split(/\s+/).length,
+                    emojiCounts: Object.keys(emojis).length > 0 ? emojis : undefined,
                     timestamp,
                     sender: pseudonym
                 } as Message);

@@ -22,6 +22,7 @@ export interface DataSource {
 export interface Message {
     id?: string,
     wordCount: number,
+    emojiCounts?: Record<string, number>,
     timestamp: number,
     sender: string,
 }

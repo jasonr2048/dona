@@ -26,9 +26,10 @@ namespace NewMessage {
         conversationId: string,
         message: Message
     ): NewMessage {
-        const {wordCount, timestamp, sender} = message;
+        const {wordCount, emojiCounts, timestamp, sender} = message;
         return {
             wordCount,
+            emojiCounts: emojiCounts || undefined,
             dateTime: new Date(timestamp),
             senderId: sender || undefined,
             conversationId: conversationId

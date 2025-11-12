@@ -1,4 +1,5 @@
 import wordCount from '@services/parsing/shared/wordCount';
+import emojiCount from '@services/parsing/shared/emojiCount';
 import {ValidEntry} from "@services/parsing/shared/zipExtraction";
 import calculateAudioLength from "@services/parsing/shared/audioLength";
 import {isTextMessage, isVoiceMessage} from "@services/parsing/meta/messageChecks";
@@ -50,8 +51,11 @@ export default async function deIdentify(
                         } as MessageAudio);
 
                     } else if (isTextMessage(messageData)) {
+                        const messageContent = messageData.content || "";
+                        const emojis = emojiCount(messageContent);
                         textMessages.push({
-                            wordCount: wordCount(messageData.content || ""),
+                            wordCount: wordCount(messageContent),
+                            emojiCounts: Object.keys(emojis).length > 0 ? emojis : undefined,
                             timestamp,
                             sender: senderName,
                         } as Message);

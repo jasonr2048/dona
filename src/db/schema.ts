@@ -37,6 +37,7 @@ export const messages = p.pgTable("messages", {
     senderId: p.uuid("sender_id").defaultRandom().notNull(),
     dateTime: p.timestamp("datetime").notNull(),
     wordCount: p.integer("word_count").notNull(),
+    emojiCounts: p.jsonb("emoji_counts"),
     conversationId: p.uuid("conversation_id").notNull().references(() => conversations.id)
 });
 

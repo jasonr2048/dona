@@ -2,6 +2,7 @@ import {ParsedMessage} from "@services/parsing/whatsapp/whatsappParser";
 import {AnonymizationResult, Conversation, DataSourceValue, Message} from "@models/processed";
 import {getAliasConfig} from "@services/parsing/shared/aliasConfig";
 import wordCount from "@services/parsing/shared/wordCount";
+import emojiCount from "@services/parsing/shared/emojiCount";
 import {ChatPseudonyms, ContactPseudonyms} from "@services/parsing/shared/pseudonyms";
 
 export default async function deIdentify(parsedFiles: ParsedMessage[][], donorName: string): Promise<AnonymizationResult> {
@@ -26,10 +27,12 @@ export default async function deIdentify(parsedFiles: ParsedMessage[][], donorNa
             .map(line => {
                 const participant = contactPseudonyms.getPseudonym(line.author);
                 participantPseudonyms.add(participant);
+                const emojis = emojiCount(line.message);
                 return {
                     sender: participant,
                     timestamp: line.date,
                     wordCount: wordCount(line.message),
+                    emojiCounts: Object.keys(emojis).length > 0 ? emojis : undefined,
                 };
             })
         const participants = Array.from(participantPseudonyms);

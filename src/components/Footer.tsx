@@ -15,7 +15,7 @@ import { FooterButton } from "@/styles/StyledButtons";
 export default function Footer() {
   const links = useTranslations("links");
   const urls = useTranslations("urls");
-  const projectNumber = useTranslations("footer")("project-number");
+  const projectNumber = useTranslations("footer")("projectNumber");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Detects mobile screens
 

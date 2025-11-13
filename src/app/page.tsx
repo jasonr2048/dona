@@ -50,7 +50,7 @@ export default function HomePage() {
                 </Box>
 
                 <BlockTitle sx={{ mt: 2 }}>{landing.t(`why.${col}.title`)}</BlockTitle>
-                <RichText>{landing.rich(`why.${col}.body`, { link: "earn-more" }, false)}</RichText>
+                <RichText>{landing.rich(`why.${col}.body`, { link: "learnMore" }, false)}</RichText>
               </Grid>
             ))}
           </Grid>

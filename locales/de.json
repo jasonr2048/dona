@@ -373,7 +373,7 @@
       }
     }
   },
-  "data-storage": {
+  "dataStorage": {
     "title": "Erhobene Daten",
     "body1": "<em>Datenspende:</em> Bei der Datenspende Ihrer Social-Media-Daten erfassen wir ausschließlich Metadaten (e.g. Nachrichtenlänge, Nachrichtenzeitpunkt und Pseudonyme der UnterhaltungsteilnehmerInnen) und keine Inhalte (e.g. Nachrichtentext oder Name der UnterhaltungsteilnehmerInnen). Ihre Online-Interaktions-Daten werden bereits auf Ihrem Rechner anonymisiert. Wir sehen also niemals Ihre Nachrichten. Bevor wir Ihre anonymisierten Nachrichten speichern, können Sie diese begutachten. So können Sie sich davon überzeugen, dass diese ausreichend anonymisiert sind.",
     "body2": "<em>Fragebögen:</em> Sie füllen zunächst Fragebögen zu Ihren demographischen Informationen aus. Danach können Sie die Datenspende durchführen und erhalten Feedback. Die Erhebung von Fragebogendaten findet ebenfalls komplett anonym auf der Plattform <link>LimeSurvey</link> statt."

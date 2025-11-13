@@ -147,7 +147,7 @@ export default function ConsentModal() {
             )}
             {idInputMethod === IdInputMethod.MANUALLY && (
               <>
-                <TextField label={donor.t("your-id")} value={manualId} onChange={handleManualIdChange} fullWidth sx={{ mt: 1 }} error={!!idError} helperText={<span style={{ minHeight: "1em", display: "block" }}>{idError || "\u00A0"}</span>} disabled={isValidating} />
+                <TextField label={donor.t("yourId")} value={manualId} onChange={handleManualIdChange} fullWidth sx={{ mt: 1 }} error={!!idError} helperText={<span style={{ minHeight: "1em", display: "block" }}>{idError || "\u00A0"}</span>} disabled={isValidating} />
               </>
             )}
           </DialogContent>

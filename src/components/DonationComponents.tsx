@@ -8,7 +8,7 @@ export function FileUploadButton({ onChange, loading, accept }: { onChange: (e: 
 
   return (
     <Button variant="contained" component="label" disabled={loading} sx={{ my: 1 }}>
-      {t("select-data.browse")}
+      {t("selectData.browse")}
       <input type="file" hidden multiple accept={accept} onChange={onChange} />
     </Button>
   );
@@ -19,7 +19,7 @@ export function RemoveButton({ onClick, loading }: { onClick: React.MouseEventHa
 
   return (
     <Button variant="outlined" disabled={loading} sx={{ my: 1 }} onClick={onClick}>
-      {t("select-data.remove")}
+      {t("selectData.remove")}
     </Button>
   );
 }

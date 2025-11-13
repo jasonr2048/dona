@@ -9,7 +9,7 @@ import { BlockTitle, ContactBlock, MainTitle } from "@/styles/StyledTypography";
 
 export default function DataProtection() {
   const protection = useRichTranslations("dataProtection");
-  const storage = useRichTranslations("data-storage");
+  const storage = useRichTranslations("dataStorage");
   const consent = useRichTranslations("consent");
 
   return (

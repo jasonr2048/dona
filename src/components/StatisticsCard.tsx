@@ -16,7 +16,7 @@ const formatPercentage = (value: number, total: number): string => {
 
 export default function StatisticsCard({ stats }: { stats: BasicStatistics }) {
   const t = useTranslations("feedback.statisticsCard");
-  const thousandSeparator = t("thousand-separator");
+  const thousandSeparator = t("thousandSeparator");
 
   const formatWithSeparator = (num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
@@ -67,8 +67,8 @@ export default function StatisticsCard({ stats }: { stats: BasicStatistics }) {
   return (
     <Grid container spacing={2}>
       {/* Messages */}
-      <Grid size={{ xs: 12, md: 6 }}>{renderSection(t("total-messages"), t("active-years-explanation_format", { years: stats.numberOfActiveYears }), [renderStatBox(stats.messagesTotal.allMessages.sent, t("messages"), t("sent"), CARD_COLOR_PRIMARY), renderStatBox(stats.messagesTotal.allMessages.received, t("messages"), t("received"), CARD_COLOR_SECONDARY), renderTypeBreakdownBox(stats.messagesTotal.textMessages.sent, stats.messagesTotal.audioMessages.sent, stats.messagesTotal.allMessages.sent, CARD_COLOR_PRIMARY), renderTypeBreakdownBox(stats.messagesTotal.textMessages.received, stats.messagesTotal.audioMessages.received, stats.messagesTotal.allMessages.received, CARD_COLOR_SECONDARY)])}</Grid>
-      <Grid size={{ xs: 12, md: 6 }}>{renderSection(t("average-per-active-month"), t("active-months-explanation_format", { months: stats.numberOfActiveMonths }), [renderStatBox(stats.messagesPerActiveMonth.allMessages.sent, t("messages"), t("sent"), CARD_COLOR_PRIMARY), renderStatBox(stats.messagesPerActiveMonth.allMessages.received, t("messages"), t("received"), CARD_COLOR_SECONDARY), renderTypeBreakdownBox(stats.messagesPerActiveMonth.textMessages.sent, stats.messagesPerActiveMonth.audioMessages.sent, stats.messagesPerActiveMonth.allMessages.sent, CARD_COLOR_PRIMARY), renderTypeBreakdownBox(stats.messagesPerActiveMonth.textMessages.received, stats.messagesPerActiveMonth.audioMessages.received, stats.messagesPerActiveMonth.allMessages.received, CARD_COLOR_SECONDARY)])}</Grid>
+      <Grid size={{ xs: 12, md: 6 }}>{renderSection(t("totalMessages"), t("activeYearsExplanation_format", { years: stats.numberOfActiveYears }), [renderStatBox(stats.messagesTotal.allMessages.sent, t("messages"), t("sent"), CARD_COLOR_PRIMARY), renderStatBox(stats.messagesTotal.allMessages.received, t("messages"), t("received"), CARD_COLOR_SECONDARY), renderTypeBreakdownBox(stats.messagesTotal.textMessages.sent, stats.messagesTotal.audioMessages.sent, stats.messagesTotal.allMessages.sent, CARD_COLOR_PRIMARY), renderTypeBreakdownBox(stats.messagesTotal.textMessages.received, stats.messagesTotal.audioMessages.received, stats.messagesTotal.allMessages.received, CARD_COLOR_SECONDARY)])}</Grid>
+      <Grid size={{ xs: 12, md: 6 }}>{renderSection(t("averagePerActiveMonth"), t("activeMonthsExplanation_format", { months: stats.numberOfActiveMonths }), [renderStatBox(stats.messagesPerActiveMonth.allMessages.sent, t("messages"), t("sent"), CARD_COLOR_PRIMARY), renderStatBox(stats.messagesPerActiveMonth.allMessages.received, t("messages"), t("received"), CARD_COLOR_SECONDARY), renderTypeBreakdownBox(stats.messagesPerActiveMonth.textMessages.sent, stats.messagesPerActiveMonth.audioMessages.sent, stats.messagesPerActiveMonth.allMessages.sent, CARD_COLOR_PRIMARY), renderTypeBreakdownBox(stats.messagesPerActiveMonth.textMessages.received, stats.messagesPerActiveMonth.audioMessages.received, stats.messagesPerActiveMonth.allMessages.received, CARD_COLOR_SECONDARY)])}</Grid>
     </Grid>
   );
 }

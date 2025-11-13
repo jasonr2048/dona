@@ -28,6 +28,7 @@ export const CHART_LAYOUT = {
     hBarThickness: 20,
     maxHBarThickness: 40,
     barPercentageNarrow: 0.6,
+    barPercentageNarrower: 0.5,
     barPercentageWide: 1.,
     maxWidth: "900px",
     mobileChartHeight: MOBILE_HEIGHT,

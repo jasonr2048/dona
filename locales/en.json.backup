@@ -464,8 +464,8 @@
         "title": "Message Types",
         "description": "This chart shows the distribution of message types (text and audio) that you sent and received. Click <button>HERE</button> to see an explanation with an example.",
         "legend": {
-          "donor": "Your messages",
-          "contacts": "Contacts messages"
+          "donor": "Your Messages",
+          "contacts": "Contacts Messages"
         },
         "types": {
           "text": "Text",
@@ -482,8 +482,8 @@
         "title": "Audio Message Lengths",
         "description": "This chart shows the distribution of audio message lengths that you sent and received. Click <button>HERE</button> to see an explanation with an example.",
         "legend": {
-          "donor": "Your audio messages",
-          "contacts": "Contacts audio messages"
+          "donor": "Your Audio Messages",
+          "contacts": "Contacts Audio Messages"
         },
         "xAxis": "Audio length",
         "yAxis": "Percentage of audio messages",
@@ -496,8 +496,8 @@
         "title": "Most Used Emojis",
         "description": "This chart shows the top 20 most frequently used emojis in your messages. Click <button>HERE</button> to see an explanation with an example.",
         "legend": {
-          "donor": "Your emojis",
-          "contacts": "Contacts emojis"
+          "donor": "Your Emojis",
+          "contacts": "Contacts Emojis"
         },
         "xAxis": "Emoji",
         "yAxis": "Count",
@@ -517,7 +517,7 @@
         "description": "This visualization displays you as the yellow dot in the middle. The chats you donated are the white dots around you. The closer a dot is to you, the more words you have written in this chat. In the time-slider below you can see and select the month and year for which the data is shown. The smaller lighter white dots show the activity in the respective chats in other months. Click <button>HERE</button> to see an explanation with an example.",
         "legend": {
           "donor": "You",
-          "others": "Chat intensity"
+          "others": "Chat Intensity"
         },
         "example": {
           "image": "images/charts/feedback_example_polarPlot_english.svg",
@@ -637,8 +637,8 @@
       "responseTimeBarChart": {
         "description": "Here you can see how fast you reply to your contacts and vice versa. You see the percentages of all your responses and the replies from your contacts that took place in the specified time. Responses are messages sent directly after a message from someone else. You can see what percentage of your responses you sent or received quicker than after 1 minute, after 1-2 minutes, 3-5 minutes, 6-15 minutes, 16-30 minutes, 31-60 minutes, and slower than 60 minutes. The bar for > 60 minutes includes longer breaks in the conversation. Click <button>HERE</button> to see an explanation with an example.",
         "legend": {
-          "donor": "Your response times",
-          "contacts": "Contacts response times"
+          "donor": "Your Response Times",
+          "contacts": "Contacts Response Times"
         },
         "yAxis": "Percentage of all responses",
         "xAxis": "Time until response",
@@ -651,8 +651,8 @@
       "responseTimeBarChartMonthly": {
         "description": "Here you see your response times <b>per month</b>. So, the figure shows the percentage of responses (i.e. a message that you sent after a message from a contact) that took place in the specified amount of time. You can see what percentage of your responses you sent quicker than after 1 minute, after 1-2 minutes, 3-5 minutes, 6-15 minutes, 16-30 minutes, 31-60 minutes, and slower than 60 minutes. The bar for > 60 minutes includes longer breaks in the conversation.",
         "legend": {
-          "donor": "Your response times",
-          "contacts": "Contacts response times"
+          "donor": "Your Response Times",
+          "contacts": "Contacts Response Times"
         },
         "yAxis": "Percentage of all responses",
         "xAxis": "Time until response"

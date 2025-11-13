@@ -513,7 +513,7 @@
         "description": "Diese Visualisierung zeigt Sie als gelben Punkt in der Mitte. Die von Ihnen gespendeten Chats sind die weißen Punkte um Sie herum. Je näher ein Punkt an Ihnen ist, desto mehr Wörter haben Sie in diesem Chat geschrieben. Im Zeitschieberegler unten können Sie den Monat und das Jahr auswählen, für die die Daten angezeigt werden. Die kleineren, helleren weißen Punkte zeigen die Aktivität in den jeweiligen Chats in anderen Monaten. Klicken Sie <button>HIER</button>, um eine Erklärung mit einem Beispiel zu sehen.",
         "legend": {
           "donor": "Sie",
-          "others": "Chat-Intensität"
+          "others": "Chat-intensität"
         },
         "example": {
           "image": "images/charts/feedback_example_polarPlot_english.svg",

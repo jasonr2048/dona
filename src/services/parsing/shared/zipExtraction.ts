@@ -9,14 +9,10 @@ export interface ValidEntry extends Entry {
 const isValidEntry = (entry: Entry): entry is ValidEntry => typeof entry.getData === "function";
 
 // Check if entry should be excluded (e.g., system files or folders)
-const isExcludedEntry = (entry: Entry): boolean =>
-  entry.filename.startsWith("__MACOSX/") ||
-  entry.filename.endsWith(".DS_Store") ||
-  entry.filename.trim() === "";
+const isExcludedEntry = (entry: Entry): boolean => entry.filename.startsWith("__MACOSX/") || entry.filename.endsWith(".DS_Store") || entry.filename.trim() === "";
 
 // Check that entry name matches the pattern provided
-const isMatchingEntry = (entry: Entry, contentPattern: string): boolean =>
-  entry.filename.trim().includes(contentPattern);
+const isMatchingEntry = (entry: Entry, contentPattern: string): boolean => entry.filename.trim().includes(contentPattern);
 
 const getEntryText = (entry: ValidEntry): Promise<string> => entry.getData(new TextWriter());
 
@@ -49,9 +45,7 @@ async function extractEntriesFromZips(files: File[]): Promise<ValidEntry[]> {
   }
 
   // Filter valid entries and exclude unwanted ones
-  return allEntries.filter(
-    (entry) => isValidEntry(entry) && !isExcludedEntry(entry)
-  ) as ValidEntry[];
+  return allEntries.filter(entry => isValidEntry(entry) && !isExcludedEntry(entry)) as ValidEntry[];
 }
 
 export { extractTxtFilesFromZip, extractEntriesFromZips, getEntryText, isMatchingEntry };

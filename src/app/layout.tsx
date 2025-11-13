@@ -1,24 +1,27 @@
+import CssBaseline from "@mui/material/CssBaseline";
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
-import { Inter } from "next/font/google";
-import CssBaseline from "@mui/material/CssBaseline";
+import React from "react";
+
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import "@/styles/globals.css";
 import { Locale } from "@/config";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Image from "next/image";
-import Link from "next/link";
+
 import { DonationProvider } from "@/context/DonationContext";
-import React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Dona",
-  description: "Social Gathering Platform",
+  description: "Social Gathering Platform"
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -28,10 +31,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
   return (
     <html lang={locale}>
-      <body
-        className={inter.className}
-        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
-      >
+      <body className={inter.className} style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
         <NextIntlClientProvider messages={messages}>
           <DonationProvider>
             <CssBaseline />
@@ -47,15 +47,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 sx={{
                   backgroundColor: "transparent",
                   padding: 0,
-                  "&:hover": { backgroundColor: "transparent" },
+                  "&:hover": { backgroundColor: "transparent" }
                 }}
               >
-                <Image
-                  src="/images/logos/uni-bielefeld-logo.svg"
-                  alt="Universität Bielefeld"
-                  width={150}
-                  height={75}
-                />
+                <Image src="/images/logos/uni-bielefeld-logo.svg" alt="Universität Bielefeld" width={150} height={75} />
               </Button>
             </Box>
 

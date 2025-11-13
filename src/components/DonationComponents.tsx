@@ -1,17 +1,9 @@
-import React from "react";
-import { useTranslations } from "next-intl";
-import { Button, Divider, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import { Button, Divider, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { useTranslations } from "next-intl";
+import React from "react";
 
-export function FileUploadButton({
-  onChange,
-  loading,
-  accept,
-}: {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  loading: boolean;
-  accept: string;
-}) {
+export function FileUploadButton({ onChange, loading, accept }: { onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; loading: boolean; accept: string }) {
   const t = useTranslations("donation");
 
   return (
@@ -22,13 +14,7 @@ export function FileUploadButton({
   );
 }
 
-export function RemoveButton({
-  onClick,
-  loading,
-}: {
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
-  loading: boolean;
-}) {
+export function RemoveButton({ onClick, loading }: { onClick: React.MouseEventHandler<HTMLButtonElement>; loading: boolean }) {
   const t = useTranslations("donation");
 
   return (
@@ -46,7 +32,7 @@ export function FileList({ files }: { files: File[] }) {
         borderRadius: 1,
         border: "1px solid",
         borderColor: "divider",
-        backgroundColor: "background.paper",
+        backgroundColor: "background.paper"
       }}
     >
       {files.map((file, index) => (
@@ -61,9 +47,9 @@ export function FileList({ files }: { files: File[] }) {
                 primary: {
                   style: {
                     overflowWrap: "break-word",
-                    wordBreak: "break-word",
-                  },
-                },
+                    wordBreak: "break-word"
+                  }
+                }
               }}
             />
           </ListItem>

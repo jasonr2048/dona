@@ -1,11 +1,8 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
-import {
-  appendConversationBatch,
-  finalizeDonation,
-  startDonation,
-} from "@/app/data-donation/actions";
-import { DonationErrors } from "@/services/errors";
+
 import { createMockDbClient } from "@/app/__tests__/mockDbClient";
+import { appendConversationBatch, finalizeDonation, startDonation } from "@/app/data-donation/actions";
+import { DonationErrors } from "@/services/errors";
 
 describe("donation actions - unit", () => {
   let mock: ReturnType<typeof createMockDbClient>;
@@ -29,8 +26,8 @@ describe("donation actions - unit", () => {
         ({
           values: () => {
             throw new Error("insert-failed");
-          },
-        }) as any,
+          }
+        }) as any
     }).client;
 
     const res = await startDonation("ext-1", throwing);
@@ -48,25 +45,19 @@ describe("donation actions - unit", () => {
         participants: ["Donor", "Alice"],
         messages: [
           { sender: "Donor", text: "Hi", createdAt: new Date().toISOString() },
-          { sender: "Alice", text: "Hello", createdAt: new Date().toISOString() },
+          { sender: "Alice", text: "Hello", createdAt: new Date().toISOString() }
         ],
         messagesAudio: [
           {
             sender: "Alice",
             url: "https://example.com/a1.mp3",
-            createdAt: new Date().toISOString(),
-          },
-        ],
-      },
+            createdAt: new Date().toISOString()
+          }
+        ]
+      }
     ];
 
-    const result = await appendConversationBatch(
-      "don-1",
-      "donor-uuid-1",
-      batch as any,
-      "Donor",
-      client
-    );
+    const result = await appendConversationBatch("don-1", "donor-uuid-1", batch as any, "Donor", client);
     expect(result.success).toBe(true);
   });
 
@@ -76,24 +67,18 @@ describe("donation actions - unit", () => {
     const manyMessages = Array.from({ length: 15000 }).map((_, i) => ({
       sender: i % 2 === 0 ? "Donor" : "Alice",
       text: `msg-${i}`,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date().toISOString()
     }));
     const batch = [
       {
         dataSource: "Default",
         participants: ["Donor", "Alice"],
         messages: manyMessages,
-        messagesAudio: [],
-      },
+        messagesAudio: []
+      }
     ];
 
-    const result = await appendConversationBatch(
-      "don-2",
-      "donor-uuid-2",
-      batch as any,
-      "Donor",
-      client
-    );
+    const result = await appendConversationBatch("don-2", "donor-uuid-2", batch as any, "Donor", client);
     expect(result.success).toBe(true);
   });
 
@@ -111,7 +96,7 @@ describe("donation actions - unit", () => {
     const throwingTx = createMockDbClient({
       transaction: async (_fn: any) => {
         throw new Error("tx-failed");
-      },
+      }
     }).client;
 
     const res = await finalizeDonation("don-4", { foo: "bar" }, throwingTx);

@@ -1,18 +1,13 @@
+import Box from "@mui/material/Box";
+import { ChartDataset } from "chart.js";
+import _ from "lodash";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import Box from "@mui/material/Box";
-import { useTranslations } from "next-intl";
-import _ from "lodash";
-import { AnswerTimePoint } from "@models/graphData";
+
+import { BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT, PCT_TOOLTIP, TOP_LEGEND } from "@components/charts/chartConfig";
 import DownloadButtons from "@components/charts/DownloadButtons";
-import { ChartDataset } from "chart.js";
-import {
-  BARCHART_OPTIONS,
-  CHART_COLORS,
-  CHART_LAYOUT,
-  PCT_TOOLTIP,
-  TOP_LEGEND,
-} from "@components/charts/chartConfig";
+import { AnswerTimePoint } from "@models/graphData";
 
 const FIRST = "< 1 min";
 const SECOND = "1-2 min";
@@ -29,7 +24,7 @@ const ranges = [
   { max: 900000, label: FOURTH },
   { max: 1800000, label: FIFTH },
   { max: 3600000, label: SIXTH },
-  { max: Infinity, label: SEVENTH },
+  { max: Infinity, label: SEVENTH }
 ];
 
 interface ResponseTimeBarChartProps {
@@ -42,14 +37,14 @@ const ResponseTimeBarChart: React.FC<ResponseTimeBarChartProps> = ({ responseTim
   const chartTexts = useTranslations("feedback.responseTimes.responseTimeBarChart");
 
   const categorizeResponseTime = (timeInMs: number) => {
-    return ranges.findIndex((range) => timeInMs <= range.max);
+    return ranges.findIndex(range => timeInMs <= range.max);
   };
 
-  const groupedByIsDonor = _.groupBy(responseTimes, (responseTime) => responseTime.isFromDonor);
+  const groupedByIsDonor = _.groupBy(responseTimes, responseTime => responseTime.isFromDonor);
 
   const countByRange = (group: { responseTimeMs: number }[]) => {
     const counts = Array(ranges.length).fill(0);
-    group.forEach((responseTime) => {
+    group.forEach(responseTime => {
       counts[categorizeResponseTime(responseTime.responseTimeMs)]++;
     });
     return counts;
@@ -61,50 +56,46 @@ const ResponseTimeBarChart: React.FC<ResponseTimeBarChartProps> = ({ responseTim
   const donorTotal = donorCounts.reduce((a, b) => a + b, 0);
   const contactTotal = contactCounts.reduce((a, b) => a + b, 0);
 
-  const donorPercentages = donorCounts.map((count) =>
-    donorTotal > 0 ? (count / donorTotal) * 100 : 0
-  );
-  const contactPercentages = contactCounts.map((count) =>
-    contactTotal > 0 ? (count / contactTotal) * 100 : 0
-  );
+  const donorPercentages = donorCounts.map(count => (donorTotal > 0 ? (count / donorTotal) * 100 : 0));
+  const contactPercentages = contactCounts.map(count => (contactTotal > 0 ? (count / contactTotal) * 100 : 0));
 
   const datasets: ChartDataset<"bar", number[]>[] = [
     {
       label: chartTexts("legend.contacts"),
       data: contactPercentages,
       barPercentage: CHART_LAYOUT.barPercentageNarrow,
-      backgroundColor: CHART_COLORS.secondary,
+      backgroundColor: CHART_COLORS.secondary
     },
     {
       label: chartTexts("legend.donor"),
       data: donorPercentages,
       barPercentage: CHART_LAYOUT.barPercentageWide,
-      backgroundColor: CHART_COLORS.primary,
-    },
+      backgroundColor: CHART_COLORS.primary
+    }
   ] as ChartDataset<"bar", number[]>[];
 
   const data = {
-    labels: ranges.map((range) => range.label),
-    datasets: datasets,
+    labels: ranges.map(range => range.label),
+    datasets: datasets
   };
 
   const options = {
     ...BARCHART_OPTIONS,
     plugins: {
       legend: TOP_LEGEND,
-      tooltip: PCT_TOOLTIP,
+      tooltip: PCT_TOOLTIP
     },
     scales: {
       x: {
         ...BARCHART_OPTIONS.scales.x,
         title: { display: true, text: chartTexts("xAxis") },
-        stacked: true,
+        stacked: true
       },
       y: {
         ...BARCHART_OPTIONS.scales.y,
-        title: { display: true, text: chartTexts("yAxis") },
-      },
-    },
+        title: { display: true, text: chartTexts("yAxis") }
+      }
+    }
   };
 
   return (

@@ -5,12 +5,12 @@ export const CHART_COLORS = {
   secondary: "#ff7f0e", // Orange
   secondaryLight: "#ffb26e",
   secondaryTransparent: "rgba(255, 127, 14, 0.2)",
-  background: "#f5f5f5",
+  background: "#f5f5f5"
 };
 
 export const POLAR_CHART_COLORS = {
   drawing: "#FFFFFF",
-  highlight: "#FFD700",
+  highlight: "#FFD700"
 };
 
 const MOBILE_HEIGHT = 250;
@@ -20,7 +20,7 @@ const Y_TICKS = { font: { size: 12 }, padding: 0, offset: false };
 
 export const CHART_BOX_PROPS = {
   main: { width: "100%", maxWidth: "900px", mx: "auto" },
-  drawingArea: {},
+  drawingArea: {}
 };
 
 export const CHART_LAYOUT = {
@@ -36,11 +36,11 @@ export const CHART_LAYOUT = {
   responsiveChartHeight: { xs: MOBILE_HEIGHT, sm: DESKTOP_HEIGHT },
   paddingX: { xs: 1, sm: 2 },
   paddingY: 2,
-  labelFontSize: { xs: "0.8rem", sm: "1rem" },
+  labelFontSize: { xs: "0.8rem", sm: "1rem" }
 };
 
 export const PCT_TOOLTIP = {
-  callbacks: { label: (context: any) => `${context.raw?.toFixed(2)}%` },
+  callbacks: { label: (context: any) => `${context.raw?.toFixed(2)}%` }
 };
 
 export const TOP_LEGEND = {
@@ -48,8 +48,8 @@ export const TOP_LEGEND = {
   labels: {
     font: { size: 11 },
     padding: 10,
-    boxWidth: 14,
-  },
+    boxWidth: 14
+  }
 };
 
 export const COMMON_CHART_OPTIONS = {
@@ -59,8 +59,8 @@ export const COMMON_CHART_OPTIONS = {
   plugins: { legend: { display: false } },
   scales: {
     x: { ticks: X_TICKS, beginAtZero: true },
-    y: { ticks: Y_TICKS },
-  },
+    y: { ticks: Y_TICKS }
+  }
 };
 
 export const BARCHART_OPTIONS = {
@@ -69,26 +69,26 @@ export const BARCHART_OPTIONS = {
   maintainAspectRatio: false,
   plugins: {
     legend: { display: true },
-    tooltip: PCT_TOOLTIP,
+    tooltip: PCT_TOOLTIP
   },
   scales: {
     x: {
       ticks: X_TICKS,
-      grid: { drawOnChartArea: false },
+      grid: { drawOnChartArea: false }
     },
     y: {
       ticks: {
         ...Y_TICKS,
-        callback: (value: number | string) => `${value}%`,
+        callback: (value: number | string) => `${value}%`
       },
       beginAtZero: true,
-      max: 100,
+      max: 100
     },
     y_no_pct: {
       ticks: {
         ...Y_TICKS,
-        callback: (value: number | string) => value, // Display actual numbers, not percentages
-      },
-    },
-  },
+        callback: (value: number | string) => value // Display actual numbers, not percentages
+      }
+    }
+  }
 };

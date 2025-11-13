@@ -1,21 +1,14 @@
 "use client";
 
-import { useRichTranslations } from "@/hooks/useRichTranslations";
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid2";
+import Typography from "@mui/material/Typography";
+
+import { InstructionVideo, StepsList, TabbedInstructionVideo } from "@/components/InstructionComponents";
+import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle } from "@/styles/StyledTypography";
-import {
-  InstructionVideo,
-  StepsList,
-  TabbedInstructionVideo,
-} from "@/components/InstructionComponents";
 import { DataSourceValue } from "@models/processed";
 
-export default function DatasourceSpecificInstructions({
-  dataSource,
-}: {
-  dataSource: DataSourceValue;
-}) {
+export default function DatasourceSpecificInstructions({ dataSource }: { dataSource: DataSourceValue }) {
   const source = useRichTranslations(dataSource.toLowerCase());
   const generic = useRichTranslations("instructions");
 
@@ -27,7 +20,7 @@ export default function DatasourceSpecificInstructions({
   const externalLinks = {
     link_android: `${dataSource.toLowerCase()}.androidDocumentation`,
     link_ios: `${dataSource.toLowerCase()}.iosDocumentation`,
-    link: `${dataSource.toLowerCase()}.externalDocumentation`,
+    link: `${dataSource.toLowerCase()}.externalDocumentation`
   };
 
   const FirstBlock = ({ halfWidth = false }: { halfWidth?: boolean }) => (
@@ -44,7 +37,7 @@ export default function DatasourceSpecificInstructions({
           link: "secureDelete",
           link_datenschutz: "datenschutz",
           link_android: "deleteFromAndroid",
-          link_ios: "deleteFromIos",
+          link_ios: "deleteFromIos"
         })}
       </Typography>
     </Grid>
@@ -55,18 +48,7 @@ export default function DatasourceSpecificInstructions({
       {verticalVideo ? (
         <Grid container spacing={2} alignItems="flex-start">
           <FirstBlock halfWidth />
-          <Grid size={{ xs: 12, md: 6 }}>
-            {isWhatsApp ? (
-              <TabbedInstructionVideo
-                iosVideoUrl={source.t("video.ios")}
-                androidVideoUrl={source.t("video.android")}
-                iosCaption={source.t("video.iosCaption")}
-                androidCaption={source.t("video.androidCaption")}
-              />
-            ) : (
-              <InstructionVideo videoUrl={source.t("video")} />
-            )}
-          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>{isWhatsApp ? <TabbedInstructionVideo iosVideoUrl={source.t("video.ios")} androidVideoUrl={source.t("video.android")} iosCaption={source.t("video.iosCaption")} androidCaption={source.t("video.androidCaption")} /> : <InstructionVideo videoUrl={source.t("video")} />}</Grid>
         </Grid>
       ) : (
         <>

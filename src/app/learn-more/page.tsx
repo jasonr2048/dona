@@ -1,11 +1,12 @@
 "use client";
 
-import { useRichTranslations } from "@/hooks/useRichTranslations";
-import Image from "next/image";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
-import Button from "@mui/material/Button";
+import Image from "next/image";
+
+import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { MainTitle, RichText } from "@/styles/StyledTypography";
 
 export default function LearnMore() {
@@ -22,7 +23,7 @@ export default function LearnMore() {
 
         {/* Images with Captions */}
         <Grid container spacing={3} justifyContent="center" alignItems="center" sx={{ mt: 3 }}>
-          {["textMessages", "voiceMessages"].map((imgKey) => (
+          {["textMessages", "voiceMessages"].map(imgKey => (
             <Grid key={imgKey} size={{ xs: 12 }} textAlign="center">
               <Box
                 component="figure"
@@ -32,21 +33,12 @@ export default function LearnMore() {
                   p: 1,
                   backgroundColor: "background.paper",
                   maxWidth: { xs: "100%", md: "75%" }, // Makes the image bigger
-                  mx: "auto",
+                  mx: "auto"
                 }}
               >
-                <Image
-                  src={learnMore.t(`images.${imgKey}.imagePath`)}
-                  alt={learnMore.t(`images.${imgKey}.caption`)}
-                  width={0}
-                  height={0}
-                  style={{ width: "100%", height: "auto" }}
-                  loading="lazy"
-                />
+                <Image src={learnMore.t(`images.${imgKey}.imagePath`)} alt={learnMore.t(`images.${imgKey}.caption`)} width={0} height={0} style={{ width: "100%", height: "auto" }} loading="lazy" />
                 <figcaption>
-                  <RichText sx={{ fontStyle: "italic" }}>
-                    {learnMore.t(`images.${imgKey}.caption`)}
-                  </RichText>
+                  <RichText sx={{ fontStyle: "italic" }}>{learnMore.t(`images.${imgKey}.caption`)}</RichText>
                 </figcaption>
               </Box>
             </Grid>

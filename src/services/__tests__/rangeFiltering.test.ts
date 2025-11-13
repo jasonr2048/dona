@@ -1,6 +1,7 @@
-import { calculateMinMaxDates, filterDataByRange, NullableRange } from "@services/rangeFiltering";
-import { Conversation } from "@models/processed";
 import { describe, expect, it } from "@jest/globals";
+
+import { Conversation } from "@models/processed";
+import { calculateMinMaxDates, filterDataByRange, NullableRange } from "@services/rangeFiltering";
 
 const mockConversations: Conversation[] = [
   {
@@ -9,14 +10,14 @@ const mockConversations: Conversation[] = [
     dataSource: "sourceA",
     messages: [
       { timestamp: new Date("2024-01-01").getTime(), wordCount: 5, sender: "Alice" },
-      { timestamp: new Date("2024-02-15").getTime(), wordCount: 10, sender: "Bob" },
+      { timestamp: new Date("2024-02-15").getTime(), wordCount: 10, sender: "Bob" }
     ],
     messagesAudio: [
       { timestamp: new Date("2024-02-20").getTime(), lengthSeconds: 30, sender: "Alice" },
-      { timestamp: new Date("2024-03-10").getTime(), lengthSeconds: 45, sender: "Bob" },
+      { timestamp: new Date("2024-03-10").getTime(), lengthSeconds: 45, sender: "Bob" }
     ],
     participants: ["Alice", "Bob"],
-    conversationPseudonym: "Group1",
+    conversationPseudonym: "Group1"
   },
   {
     id: "2",
@@ -24,12 +25,12 @@ const mockConversations: Conversation[] = [
     dataSource: "sourceB",
     messages: [
       { timestamp: new Date("2023-12-25").getTime(), wordCount: 15, sender: "Charlie" },
-      { timestamp: new Date("2024-01-10").getTime(), wordCount: 20, sender: "Charlie" },
+      { timestamp: new Date("2024-01-10").getTime(), wordCount: 20, sender: "Charlie" }
     ],
     messagesAudio: [],
     participants: ["Charlie"],
-    conversationPseudonym: "Chat2",
-  },
+    conversationPseudonym: "Chat2"
+  }
 ];
 
 describe("calculateMinMaxDates", () => {
@@ -41,14 +42,14 @@ describe("calculateMinMaxDates", () => {
         dataSource: "sourceA",
         messages: [
           { timestamp: new Date("2023-12-25").getTime(), sender: "Alice", wordCount: 10 },
-          { timestamp: new Date("2024-01-15").getTime(), sender: "Alice", wordCount: 20 },
+          { timestamp: new Date("2024-01-15").getTime(), sender: "Alice", wordCount: 20 }
         ],
         messagesAudio: [
           { timestamp: new Date("2024-01-10").getTime(), sender: "Alice", lengthSeconds: 30 },
-          { timestamp: new Date("2024-03-10").getTime(), sender: "Alice", lengthSeconds: 45 },
+          { timestamp: new Date("2024-03-10").getTime(), sender: "Alice", lengthSeconds: 45 }
         ],
         participants: ["Alice"],
-        conversationPseudonym: "ChatWithAlice",
+        conversationPseudonym: "ChatWithAlice"
       },
       {
         id: "2",
@@ -56,19 +57,19 @@ describe("calculateMinMaxDates", () => {
         dataSource: "sourceB",
         messages: [
           { timestamp: new Date("2024-01-20").getTime(), sender: "Bob", wordCount: 15 },
-          { timestamp: new Date("2024-02-05").getTime(), sender: "Charlie", wordCount: 25 },
+          { timestamp: new Date("2024-02-05").getTime(), sender: "Charlie", wordCount: 25 }
         ],
         messagesAudio: [],
         participants: ["Bob", "Charlie"],
-        conversationPseudonym: "GroupChat",
-      },
+        conversationPseudonym: "GroupChat"
+      }
     ];
 
     it("calculates the correct min and max dates with textOnly=false (default)", () => {
       const result = calculateMinMaxDates(mockConversations);
       expect(result).toEqual({
         minDate: new Date("2023-12-25"),
-        maxDate: new Date("2024-03-10"),
+        maxDate: new Date("2024-03-10")
       });
     });
 
@@ -76,7 +77,7 @@ describe("calculateMinMaxDates", () => {
       const result = calculateMinMaxDates(mockConversations, true);
       expect(result).toEqual({
         minDate: new Date("2023-12-25"),
-        maxDate: new Date("2024-02-05"),
+        maxDate: new Date("2024-02-05")
       });
     });
 
@@ -94,8 +95,8 @@ describe("calculateMinMaxDates", () => {
           messages: [],
           messagesAudio: [],
           participants: ["Dave"],
-          conversationPseudonym: "EmptyGroup",
-        },
+          conversationPseudonym: "EmptyGroup"
+        }
       ]);
 
       expect(result).toEqual({ minDate: null, maxDate: null });
@@ -105,7 +106,7 @@ describe("calculateMinMaxDates", () => {
       const result = calculateMinMaxDates([mockConversations[1]], false);
       expect(result).toEqual({
         minDate: new Date("2024-01-20"),
-        maxDate: new Date("2024-02-05"),
+        maxDate: new Date("2024-02-05")
       });
     });
 
@@ -117,10 +118,10 @@ describe("calculateMinMaxDates", () => {
         messages: [],
         messagesAudio: [
           { timestamp: new Date("2024-02-10").getTime(), sender: "Eve", lengthSeconds: 60 },
-          { timestamp: new Date("2024-02-20").getTime(), sender: "Eve", lengthSeconds: 120 },
+          { timestamp: new Date("2024-02-20").getTime(), sender: "Eve", lengthSeconds: 120 }
         ],
         participants: ["Eve"],
-        conversationPseudonym: "AudioOnlyChat",
+        conversationPseudonym: "AudioOnlyChat"
       };
       const result = calculateMinMaxDates([conversationWithOnlyAudio], true);
       expect(result).toEqual({ minDate: null, maxDate: null });
@@ -139,25 +140,21 @@ describe("filterDataByRange", () => {
         dataSource: "sourceA",
         messages: [
           { timestamp: new Date("2024-01-01").getTime(), wordCount: 5, sender: "Alice" },
-          { timestamp: new Date("2024-02-15").getTime(), wordCount: 10, sender: "Bob" },
+          { timestamp: new Date("2024-02-15").getTime(), wordCount: 10, sender: "Bob" }
         ],
-        messagesAudio: [
-          { timestamp: new Date("2024-02-20").getTime(), lengthSeconds: 30, sender: "Alice" },
-        ],
+        messagesAudio: [{ timestamp: new Date("2024-02-20").getTime(), lengthSeconds: 30, sender: "Alice" }],
         participants: ["Alice", "Bob"],
-        conversationPseudonym: "Group1",
+        conversationPseudonym: "Group1"
       },
       {
         id: "2",
         isGroupConversation: false,
         dataSource: "sourceB",
-        messages: [
-          { timestamp: new Date("2024-01-10").getTime(), wordCount: 20, sender: "Charlie" },
-        ],
+        messages: [{ timestamp: new Date("2024-01-10").getTime(), wordCount: 20, sender: "Charlie" }],
         messagesAudio: [],
         participants: ["Charlie"],
-        conversationPseudonym: "Chat2",
-      },
+        conversationPseudonym: "Chat2"
+      }
     ]);
   });
 
@@ -181,12 +178,10 @@ describe("filterDataByRange", () => {
         isGroupConversation: true,
         dataSource: "sourceA",
         messages: [{ timestamp: new Date("2024-02-15").getTime(), wordCount: 10, sender: "Bob" }],
-        messagesAudio: [
-          { timestamp: new Date("2024-02-20").getTime(), lengthSeconds: 30, sender: "Alice" },
-        ],
+        messagesAudio: [{ timestamp: new Date("2024-02-20").getTime(), lengthSeconds: 30, sender: "Alice" }],
         participants: ["Alice", "Bob"],
-        conversationPseudonym: "Group1",
-      },
+        conversationPseudonym: "Group1"
+      }
     ]);
   });
 
@@ -200,8 +195,8 @@ describe("filterDataByRange", () => {
           messages: [],
           messagesAudio: [],
           participants: ["Dave"],
-          conversationPseudonym: "EmptyGroup",
-        },
+          conversationPseudonym: "EmptyGroup"
+        }
       ],
       [new Date("2024-01-01"), new Date("2024-12-31")]
     );

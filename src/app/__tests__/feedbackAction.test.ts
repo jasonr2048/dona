@@ -1,7 +1,8 @@
+import { describe, expect, it, jest } from "@jest/globals";
+import headers from "next/headers";
+
 import { fetchGraphDataByDonationId, getDonationId } from "@/app/donation-feedback/actions";
 import { db } from "@/db/drizzle";
-import headers from "next/headers";
-import { describe, expect, it, jest } from "@jest/globals";
 import { GraphData } from "@models/graphData";
 
 jest.mock("@/db/drizzle");
@@ -26,7 +27,7 @@ const mockGraphData: Record<string, GraphData> = {
       messagesTotal: {
         textMessages: { sent: 0, received: 0 },
         audioMessages: { sent: 0, received: 0 },
-        allMessages: { sent: 0, received: 0 },
+        allMessages: { sent: 0, received: 0 }
       },
       wordsTotal: { sent: 0, received: 0 },
       secondsTotal: { sent: 0, received: 0 },
@@ -35,12 +36,12 @@ const mockGraphData: Record<string, GraphData> = {
       messagesPerActiveMonth: {
         textMessages: { sent: 0, received: 0 },
         audioMessages: { sent: 0, received: 0 },
-        allMessages: { sent: 0, received: 0 },
+        allMessages: { sent: 0, received: 0 }
       },
       wordsPerActiveMonth: { sent: 0, received: 0 },
-      secondsPerActiveMonth: { sent: 0, received: 0 },
-    },
-  },
+      secondsPerActiveMonth: { sent: 0, received: 0 }
+    }
+  }
 };
 
 describe("fetchGraphDataByDonationId", () => {
@@ -52,7 +53,7 @@ describe("fetchGraphDataByDonationId", () => {
     expect(result).toEqual(mockGraphData);
     expect(db.query.graphData.findFirst).toHaveBeenCalledWith({
       where: expect.any(Object),
-      columns: { data: true },
+      columns: { data: true }
     });
   });
 
@@ -60,9 +61,7 @@ describe("fetchGraphDataByDonationId", () => {
     // @ts-ignore
     db.query.graphData.findFirst = jest.fn().mockResolvedValue(null);
 
-    await expect(fetchGraphDataByDonationId("test-donation-id")).rejects.toThrow(
-      "Graph data not found for the given donation ID."
-    );
+    await expect(fetchGraphDataByDonationId("test-donation-id")).rejects.toThrow("Graph data not found for the given donation ID.");
   });
 });
 

@@ -1,20 +1,22 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
-import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useLocale, useTranslations } from "next-intl";
+import React, { useEffect, useState } from "react";
+
 import { useDonation } from "@/context/DonationContext";
-import { fetchOrComputeGraphDataByDonationId, getDonationId } from "./actions";
-import LoadingSpinner from "@components/LoadingSpinner";
-import DataSourceFeedbackSection from "@components/DataSourceFeedbackSection";
-import { MainTitle, RichText } from "@/styles/StyledTypography";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
-import Box from "@mui/material/Box";
+import { MainTitle, RichText } from "@/styles/StyledTypography";
+import DataSourceFeedbackSection from "@components/DataSourceFeedbackSection";
+import LoadingSpinner from "@components/LoadingSpinner";
 import { DataSourceValue } from "@models/processed";
+
+import { fetchOrComputeGraphDataByDonationId, getDonationId } from "./actions";
 
 const isFeedbackSurveyEnabled = process.env.NEXT_PUBLIC_FEEDBACK_SURVEY_ENABLED === "true";
 const feedbackSurveyLink = process.env.NEXT_PUBLIC_FEEDBACK_SURVEY_LINK;
@@ -32,8 +34,7 @@ export default function DonationFeedbackPage() {
         try {
           const donationIdFromCookie = await getDonationId();
           if (donationIdFromCookie) {
-            const fetchedGraphData =
-              await fetchOrComputeGraphDataByDonationId(donationIdFromCookie);
+            const fetchedGraphData = await fetchOrComputeGraphDataByDonationId(donationIdFromCookie);
             setDonationData(donationIdFromCookie, fetchedGraphData);
           }
         } catch (error) {
@@ -48,10 +49,7 @@ export default function DonationFeedbackPage() {
   }, [feedbackData, setDonationData]);
 
   const handleContinue = () => {
-    window.location.href =
-      isFeedbackSurveyEnabled && feedbackSurveyLink
-        ? `${feedbackSurveyLink}?UID=${externalDonorId}&lang=${locale}`
-        : "/";
+    window.location.href = isFeedbackSurveyEnabled && feedbackSurveyLink ? `${feedbackSurveyLink}?UID=${externalDonorId}&lang=${locale}` : "/";
   };
 
   return (
@@ -63,7 +61,7 @@ export default function DonationFeedbackPage() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          textAlign: "center",
+          textAlign: "center"
         }}
       >
         <MainTitle variant="h5">{feedback.t("title")}</MainTitle>
@@ -82,18 +80,12 @@ export default function DonationFeedbackPage() {
           <>
             <Alert severity="info">
               <Typography variant="body1">{feedback.t("importantMessage.title")}</Typography>
-              <Typography variant="body2">
-                {feedback.rich("importantMessage.disclaimer")}
-              </Typography>
+              <Typography variant="body2">{feedback.rich("importantMessage.disclaimer")}</Typography>
             </Alert>
 
             <Box sx={{ width: "100%", textAlign: "left" }}>
               {Object.entries(feedbackData).map(([source, data]) => (
-                <DataSourceFeedbackSection
-                  key={source}
-                  dataSourceValue={source as DataSourceValue}
-                  graphData={data}
-                />
+                <DataSourceFeedbackSection key={source} dataSourceValue={source as DataSourceValue} graphData={data} />
               ))}
             </Box>
 

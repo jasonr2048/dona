@@ -12,7 +12,7 @@ export function useRichTranslations(namespace: string) {
     return Object.fromEntries(
       Object.entries(urlKeys)
         .map(([placeholder, urlKey]) => [placeholder, linkHandler(urlKey, newTab)])
-        .filter((entry) => entry !== null)
+        .filter(entry => entry !== null)
     );
   };
 
@@ -24,11 +24,7 @@ export function useRichTranslations(namespace: string) {
 
     const url = globalTranslate(urlKey);
     const LinkComponent = (text: ReactNode) => (
-      <a
-        href={url}
-        target={newTab ? "_blank" : "_self"}
-        rel={newTab ? "noopener noreferrer" : undefined}
-      >
+      <a href={url} target={newTab ? "_blank" : "_self"} rel={newTab ? "noopener noreferrer" : undefined}>
         {text}
       </a>
     );
@@ -40,26 +36,21 @@ export function useRichTranslations(namespace: string) {
     {
       [namespace]: {
         t: translate,
-        rich: (
-          key: string,
-          urlKeys?: Record<string, string>,
-          newTab: boolean = true,
-          templateValues?: Record<string, any>
-        ) =>
+        rich: (key: string, urlKeys?: Record<string, string>, newTab: boolean = true, templateValues?: Record<string, any>) =>
           translate.rich(key, {
             ...makeLinkHandlers(urlKeys, newTab),
             br: () => <br />,
-            p: (txt) => <p>{txt}</p>,
-            u: (txt) => <u>{txt}</u>,
-            b: (content) => <b>{content}</b>,
-            i: (content) => <i>{content}</i>,
-            em: (content) => <em>{content}</em>,
-            strong: (content) => <strong>{content}</strong>,
-            email: (address) => <a href={"mailto:" + address}>{address}</a>,
-            ...templateValues,
+            p: txt => <p>{txt}</p>,
+            u: txt => <u>{txt}</u>,
+            b: content => <b>{content}</b>,
+            i: content => <i>{content}</i>,
+            em: content => <em>{content}</em>,
+            strong: content => <strong>{content}</strong>,
+            email: address => <a href={"mailto:" + address}>{address}</a>,
+            ...templateValues
           }),
-        link: linkHandler, // Standalone function for direct use
-      },
+        link: linkHandler // Standalone function for direct use
+      }
     }[namespace] ?? { t: () => "", rich: () => "", link: () => "" }
   ); // Return a default object
 }

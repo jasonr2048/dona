@@ -8,7 +8,7 @@ export async function checkDonorIdExists(externalDonorId: string): Promise<boole
   }
 
   const existingDonation = await db.query.donations.findFirst({
-    where: (donations, { eq }) => eq(donations.externalDonorId, externalDonorId),
+    where: (donations, { eq }) => eq(donations.externalDonorId, externalDonorId)
   });
 
   return !!existingDonation;

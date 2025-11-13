@@ -1,20 +1,14 @@
 "use server";
 
-import { db } from "@/db/drizzle";
+import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
-import {
-  conversationParticipants,
-  conversations,
-  donations,
-  graphData,
-  messages,
-  messagesAudio,
-} from "@/db/schema";
+
+import { db } from "@/db/drizzle";
+import { conversationParticipants, conversations, donations, graphData, messages, messagesAudio } from "@/db/schema";
+import { DbClient } from "@/db/types";
 import { NewConversation, NewMessage, NewMessageAudio } from "@models/persisted";
 import { Conversation, DonationStatus } from "@models/processed";
 import { DonationErrors, DonationProcessingError, SerializedDonationError } from "@services/errors";
-import { eq } from "drizzle-orm";
-import { DbClient } from "@/db/types";
 
 const MAX_MESSAGES_PER_TX = 10000; // max messages (text + audio) per DB transaction
 const BULK_CHUNK = 2000; // chunk size for large bulk inserts
@@ -29,10 +23,7 @@ function generateExternalDonorId(): string {
   return Math.random().toString(36).substring(2, 8);
 }
 
-export async function startDonation(
-  externalDonorId?: string,
-  dbClient: DbClient = db
-): Promise<ActionResult<{ donationId: string; donorId: string }>> {
+export async function startDonation(externalDonorId?: string, dbClient: DbClient = db): Promise<ActionResult<{ donationId: string; donorId: string }>> {
   const donorId = uuidv4();
   const externalIdToUse = externalDonorId || generateExternalDonorId();
   console.log(`[DONATION][donorId=${donorId}] startDonation: externalDonorId=${externalIdToUse}`);
@@ -42,7 +33,7 @@ export async function startDonation(
       .values({
         donorId,
         externalDonorId: externalIdToUse,
-        status: DonationStatus.Pending,
+        status: DonationStatus.Pending
       })
       .returning({ id: donations.id });
 
@@ -52,31 +43,23 @@ export async function startDonation(
   } catch (err) {
     console.error(`[DONATION][donorId=${donorId}] ❌ startDonation:`, {
       error: err,
-      stack: (err as any)?.stack,
+      stack: (err as any)?.stack
     });
     if ((err as any)?.constraint === "donations_external_donor_id_unique") {
       return {
         success: false,
-        error: DonationProcessingError(DonationErrors.DuplicateDonorId, { originalError: err }),
+        error: DonationProcessingError(DonationErrors.DuplicateDonorId, { originalError: err })
       };
     }
     return {
       success: false,
-      error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err }),
+      error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err })
     };
   }
 }
 
-export async function appendConversationBatch(
-  donationId: string,
-  donorId: string,
-  batch: Conversation[],
-  donorAlias: string,
-  dbClient: DbClient = db
-): Promise<ActionResult<{ inserted: number }>> {
-  console.log(
-    `[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`
-  );
+export async function appendConversationBatch(donationId: string, donorId: string, batch: Conversation[], donorAlias: string, dbClient: DbClient = db): Promise<ActionResult<{ inserted: number }>> {
+  console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`);
 
   try {
     const dataSources = (await dbClient.query.dataSources.findMany()) as any;
@@ -108,13 +91,11 @@ export async function appendConversationBatch(
       const audioCount = sub.reduce((acc, c) => acc + (c.messagesAudio?.length ?? 0), 0);
 
       // 1) Insert conversations in one transaction and get IDs (so messages can be inserted in later txs)
-      const insertedConvos = await dbClient.transaction(async (tx) => {
-        const newConvos = sub.map((convo) =>
-          NewConversation.create(donationId, convo, dataSources)
-        );
+      const insertedConvos = await dbClient.transaction(async tx => {
+        const newConvos = sub.map(convo => NewConversation.create(donationId, convo, dataSources));
         return tx.insert(conversations).values(newConvos).returning({ id: conversations.id });
       });
-      const conversationIds = insertedConvos.map((r) => r.id);
+      const conversationIds = insertedConvos.map(r => r.id);
 
       // 2) Build messages, audio messages and participants lists (use same participantId mapping per conversation)
       const messagesToInsert: any[] = [];
@@ -137,7 +118,7 @@ export async function appendConversationBatch(
           const senderId = resolveParticipantId(message.sender);
           const newMessage = NewMessage.create(conversationId, {
             ...message,
-            sender: senderId,
+            sender: senderId
           });
           messagesToInsert.push(newMessage);
         }
@@ -147,7 +128,7 @@ export async function appendConversationBatch(
           const senderId = resolveParticipantId(audio.sender);
           const newAudio = NewMessageAudio.create(conversationId, {
             ...audio,
-            sender: senderId,
+            sender: senderId
           });
           audioToInsert.push(newAudio);
         }
@@ -158,7 +139,7 @@ export async function appendConversationBatch(
           participantsToInsert.push({
             participantId,
             conversationId,
-            participantPseudonym: participant,
+            participantPseudonym: participant
           });
         }
       }
@@ -168,7 +149,7 @@ export async function appendConversationBatch(
       if (messagesToInsert.length > 0) {
         for (let start = 0; start < messagesToInsert.length; start += MAX_MESSAGES_PER_TX) {
           const window = messagesToInsert.slice(start, start + MAX_MESSAGES_PER_TX);
-          await dbClient.transaction(async (tx) => {
+          await dbClient.transaction(async tx => {
             for (let j = 0; j < window.length; j += BULK_CHUNK) {
               await tx.insert(messages).values(window.slice(j, j + BULK_CHUNK));
             }
@@ -182,7 +163,7 @@ export async function appendConversationBatch(
       if (audioToInsert.length > 0) {
         for (let start = 0; start < audioToInsert.length; start += MAX_MESSAGES_PER_TX) {
           const window = audioToInsert.slice(start, start + MAX_MESSAGES_PER_TX);
-          await dbClient.transaction(async (tx) => {
+          await dbClient.transaction(async tx => {
             for (let j = 0; j < window.length; j += BULK_CHUNK) {
               await tx.insert(messagesAudio).values(window.slice(j, j + BULK_CHUNK));
             }
@@ -201,55 +182,40 @@ export async function appendConversationBatch(
         }
       }
 
-      console.log(
-        `[DONATION][donorId=${donorId}][donationId=${donationId}] ` +
-          `Sub-batch ${subIndex}/${totalSubBatches}: ${convoCount} conversations, ${textCount} messages, ${audioCount} audio messages`
-      );
+      console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] ` + `Sub-batch ${subIndex}/${totalSubBatches}: ${convoCount} conversations, ${textCount} messages, ${audioCount} audio messages`);
     }
 
-    console.log(
-      `[DONATION][donorId=${donorId}][donationId=${donationId}] ✅ appendConversationBatch: inserted ${batch.length} conversations`
-    );
+    console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] ✅ appendConversationBatch: inserted ${batch.length} conversations`);
     return { success: true };
   } catch (err) {
-    console.error(
-      `[DONATION][donorId=${donorId}][donationId=${donationId}] ❌ appendConversationBatch:`,
-      {
-        error: err,
-        stack: (err as any)?.stack,
-      }
-    );
+    console.error(`[DONATION][donorId=${donorId}][donationId=${donationId}] ❌ appendConversationBatch:`, {
+      error: err,
+      stack: (err as any)?.stack
+    });
     return {
       success: false,
-      error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err }),
+      error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err })
     };
   }
 }
 
-export async function finalizeDonation(
-  donationId: string,
-  graphDataRecord: Record<string, any>,
-  dbClient: DbClient = db
-): Promise<ActionResult<{ donationId: string }>> {
+export async function finalizeDonation(donationId: string, graphDataRecord: Record<string, any>, dbClient: DbClient = db): Promise<ActionResult<{ donationId: string }>> {
   console.log(`[DONATION][donationId=${donationId}] finalizeDonation`);
   try {
-    await dbClient.transaction(async (tx) => {
+    await dbClient.transaction(async tx => {
       await tx.insert(graphData).values({ donationId, data: graphDataRecord });
-      await tx
-        .update(donations)
-        .set({ status: DonationStatus.Complete })
-        .where(eq(donations.id, donationId));
+      await tx.update(donations).set({ status: DonationStatus.Complete }).where(eq(donations.id, donationId));
     });
     console.log(`[DONATION][donationId=${donationId}] ✅ finalizeDonation`);
     return { success: true, data: { donationId } };
   } catch (err) {
     console.error(`[DONATION][donationId=${donationId}] ❌ finalizeDonation:`, {
       error: err,
-      stack: (err as any)?.stack,
+      stack: (err as any)?.stack
     });
     return {
       success: false,
-      error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err }),
+      error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err })
     };
   }
 }

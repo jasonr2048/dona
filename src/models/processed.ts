@@ -5,13 +5,13 @@ export enum DataSourceValue {
   WhatsApp = "WhatsApp",
   Facebook = "Facebook",
   Instagram = "Instagram",
-  IMessage = "IMessage",
+  IMessage = "IMessage"
 }
 
 export enum DonationStatus {
   Pending = "pending", //TODO: Post consent, pre donation
   Complete = "complete",
-  Deleted = "deleted",
+  Deleted = "deleted"
 }
 
 export interface DataSource {

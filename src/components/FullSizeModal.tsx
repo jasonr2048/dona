@@ -1,7 +1,7 @@
-import React from "react";
 import { Modal, Box, Button, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslations } from "next-intl";
+import React from "react";
 
 const StyledModalBox = styled(Box)(({ theme }) => ({
   position: "absolute",
@@ -15,7 +15,7 @@ const StyledModalBox = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   borderRadius: theme.shape.borderRadius * 2,
   boxShadow: theme.shadows[10],
-  padding: theme.spacing(3),
+  padding: theme.spacing(3)
 }));
 
 interface FullSizeModalProps {
@@ -26,22 +26,11 @@ interface FullSizeModalProps {
   onAgree?: () => void;
 }
 
-const FullSizeModal: React.FC<FullSizeModalProps> = ({
-  open,
-  onClose,
-  children,
-  ariaLabel,
-  onAgree,
-}) => {
+const FullSizeModal: React.FC<FullSizeModalProps> = ({ open, onClose, children, ariaLabel, onAgree }) => {
   const actions = useTranslations("actions");
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      aria-labelledby={ariaLabel ? "modal-title" : undefined}
-      aria-describedby={ariaLabel ? "modal-content" : undefined}
-    >
+    <Modal open={open} onClose={onClose} aria-labelledby={ariaLabel ? "modal-title" : undefined} aria-describedby={ariaLabel ? "modal-content" : undefined}>
       <StyledModalBox>
         {/* Optional aria label */}
         {ariaLabel && (

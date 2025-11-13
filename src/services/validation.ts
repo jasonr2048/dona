@@ -8,11 +8,8 @@ export function validateMinChatsForDonation(conversations: Conversation[] | File
 
 export function validateMinImportantChatsForDonation(conversations: Conversation[]): boolean {
   // Filter conversations based on messages and contacts, for validation
-  const filteredConversations = conversations.filter((conv) => {
-    return (
-      conv.messages.length + conv.messagesAudio.length >= CONFIG.MIN_MESSAGES_PER_CHAT &&
-      conv.participants.length >= CONFIG.MIN_CONTACTS_PER_CHAT
-    );
+  const filteredConversations = conversations.filter(conv => {
+    return conv.messages.length + conv.messagesAudio.length >= CONFIG.MIN_MESSAGES_PER_CHAT && conv.participants.length >= CONFIG.MIN_CONTACTS_PER_CHAT;
   });
 
   // Final validation for the number of conversations after filtering

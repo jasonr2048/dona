@@ -1,8 +1,9 @@
 "use client";
 
-import { useRichTranslations } from "@/hooks/useRichTranslations";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+
+import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { MainTitle, RichText, BlockTitle } from "@/styles/StyledTypography";
 
 export default function Imprint() {
@@ -19,9 +20,7 @@ export default function Imprint() {
         <RichText>{imprint.rich("rsa.body")}</RichText>
 
         <BlockTitle variant="h5">{imprint.t("responsibleDona.title")}</BlockTitle>
-        <RichText>
-          {imprint.rich("responsibleDona.body", { link: "donaResponsibleHomepage" })}
-        </RichText>
+        <RichText>{imprint.rich("responsibleDona.body", { link: "donaResponsibleHomepage" })}</RichText>
 
         <BlockTitle variant="h5">{imprint.t("responsibleCentralWebsite.title")}</BlockTitle>
         <RichText>{imprint.rich("responsibleCentralWebsite.body")}</RichText>

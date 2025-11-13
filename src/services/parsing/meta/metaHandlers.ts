@@ -1,13 +1,9 @@
-import deIdentify from "./deIdentify";
-import { DonationErrors, DonationValidationError } from "@services/errors";
-import {
-  extractEntriesFromZips,
-  getEntryText,
-  isMatchingEntry,
-  ValidEntry,
-} from "@services/parsing/shared/zipExtraction";
 import { AnonymizationResult, DataSourceValue } from "@models/processed";
+import { DonationErrors, DonationValidationError } from "@services/errors";
 import { decode, processJsonContent } from "@services/parsing/shared/decoding";
+import { extractEntriesFromZips, getEntryText, isMatchingEntry, ValidEntry } from "@services/parsing/shared/zipExtraction";
+
+import deIdentify from "./deIdentify";
 
 interface ParsedMessage {
   sender_name: string;
@@ -23,27 +19,17 @@ export interface ParsedConversation {
 }
 
 export async function handleInstagramZipFiles(fileList: File[]): Promise<AnonymizationResult> {
-  return handleMetaZipFiles(
-    fileList,
-    "personal_information.json",
-    extractDonorNameFromInstagramProfile,
-    DataSourceValue.Instagram
-  );
+  return handleMetaZipFiles(fileList, "personal_information.json", extractDonorNameFromInstagramProfile, DataSourceValue.Instagram);
 }
 
 export async function handleFacebookZipFiles(fileList: File[]): Promise<AnonymizationResult> {
-  return handleMetaZipFiles(
-    fileList,
-    "profile_information.json",
-    extractDonorNameFromFacebookProfile,
-    DataSourceValue.Facebook
-  );
+  return handleMetaZipFiles(fileList, "profile_information.json", extractDonorNameFromFacebookProfile, DataSourceValue.Facebook);
 }
 
 const extractDonorNameFromFacebookProfile = (profileText: string): string => {
   const profileJson = JSON.parse(profileText);
 
-  const profileKey = Object.keys(profileJson).find((key) => /profile/.test(key));
+  const profileKey = Object.keys(profileJson).find(key => /profile/.test(key));
   if (profileKey && profileJson[profileKey]?.name?.full_name) {
     return decode(profileJson[profileKey].name.full_name);
   }
@@ -70,30 +56,21 @@ const extractDonorNameFromInstagramProfile = (profileText: string): string => {
   throw DonationValidationError(DonationErrors.NoDonorNameFound);
 };
 
-async function handleMetaZipFiles(
-  fileList: File[],
-  profileInfoFilePattern: string,
-  userNameExtractor: (profileText: string) => string,
-  dataSourceValue: DataSourceValue
-): Promise<AnonymizationResult> {
+async function handleMetaZipFiles(fileList: File[], profileInfoFilePattern: string, userNameExtractor: (profileText: string) => string, dataSourceValue: DataSourceValue): Promise<AnonymizationResult> {
   const allEntries: ValidEntry[] = await extractEntriesFromZips(fileList);
 
   // Check for the presence of profile information
-  const profileInfoEntry = allEntries.find((entry) =>
-    isMatchingEntry(entry, profileInfoFilePattern)
-  );
+  const profileInfoEntry = allEntries.find(entry => isMatchingEntry(entry, profileInfoFilePattern));
   if (!profileInfoEntry) {
     throw DonationValidationError(DonationErrors.NoProfile);
   }
   // Filter for message entries
-  const messageEntries = allEntries.filter(
-    (entry) => isMatchingEntry(entry, "message.json") || isMatchingEntry(entry, "message_1.json")
-  );
+  const messageEntries = allEntries.filter(entry => isMatchingEntry(entry, "message.json") || isMatchingEntry(entry, "message_1.json"));
   if (messageEntries.length < 1) {
     throw DonationValidationError(DonationErrors.NoMessageEntries);
   }
   // Select audio entries
-  const audioEntries = allEntries.filter((entry) => isMatchingEntry(entry, ".wav"));
+  const audioEntries = allEntries.filter(entry => isMatchingEntry(entry, ".wav"));
   console.log("Audio entries found:", audioEntries.length);
 
   try {
@@ -110,13 +87,11 @@ async function handleMetaZipFiles(
   }
 }
 
-const getConversationsFromEntries = async (
-  messageEntries: ValidEntry[]
-): Promise<ParsedConversation[]> => {
+const getConversationsFromEntries = async (messageEntries: ValidEntry[]): Promise<ParsedConversation[]> => {
   const textList = await Promise.all(messageEntries.map(getEntryText));
   const jsonContents: Map<string, ParsedConversation> = new Map();
 
-  textList.forEach((textContent) => {
+  textList.forEach(textContent => {
     try {
       // First parse the JSON directly
       const jsonContent: ParsedConversation = JSON.parse(textContent);
@@ -125,9 +100,7 @@ const getConversationsFromEntries = async (
       const fullyDecodedContent = processJsonContent(jsonContent);
 
       if (jsonContents.has(fullyDecodedContent.thread_path)) {
-        jsonContents
-          .get(fullyDecodedContent.thread_path)!
-          .messages.push(...fullyDecodedContent.messages);
+        jsonContents.get(fullyDecodedContent.thread_path)!.messages.push(...fullyDecodedContent.messages);
       } else {
         jsonContents.set(fullyDecodedContent.thread_path, fullyDecodedContent);
       }

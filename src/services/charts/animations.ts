@@ -19,10 +19,7 @@ interface SentReceivedPoint {
  * @param sentOnly - If true, only sent counts are considered; otherwise, both sent and received counts are used.
  * @returns An object containing counts per month, sorted month keys, and the global maximum count.
  */
-export const prepareCountsOverTimeData = (
-  dataMonthlyPerConversation: Record<string, SentReceivedPoint[]>,
-  sentOnly: boolean = false
-): CountsOverTimeData => {
+export const prepareCountsOverTimeData = (dataMonthlyPerConversation: Record<string, SentReceivedPoint[]>, sentOnly: boolean = false): CountsOverTimeData => {
   const counts: Record<string, number[]> = {};
   const monthsSet = new Set<string>();
   let globalMax = 0;
@@ -32,7 +29,7 @@ export const prepareCountsOverTimeData = (
     let cumulativeSum = 0;
     conversationData
       .sort((a, b) => a.year - b.year || a.month - b.month)
-      .forEach((dataPoint) => {
+      .forEach(dataPoint => {
         const monthKey = `${dataPoint.year}-${dataPoint.month.toString().padStart(2, "0")}`;
         monthsSet.add(monthKey);
 
@@ -52,13 +49,9 @@ export const prepareCountsOverTimeData = (
   return { counts, sortedMonths, globalMax };
 };
 
-const fillMissingMonths = (
-  counts: Record<string, number[]>,
-  sortedMonths: string[],
-  numConversations: number
-) => {
+const fillMissingMonths = (counts: Record<string, number[]>, sortedMonths: string[], numConversations: number) => {
   let lastValues = Array(numConversations).fill(0);
-  sortedMonths.forEach((monthKey) => {
+  sortedMonths.forEach(monthKey => {
     if (!counts[monthKey]) counts[monthKey] = Array(numConversations).fill(0);
     counts[monthKey] = counts[monthKey].map((value, idx) => value || lastValues[idx]);
     lastValues = counts[monthKey];

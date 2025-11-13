@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Slider, useMediaQuery, useTheme } from "@mui/material";
-import { useTranslations } from "next-intl";
-import { ChartControlButton } from "@/styles/StyledButtons";
 import { styled } from "@mui/material/styles";
 import { sparseMarks } from "@services/charts/sliderUtils";
+import { useTranslations } from "next-intl";
+
+import { ChartControlButton } from "@/styles/StyledButtons";
 
 const RotatedLabelsSlider = styled(Slider)(({ theme }) => ({
   "& .MuiSlider-markLabel": {
@@ -12,8 +13,8 @@ const RotatedLabelsSlider = styled(Slider)(({ theme }) => ({
     marginTop: "1px",
     marginBottom: "100px",
     whiteSpace: "nowrap",
-    fontSize: "0.75rem",
-  },
+    fontSize: "0.75rem"
+  }
 }));
 
 interface SliderWithButtonsProps {
@@ -23,12 +24,7 @@ interface SliderWithButtonsProps {
   alwaysShowValueLabel?: boolean; // if true, always show current selection label on the thumb
 }
 
-const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({
-  value,
-  marks,
-  setCurrentFrame,
-  alwaysShowValueLabel = true,
-}) => {
+const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({ value, marks, setCurrentFrame, alwaysShowValueLabel = true }) => {
   const labels = useTranslations("feedback.chartLabels");
   const animationRef = useRef<NodeJS.Timeout | null>(null);
   const theme = useTheme();
@@ -42,7 +38,7 @@ const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({
     if (!containerRef.current) return;
     if (typeof window === "undefined") return;
     const el = containerRef.current;
-    const ro = new ResizeObserver((entries) => {
+    const ro = new ResizeObserver(entries => {
       for (const entry of entries) {
         const cr = entry.contentRect;
         setContainerWidth(cr.width);
@@ -68,10 +64,10 @@ const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({
   // Build full marks for all months, but only show labels for a sparse subset (always include first/last)
   const renderedMarks = useMemo(() => {
     const sparse = sparseMarks(marks, maxLabels);
-    const labeledValues = new Set(sparse.map((m) => m.value));
-    return marks.map((m) => ({
+    const labeledValues = new Set(sparse.map(m => m.value));
+    return marks.map(m => ({
       value: m.value,
-      label: labeledValues.has(m.value) ? m.label : "",
+      label: labeledValues.has(m.value) ? m.label : ""
     }));
   }, [marks, maxLabels]);
 
@@ -79,7 +75,7 @@ const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({
     if (animationRef.current) clearInterval(animationRef.current);
     setCurrentFrame(0);
     animationRef.current = setInterval(() => {
-      setCurrentFrame((prevFrame) => {
+      setCurrentFrame(prevFrame => {
         if (prevFrame < marks.length - 1) {
           return prevFrame + 1;
         } else {
@@ -96,35 +92,10 @@ const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection={{ xs: "column", sm: "row" }}
-      alignItems="center"
-      mx="auto"
-      width="95%"
-      gap={{ xs: 0, sm: 3 }}
-      mt={-2}
-      mb={{ xs: 2, sm: 0 }}
-    >
+    <Box display="flex" flexDirection={{ xs: "column", sm: "row" }} alignItems="center" mx="auto" width="95%" gap={{ xs: 0, sm: 3 }} mt={-2} mb={{ xs: 2, sm: 0 }}>
       {/* Slider up to 60% width */}
-      <Box
-        ref={containerRef}
-        flexGrow={1}
-        width={{ xs: "100%", sm: "60%" }}
-        minWidth="150px"
-        px={2}
-        mb={1}
-      >
-        <RotatedLabelsSlider
-          value={value}
-          onChange={(_, newValue) => setCurrentFrame(newValue as number)}
-          min={0}
-          max={marks.length - 1}
-          step={1}
-          marks={renderedMarks}
-          valueLabelDisplay={alwaysShowValueLabel ? "on" : "auto"}
-          valueLabelFormat={(v) => marks[v]?.label ?? String(v)}
-        />
+      <Box ref={containerRef} flexGrow={1} width={{ xs: "100%", sm: "60%" }} minWidth="150px" px={2} mb={1}>
+        <RotatedLabelsSlider value={value} onChange={(_, newValue) => setCurrentFrame(newValue as number)} min={0} max={marks.length - 1} step={1} marks={renderedMarks} valueLabelDisplay={alwaysShowValueLabel ? "on" : "auto"} valueLabelFormat={v => marks[v]?.label ?? String(v)} />
       </Box>
 
       {/* Buttons, side by side */}

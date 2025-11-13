@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
-import { createJsonDownloadUrl } from "@services/createJson";
-import { Conversation, Message, MessageAudio } from "@models/processed";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -9,7 +6,11 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import PersonOffIcon from "@mui/icons-material/PersonOff";
+import { useTranslations } from "next-intl";
+import React, { useEffect, useState } from "react";
+
+import { Conversation, Message, MessageAudio } from "@models/processed";
+import { createJsonDownloadUrl } from "@services/createJson";
 
 interface MessageData {
   message: Message | MessageAudio;
@@ -25,13 +26,7 @@ interface AnonymizationModalProps {
   n_messages: number;
 }
 
-const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
-  open,
-  onClose,
-  conversations,
-  n_listed_receivers,
-  n_messages,
-}) => {
+const AnonymizationModal: React.FC<AnonymizationModalProps> = ({ open, onClose, conversations, n_listed_receivers, n_messages }) => {
   const t = useTranslations("donation.preview-data");
   const actions = useTranslations("actions");
   const [messagesData, setMessagesData] = useState<MessageData[]>([]);
@@ -39,11 +34,11 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
 
   useEffect(() => {
     const filteredMessagesData = conversations
-      .flatMap((conversation) =>
-        [...conversation.messages, ...conversation.messagesAudio].map((msg) => ({
+      .flatMap(conversation =>
+        [...conversation.messages, ...conversation.messagesAudio].map(msg => ({
           message: msg,
           participants: conversation.participants,
-          isGroup: conversation.isGroupConversation || false,
+          isGroup: conversation.isGroupConversation || false
         }))
       )
       .slice(0, n_messages);
@@ -52,24 +47,14 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
   }, [conversations, n_messages]);
 
   const inferReceivers = (participants: string[], sender: string): string => {
-    const receivers = participants.filter((participant) => participant !== sender);
+    const receivers = participants.filter(participant => participant !== sender);
     if (receivers.length > n_listed_receivers) {
       return `${receivers.slice(0, n_listed_receivers).join(", ")}...`;
     }
     return receivers.join(", ");
   };
 
-  const renderMessageCard = ({
-    message,
-    participants,
-    isGroup,
-    index,
-  }: {
-    message: Message | MessageAudio;
-    participants: string[];
-    isGroup: boolean;
-    index: number;
-  }) => {
+  const renderMessageCard = ({ message, participants, isGroup, index }: { message: Message | MessageAudio; participants: string[]; isGroup: boolean; index: number }) => {
     const receiver = inferReceivers(participants, message.sender);
     const isAudio = "lengthSeconds" in message;
 
@@ -78,11 +63,11 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
       { label: t("receiver"), value: receiver },
       {
         label: isAudio ? t("length-seconds") : t("word-count"),
-        value: isAudio ? message.lengthSeconds : (message as Message).wordCount,
+        value: isAudio ? message.lengthSeconds : (message as Message).wordCount
       },
       { label: t("timestamp"), value: new Date(message.timestamp).toLocaleString() },
       { label: t("group-conversation"), value: isGroup ? actions("yes") : actions("no") },
-      { label: t("voice-message"), value: isAudio ? actions("yes") : actions("no") },
+      { label: t("voice-message"), value: isAudio ? actions("yes") : actions("no") }
     ];
 
     return (
@@ -120,27 +105,23 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
           left: "50%",
           transform: "translate(-50%, 0%)",
           width: { xs: "90%", sm: "60%" },
-          backgroundColor: "background.paper",
+          backgroundColor: "background.paper"
         }}
       >
         <Typography variant="h5">{t("title")}</Typography>
-        <Alert
-          icon={<PersonOffIcon fontSize="inherit" />}
-          severity="info"
-          sx={{ padding: 1.5, my: 2, borderRadius: 1.5 }}
-        >
+        <Alert icon={<PersonOffIcon fontSize="inherit" />} severity="info" sx={{ padding: 1.5, my: 2, borderRadius: 1.5 }}>
           <Typography variant="body2">{t("body1")}</Typography>
           <Typography variant="body2">{t("body2")}</Typography>
         </Alert>
         <Typography variant="body2" sx={{ mb: 1 }}>
           {t.rich("data-explanation_format", {
-            b: (txt) => <b>{txt}</b>,
+            b: txt => <b>{txt}</b>,
             num_messages: n_messages,
-            link: (txt) => (
+            link: txt => (
               <a href={downloadUrl} target="_blank" rel="noopener noreferrer">
                 {txt}
               </a>
-            ),
+            )
           })}
         </Typography>
         <Box
@@ -148,7 +129,7 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
             display: "flex",
             flexDirection: "row",
             gap: 2,
-            overflowX: "auto",
+            overflowX: "auto"
           }}
         >
           {messagesData.map((data, index) => renderMessageCard({ ...data, index }))}

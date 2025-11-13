@@ -1,25 +1,12 @@
+import Box from "@mui/material/Box";
+import { CategoryScale, Chart as ChartJS, Filler, Legend, LinearScale, LineElement, PointElement, Tooltip } from "chart.js";
+import { useTranslations } from "next-intl";
 import React, { useMemo } from "react";
 import { Line } from "react-chartjs-2";
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Filler,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Tooltip,
-} from "chart.js";
+
+import { CHART_COLORS, CHART_LAYOUT, COMMON_CHART_OPTIONS, TOP_LEGEND } from "@components/charts/chartConfig";
 import DownloadButtons from "@components/charts/DownloadButtons";
-import { useTranslations } from "next-intl";
-import Box from "@mui/material/Box";
 import { DailySentReceivedPoint } from "@models/graphData";
-import {
-  CHART_COLORS,
-  CHART_LAYOUT,
-  COMMON_CHART_OPTIONS,
-  TOP_LEGEND,
-} from "@components/charts/chartConfig";
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend, Filler);
 
@@ -28,24 +15,17 @@ interface SentReceivedSlidingWindowChartProps {
   mode: "text" | "audio";
 }
 
-const SentReceivedSlidingWindowChart: React.FC<SentReceivedSlidingWindowChartProps> = ({
-  slidingWindowMeanDailyWords,
-  mode,
-}) => {
+const SentReceivedSlidingWindowChart: React.FC<SentReceivedSlidingWindowChartProps> = ({ slidingWindowMeanDailyWords, mode }) => {
   const CHART_NAME = `sliding-window-mean-${mode}-chart`;
   const container_name = `chart-wrapper-${CHART_NAME}`;
 
   const property = mode === "text" ? "word" : "second";
-  const chartTexts = useTranslations(
-    `feedback.interactionIntensity.${property}CountSlidingWindowMean`
-  );
+  const chartTexts = useTranslations(`feedback.interactionIntensity.${property}CountSlidingWindowMean`);
 
   const chartData = useMemo(() => {
-    const labels = slidingWindowMeanDailyWords.map(
-      (data) => new Date(data.epochSeconds * 1000).toISOString().split("T")[0]
-    );
-    const sentData = slidingWindowMeanDailyWords.map((data) => data.sentCount);
-    const receivedData = slidingWindowMeanDailyWords.map((data) => data.receivedCount);
+    const labels = slidingWindowMeanDailyWords.map(data => new Date(data.epochSeconds * 1000).toISOString().split("T")[0]);
+    const sentData = slidingWindowMeanDailyWords.map(data => data.sentCount);
+    const receivedData = slidingWindowMeanDailyWords.map(data => data.receivedCount);
 
     return {
       labels,
@@ -57,7 +37,7 @@ const SentReceivedSlidingWindowChart: React.FC<SentReceivedSlidingWindowChartPro
           backgroundColor: CHART_COLORS.primaryTransparent,
           fill: true,
           pointRadius: 3,
-          pointStyle: mode === "audio" ? "cross" : "circle",
+          pointStyle: mode === "audio" ? "cross" : "circle"
         },
         {
           label: chartTexts("legend.received"),
@@ -66,9 +46,9 @@ const SentReceivedSlidingWindowChart: React.FC<SentReceivedSlidingWindowChartPro
           backgroundColor: CHART_COLORS.secondaryTransparent,
           fill: true,
           pointRadius: 3,
-          pointStyle: mode === "audio" ? "cross" : "circle",
-        },
-      ],
+          pointStyle: mode === "audio" ? "cross" : "circle"
+        }
+      ]
     };
   }, [slidingWindowMeanDailyWords, chartTexts]);
 
@@ -92,22 +72,22 @@ const SentReceivedSlidingWindowChart: React.FC<SentReceivedSlidingWindowChartPro
                     unit: "month",
                     tooltipFormat: "dd-MM-yyyy",
                     displayFormats: {
-                      day: "MM-yyyy",
-                    },
+                      day: "MM-yyyy"
+                    }
                   },
                   title: { display: false },
                   ticks: {
                     ...COMMON_CHART_OPTIONS.scales.x.ticks,
                     maxRotation: 45,
-                    minRotation: 45,
-                  },
+                    minRotation: 45
+                  }
                 },
                 y: {
                   ...COMMON_CHART_OPTIONS.scales.y,
                   title: { display: true, text: chartTexts("yAxis") },
-                  beginAtZero: true,
-                },
-              },
+                  beginAtZero: true
+                }
+              }
             }}
           />
         </Box>

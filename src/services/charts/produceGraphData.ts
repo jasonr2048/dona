@@ -1,52 +1,23 @@
-import { Conversation, DataSourceValue } from "@models/processed";
 import { DailySentReceivedPoint, GraphData } from "@models/graphData";
-import {
-  aggregateDailyCounts,
-  monthlyCountsPerConversation,
-  produceAllDays,
-  produceAnswerTimesPerConversation,
-  produceDailyCountsPerConversation,
-  produceMessagesSentReceivedPerType,
-  produceSlidingWindowMean,
-  produceWordCountDailyHours,
-  aggregateDailyHours,
-} from "@services/charts/timeAggregates";
+import { Conversation, DataSourceValue } from "@models/processed";
 import produceBasicStatistics from "@services/charts/produceBasicStatistics";
+import { aggregateDailyCounts, monthlyCountsPerConversation, produceAllDays, produceAnswerTimesPerConversation, produceDailyCountsPerConversation, produceMessagesSentReceivedPerType, produceSlidingWindowMean, produceWordCountDailyHours, aggregateDailyHours } from "@services/charts/timeAggregates";
 import { calculateMinMaxDates } from "@services/rangeFiltering";
 
-export default function produceGraphData(
-  donorId: string,
-  allConversations: Conversation[]
-): Record<string, GraphData> {
+export default function produceGraphData(donorId: string, allConversations: Conversation[]): Record<string, GraphData> {
   return Object.fromEntries(
     Map.groupBy(allConversations, ({ dataSource }) => dataSource)
       .entries()
       .map(([dataSourceValue, conversations]) => {
         // Extract focus conversations
-        const focusConversations = conversations
-          .filter((conversation) => conversation.focusInFeedback)
-          .map((conversation) => conversation.conversationPseudonym);
+        const focusConversations = conversations.filter(conversation => conversation.focusInFeedback).map(conversation => conversation.conversationPseudonym);
 
         // Per conversation data
-        const dailyWordsPerConversation = conversations.map((conversation) =>
-          produceDailyCountsPerConversation(donorId, conversation, "words")
-        );
-        const dailySecondsPerConversation = conversations.map((conversation) =>
-          produceDailyCountsPerConversation(donorId, conversation, "seconds")
-        );
-        const participantsPerConversation = conversations.map((conversation) =>
-          conversation.participants.filter((participant) => participant !== donorId)
-        );
-        const monthlyWordsPerConversation = monthlyCountsPerConversation(
-          donorId,
-          conversations,
-          "words"
-        );
-        const monthlySecondsPerConversation = monthlyCountsPerConversation(
-          donorId,
-          conversations,
-          "seconds"
-        );
+        const dailyWordsPerConversation = conversations.map(conversation => produceDailyCountsPerConversation(donorId, conversation, "words"));
+        const dailySecondsPerConversation = conversations.map(conversation => produceDailyCountsPerConversation(donorId, conversation, "seconds"));
+        const participantsPerConversation = conversations.map(conversation => conversation.participants.filter(participant => participant !== donorId));
+        const monthlyWordsPerConversation = monthlyCountsPerConversation(donorId, conversations, "words");
+        const monthlySecondsPerConversation = monthlyCountsPerConversation(donorId, conversations, "seconds");
 
         // Aggregated conversations data
         const dailyWords = aggregateDailyCounts(dailyWordsPerConversation);
@@ -63,15 +34,11 @@ export default function produceGraphData(
           slidingWindowMeanDailyWords = produceSlidingWindowMean(dailyWords, completeDaysList);
           slidingWindowMeanDailySeconds = produceSlidingWindowMean(dailySeconds, completeDaysList);
         }
-        const dailySentHoursPerConversation = conversations.map((c) =>
-          produceWordCountDailyHours(donorId, [c], true)
-        );
+        const dailySentHoursPerConversation = conversations.map(c => produceWordCountDailyHours(donorId, [c], true));
         const dailySentHours = aggregateDailyHours(dailySentHoursPerConversation);
         const dailyReceivedHours = produceWordCountDailyHours(donorId, conversations, false);
 
-        const answerTimes = conversations.flatMap((conversation) =>
-          produceAnswerTimesPerConversation(donorId, conversation)
-        );
+        const answerTimes = conversations.flatMap(conversation => produceAnswerTimesPerConversation(donorId, conversation));
 
         // General statistics
         const messageCounts = produceMessagesSentReceivedPerType(donorId, conversations);
@@ -84,26 +51,22 @@ export default function produceGraphData(
           received: Record<string, number>;
         } = {
           sent: {},
-          received: {},
+          received: {}
         };
 
         // Only calculate if there are audio messages
-        const hasAudioMessages = conversations.some(
-          (conversation) => conversation.messagesAudio.length > 0
-        );
+        const hasAudioMessages = conversations.some(conversation => conversation.messagesAudio.length > 0);
         if (hasAudioMessages) {
-          conversations.forEach((conversation) => {
-            conversation.messagesAudio.forEach((messageAudio) => {
+          conversations.forEach(conversation => {
+            conversation.messagesAudio.forEach(messageAudio => {
               if (messageAudio.lengthSeconds > 0) {
                 // Round the length to the nearest second
                 const roundedLength = Math.round(messageAudio.lengthSeconds).toString();
 
                 if (messageAudio.sender === donorId) {
-                  audioLengthDistribution!.sent[roundedLength] =
-                    (audioLengthDistribution!.sent[roundedLength] || 0) + 1;
+                  audioLengthDistribution!.sent[roundedLength] = (audioLengthDistribution!.sent[roundedLength] || 0) + 1;
                 } else {
-                  audioLengthDistribution!.received[roundedLength] =
-                    (audioLengthDistribution!.received[roundedLength] || 0) + 1;
+                  audioLengthDistribution!.received[roundedLength] = (audioLengthDistribution!.received[roundedLength] || 0) + 1;
                 }
               }
             });
@@ -111,27 +74,21 @@ export default function produceGraphData(
         }
 
         // Initialize emoji distribution
-        let emojiDistribution:
-          | { sent: Record<string, number>; received: Record<string, number> }
-          | undefined;
+        let emojiDistribution: { sent: Record<string, number>; received: Record<string, number> } | undefined;
         let totalEmojisSent = 0;
         let totalEmojisReceived = 0;
 
         // Calculate emoji distribution across all conversations
-        const hasEmojis = conversations.some((conversation) =>
-          conversation.messages.some(
-            (message) => message.emojiCounts && Object.keys(message.emojiCounts).length > 0
-          )
-        );
+        const hasEmojis = conversations.some(conversation => conversation.messages.some(message => message.emojiCounts && Object.keys(message.emojiCounts).length > 0));
 
         if (hasEmojis) {
           emojiDistribution = {
             sent: {},
-            received: {},
+            received: {}
           };
 
-          conversations.forEach((conversation) => {
-            conversation.messages.forEach((message) => {
+          conversations.forEach(conversation => {
+            conversation.messages.forEach(message => {
               if (message.emojiCounts) {
                 const isSent = message.sender === donorId;
                 const target = isSent ? emojiDistribution!.sent : emojiDistribution!.received;
@@ -149,12 +106,7 @@ export default function produceGraphData(
           });
         }
 
-        const basicStatistics = produceBasicStatistics(
-          messageCounts,
-          wordCounts,
-          secondCounts,
-          hasEmojis ? { sent: totalEmojisSent, received: totalEmojisReceived } : undefined
-        );
+        const basicStatistics = produceBasicStatistics(messageCounts, wordCounts, secondCounts, hasEmojis ? { sent: totalEmojisSent, received: totalEmojisReceived } : undefined);
 
         const graphData: GraphData = {
           focusConversations,
@@ -171,7 +123,7 @@ export default function produceGraphData(
           basicStatistics,
           participantsPerConversation,
           audioLengthDistribution,
-          emojiDistribution,
+          emojiDistribution
         };
 
         return [dataSourceValue, graphData];

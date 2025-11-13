@@ -1,17 +1,13 @@
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { ChartDataset } from "chart.js";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import Box from "@mui/material/Box";
-import { useTranslations } from "next-intl";
+
+import { BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT, TOP_LEGEND } from "@components/charts/chartConfig";
 import DownloadButtons from "@components/charts/DownloadButtons";
-import {
-  BARCHART_OPTIONS,
-  CHART_COLORS,
-  CHART_LAYOUT,
-  TOP_LEGEND,
-} from "@components/charts/chartConfig";
 import { EmojiDistribution } from "@models/graphData";
-import { ChartDataset } from "chart.js";
-import Typography from "@mui/material/Typography";
 
 interface EmojiBarChartProps {
   emojiDistribution: EmojiDistribution;
@@ -23,14 +19,11 @@ const EmojiBarChart: React.FC<EmojiBarChartProps> = ({ emojiDistribution }) => {
   const chartTexts = useTranslations("feedback.messageComposition.emojiBarChart");
 
   // Combine and sort emojis by total usage
-  const allEmojis = new Set([
-    ...Object.keys(emojiDistribution.sent),
-    ...Object.keys(emojiDistribution.received),
-  ]);
+  const allEmojis = new Set([...Object.keys(emojiDistribution.sent), ...Object.keys(emojiDistribution.received)]);
   const emojiTotals = Array.from(allEmojis)
-    .map((emoji) => ({
+    .map(emoji => ({
       emoji,
-      total: (emojiDistribution.sent[emoji] || 0) + (emojiDistribution.received[emoji] || 0),
+      total: (emojiDistribution.sent[emoji] || 0) + (emojiDistribution.received[emoji] || 0)
     }))
     .sort((a, b) => b.total - a.total);
 
@@ -49,9 +42,9 @@ const EmojiBarChart: React.FC<EmojiBarChartProps> = ({ emojiDistribution }) => {
   }
 
   // Prepare data for the chart
-  const labels = topEmojis.map((item) => item.emoji);
-  const donorCounts = topEmojis.map((item) => emojiDistribution.sent[item.emoji] || 0);
-  const contactCounts = topEmojis.map((item) => emojiDistribution.received[item.emoji] || 0);
+  const labels = topEmojis.map(item => item.emoji);
+  const donorCounts = topEmojis.map(item => emojiDistribution.sent[item.emoji] || 0);
+  const contactCounts = topEmojis.map(item => emojiDistribution.received[item.emoji] || 0);
 
   // Create datasets for the chart
   const datasets = [
@@ -59,19 +52,19 @@ const EmojiBarChart: React.FC<EmojiBarChartProps> = ({ emojiDistribution }) => {
       label: chartTexts("legend.contacts"),
       data: contactCounts,
       backgroundColor: CHART_COLORS.secondary,
-      barPercentage: CHART_LAYOUT.barPercentageNarrower,
+      barPercentage: CHART_LAYOUT.barPercentageNarrower
     },
     {
       label: chartTexts("legend.donor"),
       data: donorCounts,
       backgroundColor: CHART_COLORS.primary,
-      barPercentage: CHART_LAYOUT.barPercentageWide,
-    },
+      barPercentage: CHART_LAYOUT.barPercentageWide
+    }
   ] as ChartDataset<"bar", number[]>[];
 
   const data = {
     labels,
-    datasets,
+    datasets
   };
 
   const options = {
@@ -88,9 +81,9 @@ const EmojiBarChart: React.FC<EmojiBarChartProps> = ({ emojiDistribution }) => {
             const label = context.dataset.label || "";
             const value = context.parsed.y;
             return `${label}: ${value}`;
-          },
-        },
-      },
+          }
+        }
+      }
     },
     scales: {
       x: {
@@ -99,15 +92,15 @@ const EmojiBarChart: React.FC<EmojiBarChartProps> = ({ emojiDistribution }) => {
         stacked: true,
         ticks: {
           font: {
-            size: 16, // Make emojis larger in the axis
-          },
-        },
+            size: 16 // Make emojis larger in the axis
+          }
+        }
       },
       y: {
         ...BARCHART_OPTIONS.scales.y_no_pct,
-        title: { display: true, text: chartTexts("yAxis") },
-      },
-    },
+        title: { display: true, text: chartTexts("yAxis") }
+      }
+    }
   };
 
   return (

@@ -18,7 +18,7 @@ const ColorScale: React.FC<ColorScaleProps> = ({ colors, labels }) => {
         flexDirection: "column",
         alignItems: "center",
         position: "relative",
-        minWidth: "20px",
+        minWidth: "20px"
       }}
     >
       <Box
@@ -28,7 +28,7 @@ const ColorScale: React.FC<ColorScaleProps> = ({ colors, labels }) => {
           height: "100%",
           my: "auto",
           background: `linear-gradient(to bottom, ${colors.join(", ")})`,
-          position: "relative",
+          position: "relative"
         }}
       >
         {/* Labels overlapping the color scale */}
@@ -46,7 +46,7 @@ const ColorScale: React.FC<ColorScaleProps> = ({ colors, labels }) => {
               padding: "2px 4px",
               borderRadius: "4px",
               fontSize: "10px",
-              textAlign: "center",
+              textAlign: "center"
             }}
           >
             {label}

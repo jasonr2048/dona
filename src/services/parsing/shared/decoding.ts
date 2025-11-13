@@ -7,16 +7,14 @@ export function decode(input: string): string {
 
   try {
     // First try standard JSON Unicode escape sequence decoding
-    let result = input.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) =>
-      String.fromCodePoint(parseInt(hex, 16))
-    );
+    let result = input.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
 
     // Check if we have UTF-8 bytes masquerading as characters (most common issue with Meta exports)
     if (/[\u00c0-\u00ff][\u0080-\u00bf]/.test(result)) {
       // This is a simple "one-shot" decoder for most Meta text encoding issues
       // Interpreting as Latin1 and then as UTF-8 fixes most Meta export encoding problems
       try {
-        const bytes = Uint8Array.from([...result].map((c) => c.charCodeAt(0) & 0xff));
+        const bytes = Uint8Array.from([...result].map(c => c.charCodeAt(0) & 0xff));
         return new TextDecoder("utf-8").decode(bytes);
       } catch (e) {
         // Fall back to the original result if this approach fails

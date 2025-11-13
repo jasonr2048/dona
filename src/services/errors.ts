@@ -1,7 +1,7 @@
 export enum RangeErrors {
   NonsenseRange = "NonsenseRange",
   NotEnoughMonthsInRange = "NotEnoughMonthsInRange",
-  NoMessagesInRange = "NoMessagesInRange",
+  NoMessagesInRange = "NoMessagesInRange"
 }
 
 export enum DonationErrors {
@@ -15,7 +15,7 @@ export enum DonationErrors {
   NoDonorNameFound = "NoDonorNameFound",
   DuplicateDonorId = "DuplicateDonorId",
   TransactionFailed = "TransactionFailed",
-  UnknownError = "UnknownError",
+  UnknownError = "UnknownError"
 }
 
 export interface DonationError {
@@ -33,22 +33,16 @@ export interface SerializedDonationError {
   context?: Record<string, any>;
 }
 
-export const DonationValidationError = (
-  reason: DonationErrors,
-  context?: Record<string, any>
-): DonationValidationError => ({
+export const DonationValidationError = (reason: DonationErrors, context?: Record<string, any>): DonationValidationError => ({
   message: reason,
   reason,
-  context,
+  context
 });
 
-export const DonationProcessingError = (
-  reason: DonationErrors,
-  context?: Record<string, any>
-): DonationProcessingError => ({
+export const DonationProcessingError = (reason: DonationErrors, context?: Record<string, any>): DonationProcessingError => ({
   message: reason,
   reason,
-  context,
+  context
 });
 
 /**
@@ -59,11 +53,7 @@ export const DonationProcessingError = (
  * @param formatOptions - Optional dictionary for formatting variables.
  * @returns The formatted error message or a fallback.
  */
-export function getErrorMessage(
-  t: { (key: string, options?: Record<string, any>): string; has: (key: string) => boolean },
-  error: unknown,
-  formatOptions?: Record<string, any>
-): string {
+export function getErrorMessage(t: { (key: string, options?: Record<string, any>): string; has: (key: string) => boolean }, error: unknown, formatOptions?: Record<string, any>): string {
   if (error && typeof error === "object" && "reason" in error) {
     const reasonKey = `errors.${(error as DonationError).reason}`;
     const formattedKey = `${reasonKey}_format`;

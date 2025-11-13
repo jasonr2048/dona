@@ -23,10 +23,10 @@ export const calculateZScores = (
   const flatData = Array.isArray(data) ? data : Object.values(data).flat();
 
   const mean = _.mean(flatData);
-  const stdDev = Math.sqrt(_.mean(flatData.map((val) => Math.pow(val - mean, 2))));
+  const stdDev = Math.sqrt(_.mean(flatData.map(val => Math.pow(val - mean, 2))));
 
   const applyZScores = (values: number[]) =>
-    values.map((value) => {
+    values.map(value => {
       let z = (value - mean) / stdDev;
       if (z > limit) z = limit;
       if (z < -limit) z = -limit;

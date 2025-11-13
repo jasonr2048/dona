@@ -1,24 +1,19 @@
 "use server";
 
-import { cookies } from "next/headers";
-import { db } from "@/db/drizzle";
-import {
-  conversations as conversationsTbl,
-  donations as donationsTbl,
-  graphData,
-} from "@/db/schema";
-import { GraphData } from "@models/graphData";
 import { eq } from "drizzle-orm";
-import { DONATION_ID_COOKIE } from "@/middleware";
-import { DonationStatus, Conversation } from "@models/processed";
-import produceGraphData from "@/services/charts/produceGraphData";
+import { cookies } from "next/headers";
 
-export async function fetchGraphDataByDonationId(
-  donationId: string
-): Promise<Record<string, GraphData>> {
+import { db } from "@/db/drizzle";
+import { conversations as conversationsTbl, donations as donationsTbl, graphData } from "@/db/schema";
+import { DONATION_ID_COOKIE } from "@/middleware";
+import produceGraphData from "@/services/charts/produceGraphData";
+import { GraphData } from "@models/graphData";
+import { DonationStatus, Conversation } from "@models/processed";
+
+export async function fetchGraphDataByDonationId(donationId: string): Promise<Record<string, GraphData>> {
   const result = await db.query.graphData.findFirst({
     where: eq(graphData.donationId, donationId),
-    columns: { data: true },
+    columns: { data: true }
   });
 
   if (!result) {
@@ -29,20 +24,18 @@ export async function fetchGraphDataByDonationId(
 }
 
 // New: fetch or compute graph data if missing for a valid donation
-export async function fetchOrComputeGraphDataByDonationId(
-  donationId: string
-): Promise<Record<string, GraphData>> {
+export async function fetchOrComputeGraphDataByDonationId(donationId: string): Promise<Record<string, GraphData>> {
   // Try existing
   const existing = await db.query.graphData.findFirst({
     where: eq(graphData.donationId, donationId),
-    columns: { data: true },
+    columns: { data: true }
   });
   if (existing?.data) return existing.data as Record<string, GraphData>;
 
   // Validate donation
   const donation = await db.query.donations.findFirst({
     where: eq(donationsTbl.id, donationId),
-    columns: { id: true, donorId: true, status: true },
+    columns: { id: true, donorId: true, status: true }
   });
   if (!donation || donation.status !== DonationStatus.Complete || !donation.donorId) {
     throw new Error("Graph data not found and donation is not valid for recomputation.");
@@ -55,27 +48,27 @@ export async function fetchOrComputeGraphDataByDonationId(
       dataSource: true,
       participants: true,
       messages: true,
-      messagesAudio: true,
-    },
+      messagesAudio: true
+    }
   });
 
   // Map to processed conversations
-  const processedConversations: Conversation[] = convos.map((c) => ({
+  const processedConversations: Conversation[] = convos.map(c => ({
     isGroupConversation: c.isGroupConversation ?? undefined,
     dataSource: c.dataSource.name,
-    messages: c.messages.map((m) => ({
+    messages: c.messages.map(m => ({
       wordCount: m.wordCount,
       timestamp: new Date(m.dateTime).getTime(),
-      sender: m.senderId,
+      sender: m.senderId
     })),
-    messagesAudio: c.messagesAudio.map((a) => ({
+    messagesAudio: c.messagesAudio.map(a => ({
       lengthSeconds: a.lengthSeconds ?? 0,
       timestamp: new Date(a.dateTime).getTime(),
-      sender: a.senderId,
+      sender: a.senderId
     })),
-    participants: c.participants.map((p) => p.participantId),
+    participants: c.participants.map(p => p.participantId),
     conversationPseudonym: c.conversationPseudonym,
-    focusInFeedback: c.focusInFeedback ?? true,
+    focusInFeedback: c.focusInFeedback ?? true
   }));
 
   const computed = produceGraphData(donation.donorId, processedConversations);

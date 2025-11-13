@@ -1,22 +1,17 @@
-import React, { useEffect, useState } from "react";
-import {
-  Chart as ChartJS,
-  Legend,
-  LineElement,
-  PointElement,
-  RadialLinearScale,
-  Tooltip,
-} from "chart.js";
-import { Radar } from "react-chartjs-2";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import SliderWithButtons from "./SliderWithButtons";
+import { Chart as ChartJS, Legend, LineElement, PointElement, RadialLinearScale, Tooltip } from "chart.js";
+import { useTranslations } from "next-intl";
+import React, { useEffect, useState } from "react";
+import { Radar } from "react-chartjs-2";
+
+import { POLAR_CHART_COLORS, PCT_TOOLTIP } from "@components/charts/chartConfig";
+import DownloadButtons from "@components/charts/DownloadButtons";
 import { SentReceivedPoint } from "@models/graphData";
 import { prepareCountsOverTimeData } from "@services/charts/animations";
-import DownloadButtons from "@components/charts/DownloadButtons";
-import { useTranslations } from "next-intl";
 import { calculateZScores } from "@services/charts/zScores";
-import { POLAR_CHART_COLORS, PCT_TOOLTIP } from "@components/charts/chartConfig";
+
+import SliderWithButtons from "./SliderWithButtons";
 
 ChartJS.register(RadialLinearScale, Tooltip, Legend, LineElement, PointElement);
 
@@ -27,9 +22,7 @@ interface AnimatedIntensityPolarChartProps {
   dataMonthlyPerConversation: Record<string, SentReceivedPoint[]>;
 }
 
-const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = ({
-  dataMonthlyPerConversation,
-}) => {
+const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = ({ dataMonthlyPerConversation }) => {
   const CHART_NAME = "intensity-interaction-polar";
   const container_name = `chart-wrapper-${CHART_NAME}`;
 
@@ -42,13 +35,8 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
   const [counts, setCounts] = useState<Record<string, number[]>>({});
 
   useEffect(() => {
-    const { counts: preparedCounts, sortedMonths } = prepareCountsOverTimeData(
-      dataMonthlyPerConversation
-    );
-    const zScoreFrames = calculateZScores(preparedCounts, Z_SCORE_LIMIT) as Record<
-      string,
-      number[]
-    >;
+    const { counts: preparedCounts, sortedMonths } = prepareCountsOverTimeData(dataMonthlyPerConversation);
+    const zScoreFrames = calculateZScores(preparedCounts, Z_SCORE_LIMIT) as Record<string, number[]>;
     setLabels(sortedMonths);
     setFrames(zScoreFrames);
     setCounts(preparedCounts); // Store original counts for tooltip usage
@@ -67,7 +55,7 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
           pointBackgroundColor: POLAR_CHART_COLORS.drawing,
           pointRadius: 10,
           pointHoverRadius: 12,
-          borderWidth: 0,
+          borderWidth: 0
         },
         // Donor data
         {
@@ -76,32 +64,20 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
           pointBackgroundColor: POLAR_CHART_COLORS.highlight,
           pointRadius: 15,
           pointHoverRadius: 17,
-          borderWidth: 0,
-        },
-      ],
+          borderWidth: 0
+        }
+      ]
     };
   };
 
   return (
     <Box>
       <Box id={container_name} position="relative" p={2} mb={1}>
-        <Box
-          position="relative"
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ zIndex: 1, ml: 1, mb: -4, color: "#ccc" }}
-        >
+        <Box position="relative" display="flex" justifyContent="space-between" alignItems="center" sx={{ zIndex: 1, ml: 1, mb: -4, color: "#ccc" }}>
           <Typography variant="body2" align="right" sx={{ color: "#ccc" }}>
             <b>{labelTexts("currentMonth")}</b> {labels[currentFrame]}
           </Typography>
-          <DownloadButtons
-            chartId={container_name}
-            fileNamePrefix={CHART_NAME}
-            currentLabel={labels[currentFrame]}
-            color="#d5d5d5"
-            labelsBelow={true}
-          />
+          <DownloadButtons chartId={container_name} fileNamePrefix={CHART_NAME} currentLabel={labels[currentFrame]} color="#d5d5d5" labelsBelow={true} />
         </Box>
         <Box
           position="relative"
@@ -115,7 +91,7 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
             backgroundSize: "cover",
             backgroundPosition: "center",
             width: "100%",
-            height: "400px",
+            height: "400px"
           }}
         >
           <Radar
@@ -134,13 +110,13 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
                   angleLines: { display: false },
                   grid: {
                     circular: true,
-                    color: POLAR_CHART_COLORS.drawing,
+                    color: POLAR_CHART_COLORS.drawing
                   },
                   pointLabels: {
                     color: POLAR_CHART_COLORS.drawing,
-                    font: { size: 14 },
-                  },
-                },
+                    font: { size: 14 }
+                  }
+                }
               },
               plugins: {
                 legend: {
@@ -150,8 +126,8 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
                   labels: {
                     usePointStyle: true,
                     textAlign: "left",
-                    color: POLAR_CHART_COLORS.drawing,
-                  },
+                    color: POLAR_CHART_COLORS.drawing
+                  }
                 },
                 tooltip: {
                   ...PCT_TOOLTIP,
@@ -161,20 +137,16 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
                       const monthKey = labels[currentFrame];
                       const value = counts[monthKey]?.[dataIndex] ?? 0;
                       return `${labelTexts("numberMessages")}: ${value}`;
-                    },
-                  },
-                },
-              },
+                    }
+                  }
+                }
+              }
             }}
           />
         </Box>
       </Box>
 
-      <SliderWithButtons
-        value={currentFrame}
-        marks={labels.map((label, index) => ({ value: index, label }))}
-        setCurrentFrame={setCurrentFrame}
-      />
+      <SliderWithButtons value={currentFrame} marks={labels.map((label, index) => ({ value: index, label }))} setCurrentFrame={setCurrentFrame} />
     </Box>
   );
 };

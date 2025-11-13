@@ -1,11 +1,10 @@
-import { daysBeforeMonths, normalizeDate, NumericDate } from "./utils/date";
-import { convertTime12to24, normalizeAMPM, normalizeTime } from "./utils/time";
 import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
 
-const regexStartsWithDateTime =
-  /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),? (\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?: ([ap]\.?m\.?))?]?/i;
-const regexMessageEntryParser =
-  /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),? (\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?: ([ap]\.?m\.?))?]?(?: -|:)? (?:(.+?): )?((?:.|\s)*)/i;
+import { daysBeforeMonths, normalizeDate, NumericDate } from "./utils/date";
+import { convertTime12to24, normalizeAMPM, normalizeTime } from "./utils/time";
+
+const regexStartsWithDateTime = /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),? (\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?: ([ap]\.?m\.?))?]?/i;
+const regexMessageEntryParser = /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),? (\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?: ([ap]\.?m\.?))?]?(?: -|:)? (?:(.+?): )?((?:.|\s)*)/i;
 
 type Options = {
   daysFirst?: boolean;
@@ -31,28 +30,20 @@ export type ParsingResult = {
 };
 
 function inferDateFormat(datedItems: { date: string }[]): boolean | null {
-  const numericDates: NumericDate[] = Array.from(
-    new Set(datedItems.map(({ date }) => date)),
-    (date) => {
-      const dateParts = date.split(/[-/.]/).map(Number);
+  const numericDates: NumericDate[] = Array.from(new Set(datedItems.map(({ date }) => date)), date => {
+    const dateParts = date.split(/[-/.]/).map(Number);
 
-      // Ensure there are exactly three parts (day, month, year)
-      if (dateParts.length === 3) {
-        return dateParts as NumericDate;
-      }
-
-      throw new Error(`Invalid date format: ${date}`);
+    // Ensure there are exactly three parts (day, month, year)
+    if (dateParts.length === 3) {
+      return dateParts as NumericDate;
     }
-  );
+
+    throw new Error(`Invalid date format: ${date}`);
+  });
   return daysBeforeMonths(numericDates);
 }
 
-function computeDateTime(
-  date: string,
-  time: string,
-  ampm: string | null,
-  daysFirst: boolean | null
-): number {
+function computeDateTime(date: string, time: string, ampm: string | null, daysFirst: boolean | null): number {
   let day, month, year;
 
   if (daysFirst === false) {
@@ -62,19 +53,10 @@ function computeDateTime(
   }
   [year, month, day] = normalizeDate(year, month, day);
 
-  const [hours, minutes, seconds] = normalizeTime(
-    ampm ? convertTime12to24(time, normalizeAMPM(ampm)) : time
-  ).split(/[:.]/);
+  const [hours, minutes, seconds] = normalizeTime(ampm ? convertTime12to24(time, normalizeAMPM(ampm)) : time).split(/[:.]/);
 
   // Convert month and year to numbers before using them in Date constructor
-  return new Date(
-    Number(year),
-    Number(month) - 1,
-    Number(day),
-    Number(hours),
-    Number(minutes),
-    Number(seconds)
-  ).getTime();
+  return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes), Number(seconds)).getTime();
 }
 
 /**
@@ -108,7 +90,7 @@ export function parseMessages(messages: string[], options: Options = {}): Parsin
   let allContactNames: string[] = [];
 
   const parsed = messages
-    .map((msg) => {
+    .map(msg => {
       // Extract date, time, ampm, and the rest of the message
       const match = regexMessageEntryParser.exec(msg);
       if (!match) return null;
@@ -122,7 +104,7 @@ export function parseMessages(messages: string[], options: Options = {}): Parsin
           time,
           ampm: ampm || null,
           author: aliasConfig.systemAlias,
-          message: messageText,
+          message: messageText
         };
       }
 
@@ -142,12 +124,12 @@ export function parseMessages(messages: string[], options: Options = {}): Parsin
     return {
       date: computeDateTime(date, time, ampm, daysFirst),
       author,
-      message,
+      message
     };
   });
 
   return {
     texts: parsedMessages,
-    contacts: allContactNames,
+    contacts: allContactNames
   };
 }

@@ -4,7 +4,7 @@ export const locales = ["en", "de", "hy"] as const;
 export const localeNames: Record<Locale, string> = {
   en: "English",
   de: "Deutsch",
-  hy: "Armenian",
+  hy: "Armenian"
 };
 export const defaultLocale: Locale = "en";
 
@@ -17,5 +17,5 @@ export const CONFIG = {
 
   MAX_FEEDBACK_CHATS: 10,
   MIN_FEEDBACK_CHATS: 3,
-  DEFAULT_FEEDBACK_CHATS: 5,
+  DEFAULT_FEEDBACK_CHATS: 5
 };

@@ -1,26 +1,18 @@
+import Box from "@mui/material/Box";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import { useTranslations } from "next-intl";
-import { DailyHourPoint } from "@models/graphData";
-import Box from "@mui/material/Box";
+
+import { BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT, PCT_TOOLTIP, TOP_LEGEND } from "@components/charts/chartConfig";
 import DownloadButtons from "@components/charts/DownloadButtons";
-import {
-  BARCHART_OPTIONS,
-  CHART_COLORS,
-  CHART_LAYOUT,
-  PCT_TOOLTIP,
-  TOP_LEGEND,
-} from "@components/charts/chartConfig";
+import { DailyHourPoint } from "@models/graphData";
 
 interface DayPartsActivityOverallPlotProps {
   dailySentHours: DailyHourPoint[];
   dailyReceivedHours: DailyHourPoint[];
 }
 
-const DayPartsActivityOverallChart: React.FC<DayPartsActivityOverallPlotProps> = ({
-  dailySentHours,
-  dailyReceivedHours,
-}) => {
+const DayPartsActivityOverallChart: React.FC<DayPartsActivityOverallPlotProps> = ({ dailySentHours, dailyReceivedHours }) => {
   const CHART_NAME = "dayparts-activity-overall-barchart";
   const container_name = `chart-wrapper-${CHART_NAME}`;
 
@@ -30,12 +22,12 @@ const DayPartsActivityOverallChart: React.FC<DayPartsActivityOverallPlotProps> =
   const sentCounts = [0, 0, 0, 0];
   const receivedCounts = [0, 0, 0, 0];
 
-  dailySentHours.forEach((point) => {
+  dailySentHours.forEach(point => {
     const bucketIndex = point.hour < 6 ? 0 : point.hour < 12 ? 1 : point.hour < 18 ? 2 : 3;
     sentCounts[bucketIndex] += point.wordCount;
   });
 
-  dailyReceivedHours.forEach((point) => {
+  dailyReceivedHours.forEach(point => {
     const bucketIndex = point.hour < 6 ? 0 : point.hour < 12 ? 1 : point.hour < 18 ? 2 : 3;
     receivedCounts[bucketIndex] += point.wordCount;
   });
@@ -48,38 +40,36 @@ const DayPartsActivityOverallChart: React.FC<DayPartsActivityOverallPlotProps> =
     datasets: [
       {
         label: chartTexts("legend.received"),
-        data: receivedCounts.map((count) =>
-          totalReceived > 0 ? (count / totalReceived) * 100 : 0
-        ),
+        data: receivedCounts.map(count => (totalReceived > 0 ? (count / totalReceived) * 100 : 0)),
         backgroundColor: CHART_COLORS.secondary,
-        barPercentage: 0.5,
+        barPercentage: 0.5
       },
       {
         label: chartTexts("legend.sent"),
-        data: sentCounts.map((count) => (totalSent > 0 ? (count / totalSent) * 100 : 0)),
+        data: sentCounts.map(count => (totalSent > 0 ? (count / totalSent) * 100 : 0)),
         backgroundColor: CHART_COLORS.primary,
-        barPercentage: 0.8,
-      },
-    ],
+        barPercentage: 0.8
+      }
+    ]
   };
 
   const options = {
     ...BARCHART_OPTIONS,
     plugins: {
       legend: TOP_LEGEND,
-      tooltip: PCT_TOOLTIP,
+      tooltip: PCT_TOOLTIP
     },
     scales: {
       x: {
         ...BARCHART_OPTIONS.scales.x,
         title: { display: true, text: chartTexts("xAxis") },
-        stacked: true,
+        stacked: true
       },
       y: {
         ...BARCHART_OPTIONS.scales.y,
-        title: { display: true, text: chartTexts("yAxis") },
-      },
-    },
+        title: { display: true, text: chartTexts("yAxis") }
+      }
+    }
   };
 
   return (

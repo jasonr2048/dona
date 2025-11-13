@@ -1,5 +1,4 @@
-import React, { ReactNode, useState } from "react";
-import { useTranslations } from "next-intl";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -7,26 +6,20 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import StatisticsCard from "@components/StatisticsCard";
+import { useTranslations } from "next-intl";
+import React, { ReactNode, useState } from "react";
+
 import ChartContainer, { ChartType } from "@components/charts/ChartContainer";
 import ChartExplanationModal from "@components/charts/ChartExplanationModal";
 import MoreChartsModal from "@components/charts/MoreChartsModal";
-import { DataSourceValue } from "@models/processed";
+import StatisticsCard from "@components/StatisticsCard";
 import { GraphData } from "@models/graphData";
+import { DataSourceValue } from "@models/processed";
 
 type SectionName = "responseTimes" | "dailyActivityTimes" | "interactionIntensity";
 
-export default function DataSourceFeedbackSection({
-  dataSourceValue,
-  graphData,
-}: {
-  dataSourceValue: DataSourceValue;
-  graphData: GraphData;
-}) {
-  const showDetailedAudioFeedback = [DataSourceValue.Facebook, DataSourceValue.Instagram].includes(
-    dataSourceValue
-  );
+export default function DataSourceFeedbackSection({ dataSourceValue, graphData }: { dataSourceValue: DataSourceValue; graphData: GraphData }) {
+  const showDetailedAudioFeedback = [DataSourceValue.Facebook, DataSourceValue.Instagram].includes(dataSourceValue);
   // console.log("[FEEDBACK][CLIENT] Full graph data:", graphData);  # For development only
   let t = useTranslations("feedback");
   const ii = useTranslations("feedback.interactionIntensity");
@@ -66,16 +59,7 @@ export default function DataSourceFeedbackSection({
   };
 
   const openModalSpan = (content: ReactNode, translator: any, chartName: string) => (
-    <span
-      style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }}
-      onClick={() =>
-        openExplanationModal(
-          translator(translator.has(`${chartName}.title`) ? `${chartName}.title` : "title"),
-          translator.raw(`${chartName}.example.text`),
-          translator(`${chartName}.example.image`)
-        )
-      }
-    >
+    <span style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }} onClick={() => openExplanationModal(translator(translator.has(`${chartName}.title`) ? `${chartName}.title` : "title"), translator.raw(`${chartName}.example.text`), translator(`${chartName}.example.image`))}>
       {content}
     </span>
   );
@@ -86,11 +70,7 @@ export default function DataSourceFeedbackSection({
         <Typography variant="h6">{t("sourceTitle", { source: dataSourceValue })}</Typography>
       </AccordionSummary>
       <AccordionDetails sx={{ width: "100%", overflowX: "hidden" }}>
-        <Stack
-          direction="column"
-          spacing={2}
-          sx={{ display: "flex", textAlign: "center", bgcolor: "background.paper" }}
-        >
+        <Stack direction="column" spacing={2} sx={{ display: "flex", textAlign: "center", bgcolor: "background.paper" }}>
           {/* Statistics card */}
           <Typography variant="h6">{t("statisticsCard.title")}</Typography>
           <StatisticsCard stats={graphData.basicStatistics} />
@@ -104,16 +84,11 @@ export default function DataSourceFeedbackSection({
             </Typography>
             <Typography variant="body2">
               {t.rich("messageComposition.messageTypesBarChart.description", {
-                button: (label) =>
-                  openModalSpan(label, t, "messageComposition.messageTypesBarChart"),
+                button: label => openModalSpan(label, t, "messageComposition.messageTypesBarChart")
               })}
             </Typography>
           </Box>
-          <ChartContainer
-            type={ChartType.MessageTypesBarChart}
-            data={graphData}
-            dataSourceValue={dataSourceValue}
-          />
+          <ChartContainer type={ChartType.MessageTypesBarChart} data={graphData} dataSourceValue={dataSourceValue} />
           {showDetailedAudioFeedback && (
             <>
               <Box>
@@ -122,16 +97,11 @@ export default function DataSourceFeedbackSection({
                 </Typography>
                 <Typography variant="body2">
                   {t.rich("messageComposition.audioLengthsBarChart.description", {
-                    button: (label) =>
-                      openModalSpan(label, t, "messageComposition.audioLengthsBarChart"),
+                    button: label => openModalSpan(label, t, "messageComposition.audioLengthsBarChart")
                   })}
                 </Typography>
               </Box>
-              <ChartContainer
-                type={ChartType.AudioLengthsBarChart}
-                data={graphData}
-                dataSourceValue={dataSourceValue}
-              />
+              <ChartContainer type={ChartType.AudioLengthsBarChart} data={graphData} dataSourceValue={dataSourceValue} />
             </>
           )}
           {/* Emoji analysis */}
@@ -143,15 +113,11 @@ export default function DataSourceFeedbackSection({
                 </Typography>
                 <Typography variant="body2">
                   {t.rich("messageComposition.emojiBarChart.description", {
-                    button: (label) => openModalSpan(label, t, "messageComposition.emojiBarChart"),
+                    button: label => openModalSpan(label, t, "messageComposition.emojiBarChart")
                   })}
                 </Typography>
               </Box>
-              <ChartContainer
-                type={ChartType.EmojiBarChart}
-                data={graphData}
-                dataSourceValue={dataSourceValue}
-              />
+              <ChartContainer type={ChartType.EmojiBarChart} data={graphData} dataSourceValue={dataSourceValue} />
             </>
           )}
           {/* TODO: Histogram word counts? */}
@@ -164,30 +130,22 @@ export default function DataSourceFeedbackSection({
             </Typography>
             <Typography variant="body2">
               {ii.rich("animatedIntensityPolarChart.description", {
-                button: (label) => openModalSpan(label, ii, "animatedIntensityPolarChart"),
+                button: label => openModalSpan(label, ii, "animatedIntensityPolarChart")
               })}
             </Typography>
           </Box>
-          <ChartContainer
-            type={ChartType.AnimatedIntensityPolarChart}
-            data={graphData}
-            dataSourceValue={dataSourceValue}
-          />
+          <ChartContainer type={ChartType.AnimatedIntensityPolarChart} data={graphData} dataSourceValue={dataSourceValue} />
           <Box>
             <Typography variant="body1" fontWeight="fontWeightBold">
               {ii("animatedWordsPerChatBarChart.title")}
             </Typography>
             <Typography variant="body2">
               {ii.rich("animatedWordsPerChatBarChart.description", {
-                button: (label) => openModalSpan(label, ii, "animatedWordsPerChatBarChart"),
+                button: label => openModalSpan(label, ii, "animatedWordsPerChatBarChart")
               })}
             </Typography>
           </Box>
-          <ChartContainer
-            type={ChartType.AnimatedWordsPerChatBarChart}
-            data={graphData}
-            dataSourceValue={dataSourceValue}
-          />
+          <ChartContainer type={ChartType.AnimatedWordsPerChatBarChart} data={graphData} dataSourceValue={dataSourceValue} />
           {showDetailedAudioFeedback && (
             <>
               <Box>
@@ -196,35 +154,25 @@ export default function DataSourceFeedbackSection({
                 </Typography>
                 <Typography variant="body2">
                   {ii.rich("animatedSecondsPerChatBarChart.description", {
-                    button: (label) => openModalSpan(label, ii, "animatedSecondsPerChatBarChart"),
+                    button: label => openModalSpan(label, ii, "animatedSecondsPerChatBarChart")
                   })}
                 </Typography>
               </Box>
-              <ChartContainer
-                type={ChartType.AnimatedSecondsPerChatBarChart}
-                data={graphData}
-                dataSourceValue={dataSourceValue}
-              />
+              <ChartContainer type={ChartType.AnimatedSecondsPerChatBarChart} data={graphData} dataSourceValue={dataSourceValue} />
             </>
           )}
-          <Button onClick={() => openSectionModal("interactionIntensity")}>
-            {ii("moreAbout")}
-          </Button>
+          <Button onClick={() => openSectionModal("interactionIntensity")}>{ii("moreAbout")}</Button>
 
           {/* Daily Activity Times */}
           <Typography variant="h6">{dat("title")}</Typography>
           <Box>
             <Typography variant="body2">
               {dat.rich("dailyActivityHoursChart.description", {
-                button: (label) => openModalSpan(label, dat, "dailyActivityHoursChart"),
+                button: label => openModalSpan(label, dat, "dailyActivityHoursChart")
               })}
             </Typography>
           </Box>
-          <ChartContainer
-            type={ChartType.DailyActivityHoursChart}
-            data={graphData}
-            dataSourceValue={dataSourceValue}
-          />
+          <ChartContainer type={ChartType.DailyActivityHoursChart} data={graphData} dataSourceValue={dataSourceValue} />
           <Button onClick={() => openSectionModal("dailyActivityTimes")}>{dat("moreAbout")}</Button>
 
           {/* Response Times */}
@@ -232,38 +180,20 @@ export default function DataSourceFeedbackSection({
           <Box>
             <Typography variant="body2">
               {rt.rich("responseTimeBarChart.description", {
-                button: (label) => openModalSpan(label, rt, "responseTimeBarChart"),
+                button: label => openModalSpan(label, rt, "responseTimeBarChart")
               })}
             </Typography>
           </Box>
-          <ChartContainer
-            type={ChartType.ResponseTimeBarChart}
-            data={graphData}
-            dataSourceValue={dataSourceValue}
-          />
+          <ChartContainer type={ChartType.ResponseTimeBarChart} data={graphData} dataSourceValue={dataSourceValue} />
           <Button onClick={() => openSectionModal("responseTimes")}>{rt("moreAbout")}</Button>
         </Stack>
       </AccordionDetails>
 
       {/* ChartExplanationModal */}
-      <ChartExplanationModal
-        open={isModalOpen}
-        onClose={closeExplanationModal}
-        title={modalContent?.title || ""}
-        contentHtml={modalContent?.contentHtml || ""}
-        imageSrc={modalContent?.imageSrc}
-      />
+      <ChartExplanationModal open={isModalOpen} onClose={closeExplanationModal} title={modalContent?.title || ""} contentHtml={modalContent?.contentHtml || ""} imageSrc={modalContent?.imageSrc} />
 
       {/* MoreChartsModal */}
-      {currentSection && (
-        <MoreChartsModal
-          open={isSectionModalOpen}
-          onClose={closeSectionModal}
-          graphData={graphData}
-          section={currentSection}
-          showDetailedAudioFeedback={showDetailedAudioFeedback}
-        />
-      )}
+      {currentSection && <MoreChartsModal open={isSectionModalOpen} onClose={closeSectionModal} graphData={graphData} section={currentSection} showDetailedAudioFeedback={showDetailedAudioFeedback} />}
     </Accordion>
   );
 }

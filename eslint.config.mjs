@@ -8,14 +8,15 @@ const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
+  allConfig: js.configs.all
 });
-const extendedConst = [
+
+export default [
   ...compat.extends("next/core-web-vitals"),
   {
     rules: {
       "react-hooks/exhaustive-deps": "off",
-    },
-  },
+      "import/no-anonymous-default-export": "off"
+    }
+  }
 ];
-export default extendedConst;

@@ -1,21 +1,16 @@
 import { conversations, messages, messagesAudio } from "@/db/schema";
-
 import { Conversation, Message, DataSource, MessageAudio } from "@models/processed";
 
 type NewConversation = typeof conversations.$inferInsert;
 namespace NewConversation {
-  export function create(
-    donationId: string,
-    convo: Conversation,
-    dataSourceOptions: DataSource[]
-  ): NewConversation {
+  export function create(donationId: string, convo: Conversation, dataSourceOptions: DataSource[]): NewConversation {
     const { isGroupConversation, dataSource, conversationPseudonym, focusInFeedback } = convo;
     return {
       donationId,
       dataSourceId: dataSourceOptions.find(({ name }) => name === dataSource)!.id,
       isGroupConversation: isGroupConversation || undefined,
       conversationPseudonym: conversationPseudonym,
-      focusInFeedback: focusInFeedback ?? true,
+      focusInFeedback: focusInFeedback ?? true
     };
   }
 }
@@ -29,7 +24,7 @@ namespace NewMessage {
       emojiCounts: emojiCounts || undefined,
       dateTime: new Date(timestamp),
       senderId: sender || undefined,
-      conversationId: conversationId,
+      conversationId: conversationId
     };
   }
 }
@@ -42,7 +37,7 @@ namespace NewMessageAudio {
       lengthSeconds,
       dateTime: new Date(timestamp),
       senderId: sender || undefined,
-      conversationId: conversationId,
+      conversationId: conversationId
     };
   }
 }

@@ -7,11 +7,7 @@ import { useEffect, useState } from "react";
  * @param {string} lineColor - The color of the diagonal lines
  * @returns {CanvasPattern | null} - The created pattern
  */
-const createDiagonalPattern = (
-  ctx: CanvasRenderingContext2D,
-  backgroundColor: string,
-  lineColor: string
-): CanvasPattern | null => {
+const createDiagonalPattern = (ctx: CanvasRenderingContext2D, backgroundColor: string, lineColor: string): CanvasPattern | null => {
   const canvas = document.createElement("canvas");
   const size = 10; // Size of the pattern
   canvas.width = size;

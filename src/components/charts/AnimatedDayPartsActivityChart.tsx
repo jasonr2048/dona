@@ -1,27 +1,16 @@
+import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
+import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Tooltip } from "chart.js";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useMemo, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  Tooltip,
-} from "chart.js";
-import SliderWithButtons from "@components/charts/SliderWithButtons";
+
+import { CHART_BOX_PROPS, CHART_COLORS, CHART_LAYOUT, BARCHART_OPTIONS } from "@components/charts/chartConfig";
 import DownloadButtons from "@components/charts/DownloadButtons";
-import { useTranslations } from "next-intl";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import SliderWithButtons from "@components/charts/SliderWithButtons";
 import { DailyHourPoint } from "@models/graphData";
-import {
-  CHART_BOX_PROPS,
-  CHART_COLORS,
-  CHART_LAYOUT,
-  BARCHART_OPTIONS,
-} from "@components/charts/chartConfig";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -32,10 +21,7 @@ interface AnimatedDayPartsActivityChartProps {
   listOfConversations: string[];
 }
 
-const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps> = ({
-  dataSentPerConversation,
-  listOfConversations,
-}) => {
+const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps> = ({ dataSentPerConversation, listOfConversations }) => {
   const CHART_NAME = "day-parts-activity-barchart";
   const container_name = `chart-wrapper-${CHART_NAME}`;
   const selection_label_name = `select-label-${CHART_NAME}`;
@@ -66,11 +52,9 @@ const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps
     });
 
     const sortedMonths = Array.from(monthsSet).sort();
-    sortedMonths.forEach((monthKey) => {
+    sortedMonths.forEach(monthKey => {
       const total = groupedByMonth[monthKey].reduce((a, b) => a + b, 0);
-      groupedByMonth[monthKey] = total
-        ? groupedByMonth[monthKey].map((count) => (count / total) * 100)
-        : new Array(buckets.length).fill(0);
+      groupedByMonth[monthKey] = total ? groupedByMonth[monthKey].map(count => (count / total) * 100) : new Array(buckets.length).fill(0);
     });
 
     return { counts: groupedByMonth, sortedMonths };
@@ -114,58 +98,32 @@ const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps
           label: chartTexts("legend.sent"),
           data: currentView.counts && monthKey ? currentView.counts[monthKey] || [] : [],
           backgroundColor: CHART_COLORS.primary,
-          barThickness: CHART_LAYOUT.hBarThickness,
-        },
-      ],
+          barThickness: CHART_LAYOUT.hBarThickness
+        }
+      ]
     };
   };
 
   return (
     <Box sx={CHART_BOX_PROPS.main}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <Select
-          value={selectedConversation}
-          onChange={(e) => setSelectedConversation(e.target.value)}
-          size="small"
-          variant="outlined"
-          sx={{ alignSelf: "flex-start", mb: -1, pb: 0, fontSize: CHART_LAYOUT.labelFontSize }}
-        >
+        <Select value={selectedConversation} onChange={e => setSelectedConversation(e.target.value)} size="small" variant="outlined" sx={{ alignSelf: "flex-start", mb: -1, pb: 0, fontSize: CHART_LAYOUT.labelFontSize }}>
           <MenuItem value={ALL_CHATS} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
             {labelTexts("overallData")}
           </MenuItem>
-          {listOfConversations.map((conversation) => (
-            <MenuItem
-              sx={{ fontSize: CHART_LAYOUT.labelFontSize }}
-              key={conversation}
-              value={conversation}
-            >
+          {listOfConversations.map(conversation => (
+            <MenuItem sx={{ fontSize: CHART_LAYOUT.labelFontSize }} key={conversation} value={conversation}>
               {conversation}
             </MenuItem>
           ))}
         </Select>
 
-        <Box
-          id={container_name}
-          position="relative"
-          px={CHART_LAYOUT.paddingX}
-          py={CHART_LAYOUT.paddingY}
-        >
+        <Box id={container_name} position="relative" px={CHART_LAYOUT.paddingX} py={CHART_LAYOUT.paddingY}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-            <Typography
-              id={selection_label_name}
-              variant="body2"
-              align="right"
-              fontWeight="bold"
-              mt={1}
-              sx={{ fontSize: CHART_LAYOUT.labelFontSize }}
-            >
+            <Typography id={selection_label_name} variant="body2" align="right" fontWeight="bold" mt={1} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
               {labelTexts("currentMonth")} {currentView.sortedMonths[currentFrame]}
             </Typography>
-            <DownloadButtons
-              chartId={container_name}
-              fileNamePrefix={`${CHART_NAME}-${selectedConversation}`}
-              currentLabel={currentView.sortedMonths[currentFrame]}
-            />
+            <DownloadButtons chartId={container_name} fileNamePrefix={`${CHART_NAME}-${selectedConversation}`} currentLabel={currentView.sortedMonths[currentFrame]} />
           </Box>
 
           <Box
@@ -173,7 +131,7 @@ const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps
               width: "100%",
               height: CHART_LAYOUT.responsiveChartHeight,
               minHeight: CHART_LAYOUT.mobileChartHeight,
-              ml: -1,
+              ml: -1
             }}
           >
             <Bar
@@ -183,23 +141,19 @@ const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps
                 scales: {
                   x: {
                     ...BARCHART_OPTIONS.scales.x,
-                    title: { display: true, text: chartTexts("xAxis") },
+                    title: { display: true, text: chartTexts("xAxis") }
                   },
                   y: {
                     ...BARCHART_OPTIONS.scales.y,
-                    title: { display: true, text: chartTexts("yAxis") },
-                  },
-                },
+                    title: { display: true, text: chartTexts("yAxis") }
+                  }
+                }
               }}
             />
           </Box>
         </Box>
 
-        <SliderWithButtons
-          value={currentFrame}
-          marks={currentView.sortedMonths.map((label, index) => ({ value: index, label }))}
-          setCurrentFrame={setCurrentFrame}
-        />
+        <SliderWithButtons value={currentFrame} marks={currentView.sortedMonths.map((label, index) => ({ value: index, label }))} setCurrentFrame={setCurrentFrame} />
       </Box>
     </Box>
   );

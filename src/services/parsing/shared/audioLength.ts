@@ -1,5 +1,6 @@
 import { BlobWriter } from "@zip.js/zip.js";
 import { parseBlob } from "music-metadata";
+
 import { ValidEntry } from "@services/parsing/shared/zipExtraction";
 
 export default async function calculateAudioLength(audioFile?: ValidEntry): Promise<number> {

@@ -1,20 +1,21 @@
-import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { GraphData } from "@models/graphData";
-import pick from "@services/basicHelpers";
-import ResponseTimeBarChart from "@components/charts/ResponseTimeBarChart";
+import React from "react";
+
 import AnimatedCountsPerChatBarChart from "@components/charts/AnimatedCountsPerChatBarChart";
 import AnimatedDayPartsActivityChart from "@components/charts/AnimatedDayPartsActivityChart";
 import AnimatedIntensityPolarChart from "@components/charts/AnimatedIntensityPolarChart";
 import AnimatedResponseTimeBarChart from "@components/charts/AnimatedResponseTimeBarChart";
+import AudioLengthsBarChart from "@components/charts/AudioLengthsBarChart";
+import CountsOverallBarChart from "@components/charts/CountsOverallBarChart";
 import DailyActivityChart from "@components/charts/DailyActivityChart";
 import DayPartsActivityOverallChart from "@components/charts/DayPartsActivityOverallChart";
-import SentReceivedSlidingWindowChart from "@components/charts/SentReceivedSlidingWindowChart";
-import CountsOverallBarChart from "@components/charts/CountsOverallBarChart";
-import MessageTypesBarChart from "@components/charts/MessageTypesBarChart";
-import AudioLengthsBarChart from "@components/charts/AudioLengthsBarChart";
 import EmojiBarChart from "@components/charts/EmojiBarChart";
+import MessageTypesBarChart from "@components/charts/MessageTypesBarChart";
+import ResponseTimeBarChart from "@components/charts/ResponseTimeBarChart";
+import SentReceivedSlidingWindowChart from "@components/charts/SentReceivedSlidingWindowChart";
+import { GraphData } from "@models/graphData";
+import pick from "@services/basicHelpers";
 
 export enum ChartType {
   MessageTypesBarChart = "messageTypesBarChart",
@@ -31,7 +32,7 @@ export enum ChartType {
   AnimatedResponseTimeBarChart = "animatedResponseTimeBarChart",
   DailyActivityHoursChart = "dailyActivityHoursChart",
   DayPartsActivityOverallChart = "dayPartsActivityOverallChart",
-  AnimatedDayPartsActivityChart = "animatedDayPartsActivityChart",
+  AnimatedDayPartsActivityChart = "animatedDayPartsActivityChart"
 }
 
 interface ChartContainerProps {
@@ -43,10 +44,7 @@ interface ChartContainerProps {
 export default function ChartContainer({ type, data }: ChartContainerProps) {
   // For charts that show data per conversation, keep only the ones selected by the user
   const selectedChatsWordsData = pick(data.monthlyWordsPerConversation, data.focusConversations);
-  const selectedChatsSecondsData = pick(
-    data.monthlySecondsPerConversation,
-    data.focusConversations
-  );
+  const selectedChatsSecondsData = pick(data.monthlySecondsPerConversation, data.focusConversations);
 
   const renderChart = () => {
     switch (type) {
@@ -54,19 +52,9 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
       case ChartType.AnimatedIntensityPolarChart:
         return <AnimatedIntensityPolarChart dataMonthlyPerConversation={selectedChatsWordsData} />;
       case ChartType.AnimatedWordsPerChatBarChart:
-        return (
-          <AnimatedCountsPerChatBarChart
-            dataMonthlyPerConversation={selectedChatsWordsData}
-            mode="text"
-          />
-        );
+        return <AnimatedCountsPerChatBarChart dataMonthlyPerConversation={selectedChatsWordsData} mode="text" />;
       case ChartType.AnimatedSecondsPerChatBarChart:
-        return (
-          <AnimatedCountsPerChatBarChart
-            dataMonthlyPerConversation={selectedChatsSecondsData}
-            mode="audio"
-          />
-        );
+        return <AnimatedCountsPerChatBarChart dataMonthlyPerConversation={selectedChatsSecondsData} mode="audio" />;
 
       // Message composition
       case ChartType.MessageTypesBarChart:
@@ -74,41 +62,17 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
       case ChartType.AudioLengthsBarChart:
         return <AudioLengthsBarChart audioLengthDistribution={data.audioLengthDistribution} />;
       case ChartType.EmojiBarChart:
-        return data.emojiDistribution ? (
-          <EmojiBarChart emojiDistribution={data.emojiDistribution} />
-        ) : null;
+        return data.emojiDistribution ? <EmojiBarChart emojiDistribution={data.emojiDistribution} /> : null;
 
       // Aggregated data only
       case ChartType.WordCountOverallBarChart:
-        return (
-          <CountsOverallBarChart
-            sentWordsTotal={data.basicStatistics.wordsTotal.sent}
-            receivedWordsTotal={data.basicStatistics.wordsTotal.received}
-            mode="text"
-          />
-        );
+        return <CountsOverallBarChart sentWordsTotal={data.basicStatistics.wordsTotal.sent} receivedWordsTotal={data.basicStatistics.wordsTotal.received} mode="text" />;
       case ChartType.SecondCountOverallBarChart:
-        return (
-          <CountsOverallBarChart
-            sentWordsTotal={data.basicStatistics.secondsTotal.sent}
-            receivedWordsTotal={data.basicStatistics.secondsTotal.received}
-            mode="audio"
-          />
-        );
+        return <CountsOverallBarChart sentWordsTotal={data.basicStatistics.secondsTotal.sent} receivedWordsTotal={data.basicStatistics.secondsTotal.received} mode="audio" />;
       case ChartType.WordCountSlidingWindowMean:
-        return (
-          <SentReceivedSlidingWindowChart
-            slidingWindowMeanDailyWords={data.slidingWindowMeanDailyWords}
-            mode="text"
-          />
-        );
+        return <SentReceivedSlidingWindowChart slidingWindowMeanDailyWords={data.slidingWindowMeanDailyWords} mode="text" />;
       case ChartType.SecondCountSlidingWindowMean:
-        return (
-          <SentReceivedSlidingWindowChart
-            slidingWindowMeanDailyWords={data.slidingWindowMeanDailySeconds}
-            mode="audio"
-          />
-        );
+        return <SentReceivedSlidingWindowChart slidingWindowMeanDailyWords={data.slidingWindowMeanDailySeconds} mode="audio" />;
 
       // Response times
       case ChartType.ResponseTimeBarChart:
@@ -118,26 +82,11 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
 
       // Daily activity times
       case ChartType.DailyActivityHoursChart:
-        return (
-          <DailyActivityChart
-            dataSentPerConversation={data.dailySentHoursPerConversation}
-            listOfConversations={data.focusConversations}
-          />
-        );
+        return <DailyActivityChart dataSentPerConversation={data.dailySentHoursPerConversation} listOfConversations={data.focusConversations} />;
       case ChartType.DayPartsActivityOverallChart:
-        return (
-          <DayPartsActivityOverallChart
-            dailySentHours={data.dailySentHours}
-            dailyReceivedHours={data.dailyReceivedHours}
-          />
-        );
+        return <DayPartsActivityOverallChart dailySentHours={data.dailySentHours} dailyReceivedHours={data.dailyReceivedHours} />;
       case ChartType.AnimatedDayPartsActivityChart:
-        return (
-          <AnimatedDayPartsActivityChart
-            dataSentPerConversation={data.dailySentHoursPerConversation}
-            listOfConversations={data.focusConversations}
-          />
-        );
+        return <AnimatedDayPartsActivityChart dataSentPerConversation={data.dailySentHoursPerConversation} listOfConversations={data.focusConversations} />;
 
       default:
         return (
@@ -148,7 +97,7 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
               height: 150,
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
+              alignItems: "center"
             }}
           >
             <Typography variant="body2">Placeholder for {type} chart</Typography>

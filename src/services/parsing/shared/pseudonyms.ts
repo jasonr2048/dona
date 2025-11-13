@@ -1,5 +1,5 @@
-import { maskName } from "@services/parsing/shared/names";
 import { decode } from "@services/parsing/shared/decoding";
+import { maskName } from "@services/parsing/shared/names";
 
 /**
  * Class that generates a map from contact names (e.g. Jane Doe) to pseudonyms (e.g. Contact4)
@@ -19,10 +19,7 @@ export class ContactPseudonyms {
   getPseudonym(name: string): string {
     const decodedName = decode(name);
     if (!this.namesToPseudonyms[decodedName]) {
-      const pseudonym =
-        this.systemAlias && name === this.systemAlias
-          ? this.systemAlias!
-          : `${this.contactAlias}${this.counter++}`;
+      const pseudonym = this.systemAlias && name === this.systemAlias ? this.systemAlias! : `${this.contactAlias}${this.counter++}`;
       this.namesToPseudonyms[decodedName] = pseudonym;
       this.pseudonymsToNames[pseudonym] = decodedName;
     }
@@ -40,9 +37,7 @@ export class ContactPseudonyms {
   }
 
   getOriginalNames(featuredPseudonyms: string[]): string[] {
-    return featuredPseudonyms
-      .map((pseudonym) => this.pseudonymsToNames[pseudonym])
-      .filter((name): name is string => name !== undefined);
+    return featuredPseudonyms.map(pseudonym => this.pseudonymsToNames[pseudonym]).filter((name): name is string => name !== undefined);
   }
 }
 

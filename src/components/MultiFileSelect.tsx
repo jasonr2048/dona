@@ -1,42 +1,29 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
-import { AnonymizationResult, Conversation, DataSourceValue } from "@models/processed";
-import { anonymizeData } from "@/services/anonymization";
-import {
-  calculateMinMaxDates,
-  filterDataByRange,
-  NullableRange,
-  validateDateRange,
-} from "@services/rangeFiltering";
-import {
-  DonationError,
-  DonationErrors,
-  DonationValidationError,
-  getErrorMessage,
-} from "@services/errors";
-import {
-  validateMinChatsForDonation,
-  validateMinImportantChatsForDonation,
-} from "@services/validation";
 import Alert, { AlertProps } from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+
+import { FileList, FileUploadButton, RemoveButton } from "@components/DonationComponents";
+import styled from "@mui/material/styles/styled";
 import Typography from "@mui/material/Typography";
+import React, { ChangeEvent, useState } from "react";
+
+import { CONFIG } from "@/config";
+import { useRichTranslations } from "@/hooks/useRichTranslations";
+import { anonymizeData } from "@/services/anonymization";
 import AnonymizationPreview from "@components/AnonymizationPreview";
 import DateRangePicker from "@components/DateRangePicker";
 import LoadingSpinner from "@components/LoadingSpinner";
-import { FileList, FileUploadButton, RemoveButton } from "@components/DonationComponents";
-import styled from "@mui/material/styles/styled";
-import { CONFIG } from "@/config";
-import { useRichTranslations } from "@/hooks/useRichTranslations";
+import { AnonymizationResult, Conversation, DataSourceValue } from "@models/processed";
+import { DonationErrors, getErrorMessage } from "@services/errors";
+import { calculateMinMaxDates, filterDataByRange, NullableRange, validateDateRange } from "@services/rangeFiltering";
+import { validateMinChatsForDonation, validateMinImportantChatsForDonation } from "@services/validation";
 
-const UploadAlert = styled((props: AlertProps) => <Alert severity="error" {...props} />)(
-  ({ theme }) => ({
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    width: "100%",
-  })
-);
+const UploadAlert = styled((props: AlertProps) => <Alert severity="error" {...props} />)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+  width: "100%"
+}));
 
 interface MultiFileSelectProps {
   dataSourceValue: DataSourceValue;
@@ -44,18 +31,9 @@ interface MultiFileSelectProps {
   onFeedbackChatsChange: (newFeedbackChats: Set<string>) => void;
 }
 
-const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
-  dataSourceValue,
-  onDonatedConversationsChange,
-  onFeedbackChatsChange,
-}) => {
+const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDonatedConversationsChange, onFeedbackChatsChange }) => {
   const donation = useRichTranslations("donation");
-  const acceptedFileTypes =
-    dataSourceValue == DataSourceValue.WhatsApp
-      ? ".txt, .zip"
-      : dataSourceValue == DataSourceValue.IMessage
-        ? ".db"
-        : ".zip";
+  const acceptedFileTypes = dataSourceValue == DataSourceValue.WhatsApp ? ".txt, .zip" : dataSourceValue == DataSourceValue.IMessage ? ".db" : ".zip";
 
   // States
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -101,7 +79,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     setAnonymizationResult(null);
     setFilteredConversations([]);
     onDonatedConversationsChange([]);
-    setFileInputKey((prevKey) => prevKey + 1); // Update the key to reset the file input
+    setFileInputKey(prevKey => prevKey + 1); // Update the key to reset the file input
   };
 
   // Handle date range selection
@@ -111,10 +89,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     setDateRangeError(errorReason);
 
     if (!errorReason && !error && anonymizationResult) {
-      const filteredConversations = filterDataByRange(
-        anonymizationResult.anonymizedConversations,
-        newRange
-      );
+      const filteredConversations = filterDataByRange(anonymizationResult.anonymizedConversations, newRange);
 
       // Validation
       if (!validateMinChatsForDonation(filteredConversations)) {
@@ -158,24 +133,13 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       {/* Display anonymized data */}
       {!error && !isLoading && anonymizationResult && filteredConversations && (
         <Box sx={{ my: 3 }}>
-          {dataSourceValue !== DataSourceValue.Facebook &&
-            dataSourceValue !== DataSourceValue.Instagram && (
-              <>
-                <DateRangePicker
-                  calculatedRange={calculatedRange}
-                  setSelectedRange={handleDateRangeChange}
-                />
-                {dateRangeError && (
-                  <UploadAlert>{getErrorMessage(donation.t, dateRangeError, CONFIG)}</UploadAlert>
-                )}
-              </>
-            )}
-          <AnonymizationPreview
-            dataSourceValue={dataSourceValue}
-            anonymizedConversations={filteredConversations}
-            chatMappingToShow={anonymizationResult.chatMappingToShow}
-            onFeedbackChatsChange={onFeedbackChatsChange}
-          />
+          {dataSourceValue !== DataSourceValue.Facebook && dataSourceValue !== DataSourceValue.Instagram && (
+            <>
+              <DateRangePicker calculatedRange={calculatedRange} setSelectedRange={handleDateRangeChange} />
+              {dateRangeError && <UploadAlert>{getErrorMessage(donation.t, dateRangeError, CONFIG)}</UploadAlert>}
+            </>
+          )}
+          <AnonymizationPreview dataSourceValue={dataSourceValue} anonymizedConversations={filteredConversations} chatMappingToShow={anonymizationResult.chatMappingToShow} onFeedbackChatsChange={onFeedbackChatsChange} />
         </Box>
       )}
     </Box>

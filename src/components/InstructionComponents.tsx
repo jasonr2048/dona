@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import CardMedia from "@mui/material/CardMedia";
-import { BlockTitle } from "@/styles/StyledTypography";
+import Grid from "@mui/material/Grid2";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import React, { useState } from "react";
+
+import { BlockTitle } from "@/styles/StyledTypography";
 
 interface TabbedInstructionVideoProps {
   iosVideoUrl: string;
@@ -21,12 +22,7 @@ interface TabbedInstructionVideoProps {
   androidCaption: string;
 }
 
-export function TabbedInstructionVideo({
-  iosVideoUrl,
-  androidVideoUrl,
-  iosCaption,
-  androidCaption,
-}: TabbedInstructionVideoProps) {
+export function TabbedInstructionVideo({ iosVideoUrl, androidVideoUrl, iosCaption, androidCaption }: TabbedInstructionVideoProps) {
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -42,20 +38,8 @@ export function TabbedInstructionVideo({
         </Tabs>
       </Box>
       <Box width="100%" display="flex" justifyContent="center" position="relative">
-        <CardMedia
-          component="video"
-          image={iosVideoUrl}
-          title="iOS Instructions"
-          controls
-          sx={{ display: value === 0 ? "block" : "none", width: "100%" }}
-        />
-        <CardMedia
-          component="video"
-          image={androidVideoUrl}
-          title="Android Instructions"
-          controls
-          sx={{ display: value === 1 ? "block" : "none", width: "100%" }}
-        />
+        <CardMedia component="video" image={iosVideoUrl} title="iOS Instructions" controls sx={{ display: value === 0 ? "block" : "none", width: "100%" }} />
+        <CardMedia component="video" image={androidVideoUrl} title="Android Instructions" controls sx={{ display: value === 1 ? "block" : "none", width: "100%" }} />
       </Box>
       <Typography variant="caption" sx={{ mt: 1 }}>
         {value === 0 ? iosCaption : androidCaption}
@@ -72,15 +56,7 @@ export const InstructionVideo = ({ videoUrl }: { videoUrl: string }) => (
   </Grid>
 );
 
-export const StepsList = ({
-  title,
-  translation,
-  count,
-}: {
-  title: string;
-  translation: any;
-  count: number;
-}) => (
+export const StepsList = ({ title, translation, count }: { title: string; translation: any; count: number }) => (
   <Grid size={{ xs: 12, md: 10 }}>
     <BlockTitle>{title}</BlockTitle>
     <Box component="ol" sx={{ textAlign: "left", lineHeight: "1.75rem", paddingLeft: 3 }}>

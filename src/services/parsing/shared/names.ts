@@ -22,14 +22,14 @@ export const maskName = (name: string): string => {
   return name
     .trim()
     .split(/\s+/)
-    .map((word) => {
+    .map(word => {
       if (word.length <= 2) {
         return word;
       }
       const firstTwoChars = Array.from(word).slice(0, 2).join("");
       const remainingChars = Array.from(word)
         .slice(2)
-        .map((char) => "*")
+        .map(char => "*")
         .join("");
       return firstTwoChars + remainingChars;
     })

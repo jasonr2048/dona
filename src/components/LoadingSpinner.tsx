@@ -1,7 +1,7 @@
-import React from "react";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
+import React from "react";
 
 interface LoadingSpinnerProps {
   message: string;

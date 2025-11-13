@@ -1,32 +1,17 @@
-import wordCount from "@services/parsing/shared/wordCount";
-import emojiCount from "@services/parsing/shared/emojiCount";
-import { ValidEntry } from "@services/parsing/shared/zipExtraction";
-import calculateAudioLength from "@services/parsing/shared/audioLength";
+import { AnonymizationResult, Conversation, DataSourceValue, Message, MessageAudio } from "@models/processed";
 import { isTextMessage, isVoiceMessage } from "@services/parsing/meta/messageChecks";
 import { ParsedConversation } from "@services/parsing/meta/metaHandlers";
-import {
-  AnonymizationResult,
-  Conversation,
-  DataSourceValue,
-  Message,
-  MessageAudio,
-} from "@models/processed";
 import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
+import calculateAudioLength from "@services/parsing/shared/audioLength";
+import emojiCount from "@services/parsing/shared/emojiCount";
 import { ChatPseudonyms, ContactPseudonyms } from "@services/parsing/shared/pseudonyms";
+import wordCount from "@services/parsing/shared/wordCount";
+import { ValidEntry } from "@services/parsing/shared/zipExtraction";
 
-export default async function deIdentify(
-  parsedConversations: ParsedConversation[],
-  audioEntries: ValidEntry[],
-  donorName: string,
-  dataSourceValue: DataSourceValue
-): Promise<AnonymizationResult> {
+export default async function deIdentify(parsedConversations: ParsedConversation[], audioEntries: ValidEntry[], donorName: string, dataSourceValue: DataSourceValue): Promise<AnonymizationResult> {
   const aliasConfig = getAliasConfig();
   const contactPseudonyms = new ContactPseudonyms(aliasConfig.contactAlias);
-  const chatPseudonyms = new ChatPseudonyms(
-    aliasConfig.donorAlias,
-    aliasConfig.chatAlias,
-    dataSourceValue
-  );
+  const chatPseudonyms = new ChatPseudonyms(aliasConfig.donorAlias, aliasConfig.chatAlias, dataSourceValue);
   chatPseudonyms.setDonorName(donorName);
   contactPseudonyms.setPseudonym(donorName, aliasConfig.donorAlias);
 
@@ -37,25 +22,23 @@ export default async function deIdentify(
 
       // Generate participant pseudonyms first (using participants array, not messages)
       const participantPseudonyms = new Set<string>();
-      jsonContent.participants.forEach((participant) => {
+      jsonContent.participants.forEach(participant => {
         const participantName = contactPseudonyms.getPseudonym(participant.name);
         participantPseudonyms.add(participantName);
       });
 
       await Promise.all(
-        jsonContent.messages.map(async (messageData) => {
+        jsonContent.messages.map(async messageData => {
           const timestamp = messageData.timestamp_ms;
           const senderName = contactPseudonyms.getPseudonym(messageData.sender_name);
 
           if (isVoiceMessage(messageData)) {
             const audioUri = messageData.audio_files?.[0]?.uri;
-            const audioFile = !audioUri
-              ? undefined
-              : audioEntries.find((entry) => entry.filename.endsWith(audioUri));
+            const audioFile = !audioUri ? undefined : audioEntries.find(entry => entry.filename.endsWith(audioUri));
             audioMessages.push({
               lengthSeconds: await calculateAudioLength(audioFile),
               timestamp,
-              sender: senderName,
+              sender: senderName
             } as MessageAudio);
           } else if (isTextMessage(messageData)) {
             const messageContent = messageData.content || "";
@@ -64,7 +47,7 @@ export default async function deIdentify(
               wordCount: wordCount(messageContent),
               emojiCounts: Object.keys(emojis).length > 0 ? emojis : undefined,
               timestamp,
-              sender: senderName,
+              sender: senderName
             } as Message);
           }
         })
@@ -78,9 +61,7 @@ export default async function deIdentify(
 
       // Add to chats to show
       contactPseudonyms.setPseudonym(donorName, aliasConfig.donorAlias);
-      const conversationPseudonym = chatPseudonyms.getPseudonym(
-        contactPseudonyms.getOriginalNames(participants)
-      );
+      const conversationPseudonym = chatPseudonyms.getPseudonym(contactPseudonyms.getOriginalNames(participants));
 
       return {
         isGroupConversation,
@@ -88,16 +69,16 @@ export default async function deIdentify(
         messages: textMessages,
         messagesAudio: audioMessages,
         participants,
-        conversationPseudonym,
+        conversationPseudonym
       } as Conversation;
     })
-  ).then((results) => results.filter(Boolean) as Conversation[]);
+  ).then(results => results.filter(Boolean) as Conversation[]);
 
   // TODO: Filtering and chat selection logic
 
   return {
     anonymizedConversations: deIdentifiedConversations,
     participantNamesToPseudonyms: contactPseudonyms.getPseudonymMap(),
-    chatMappingToShow: chatPseudonyms.getPseudonymMap(),
+    chatMappingToShow: chatPseudonyms.getPseudonymMap()
   };
 }

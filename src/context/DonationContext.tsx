@@ -1,19 +1,17 @@
 "use client";
 
+import Cookies from "js-cookie";
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+
+import { DONATION_ID_COOKIE, EXTERNAL_DONOR_ID_COOKIE } from "@/middleware";
 import { GraphData } from "@models/graphData";
 import { DataSourceValue } from "@models/processed";
-import Cookies from "js-cookie";
-import { DONATION_ID_COOKIE, EXTERNAL_DONOR_ID_COOKIE } from "@/middleware";
 
 interface DonationContextType {
   donationId?: string;
   feedbackData?: Record<DataSourceValue, GraphData>;
   externalDonorId?: string;
-  setDonationData: (
-    donationId: string,
-    graphDataRecord: Record<DataSourceValue, GraphData>
-  ) => void;
+  setDonationData: (donationId: string, graphDataRecord: Record<DataSourceValue, GraphData>) => void;
   setExternalDonorId: (id: string) => void;
   loadExternalDonorIdFromCookie: () => void;
 }
@@ -22,15 +20,13 @@ const DonationContext = createContext<DonationContextType | undefined>(undefined
 
 export function DonationProvider({ children }: { children: ReactNode }) {
   const [donationId, setDonationId] = useState<string | undefined>();
-  const [feedbackData, setFeedbackData] = useState<
-    Record<DataSourceValue, GraphData> | undefined
-  >();
+  const [feedbackData, setFeedbackData] = useState<Record<DataSourceValue, GraphData> | undefined>();
   const [externalDonorId, setExternalDonorIdState] = useState<string | undefined>();
 
   const setCookie = (name: string, value: string) => {
     Cookies.set(name, value, {
       secure: process.env.NODE_ENV === "production",
-      path: "/",
+      path: "/"
     });
   };
 
@@ -64,7 +60,7 @@ export function DonationProvider({ children }: { children: ReactNode }) {
         externalDonorId,
         setDonationData,
         setExternalDonorId,
-        loadExternalDonorIdFromCookie,
+        loadExternalDonorIdFromCookie
       }}
     >
       {children}

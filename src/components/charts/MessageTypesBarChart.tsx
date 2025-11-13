@@ -1,20 +1,13 @@
+import Box from "@mui/material/Box";
+import { BarElement, CategoryScale, Chart as ChartJS, ChartDataset, Legend, LinearScale, Tooltip } from "chart.js";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  ChartDataset,
-  Legend,
-  LinearScale,
-  Tooltip,
-} from "chart.js";
-import DownloadButtons from "@components/charts/DownloadButtons";
-import { useTranslations } from "next-intl";
-import Box from "@mui/material/Box";
-import { BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT } from "@components/charts/chartConfig";
-import { BasicStatistics } from "@models/graphData";
+
 import useChartPattern from "@/hooks/useChartPattern";
+import { BARCHART_OPTIONS, CHART_COLORS, CHART_LAYOUT } from "@components/charts/chartConfig";
+import DownloadButtons from "@components/charts/DownloadButtons";
+import { BasicStatistics } from "@models/graphData";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -35,23 +28,17 @@ const MessageTypesBarChart: React.FC<MessageTypesBarChartProps> = ({ basicStatis
       datasets: [
         {
           label: chartTexts("legend.contacts"),
-          data: [
-            basicStatistics.messagesTotal.textMessages.received,
-            basicStatistics.messagesTotal.audioMessages.received,
-          ],
+          data: [basicStatistics.messagesTotal.textMessages.received, basicStatistics.messagesTotal.audioMessages.received],
           backgroundColor: [CHART_COLORS.secondary, secondaryPattern],
-          maxBarThickness: CHART_LAYOUT.maxBarThickness * CHART_LAYOUT.barPercentageNarrow,
+          maxBarThickness: CHART_LAYOUT.maxBarThickness * CHART_LAYOUT.barPercentageNarrow
         },
         {
           label: chartTexts("legend.donor"),
-          data: [
-            basicStatistics.messagesTotal.textMessages.sent,
-            basicStatistics.messagesTotal.audioMessages.sent,
-          ],
+          data: [basicStatistics.messagesTotal.textMessages.sent, basicStatistics.messagesTotal.audioMessages.sent],
           backgroundColor: [CHART_COLORS.primary, primaryPattern],
-          maxBarThickness: CHART_LAYOUT.maxBarThickness * CHART_LAYOUT.barPercentageWide,
-        },
-      ] as ChartDataset<"bar", number[]>[],
+          maxBarThickness: CHART_LAYOUT.maxBarThickness * CHART_LAYOUT.barPercentageWide
+        }
+      ] as ChartDataset<"bar", number[]>[]
     };
   };
 
@@ -69,21 +56,21 @@ const MessageTypesBarChart: React.FC<MessageTypesBarChartProps> = ({ basicStatis
               x: {
                 ...BARCHART_OPTIONS.scales.x,
                 title: { display: true, text: chartTexts("xAxis") },
-                stacked: true,
+                stacked: true
               },
               y: {
                 ...BARCHART_OPTIONS.scales.y_no_pct,
-                title: { display: true, text: chartTexts("yAxis") },
-              },
+                title: { display: true, text: chartTexts("yAxis") }
+              }
             },
             plugins: {
               ...BARCHART_OPTIONS.plugins,
               tooltip: {
                 callbacks: {
-                  label: (context: any) => `${context.raw}`, // Show exact number on hover
-                },
-              },
-            },
+                  label: (context: any) => `${context.raw}` // Show exact number on hover
+                }
+              }
+            }
           }}
         />
       </Box>

@@ -1,15 +1,9 @@
 import { Database } from "sql.js";
 
-import {
-  AnonymizationResult,
-  Conversation,
-  DataSourceValue,
-  Message,
-  MessageAudio,
-} from "@/models/processed";
+import { AnonymizationResult, Conversation, DataSourceValue, Message, MessageAudio } from "@/models/processed";
 import { ChatPseudonyms, ContactPseudonyms } from "@/services/parsing/shared/pseudonyms";
-import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
 import { DonationErrors, DonationValidationError } from "@services/errors";
+import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
 import emojiCount from "@services/parsing/shared/emojiCount";
 
 export default async function handleImessageDBFiles(files: File[]): Promise<AnonymizationResult> {
@@ -27,14 +21,10 @@ export default async function handleImessageDBFiles(files: File[]): Promise<Anon
   let donorName = "";
   const conversationsMap = new Map<string, Conversation>();
   const contactPseudonyms = new ContactPseudonyms(aliasConfig.contactAlias);
-  const chatPseudonyms = new ChatPseudonyms(
-    aliasConfig.donorAlias,
-    aliasConfig.chatAlias,
-    DataSourceValue.IMessage
-  );
+  const chatPseudonyms = new ChatPseudonyms(aliasConfig.donorAlias, aliasConfig.chatAlias, DataSourceValue.IMessage);
   const macEpochTime = new Date("2001-01-01T00:00:00Z").getTime();
 
-  messages.forEach((row) => {
+  messages.forEach(row => {
     const timestampSinceMachEpoch = Number(row.date) / 1e6; // Convert nanoseconds to milliseconds
     const timestamp = macEpochTime + timestampSinceMachEpoch;
 
@@ -62,7 +52,7 @@ export default async function handleImessageDBFiles(files: File[]): Promise<Anon
         messages: [],
         messagesAudio: [],
         participants: [],
-        conversationPseudonym: "",
+        conversationPseudonym: ""
       });
     }
 
@@ -77,7 +67,7 @@ export default async function handleImessageDBFiles(files: File[]): Promise<Anon
         conversation.messagesAudio.push({
           lengthSeconds: 0, // Not calculated for iMessage
           timestamp,
-          sender: pseudonym,
+          sender: pseudonym
         } as MessageAudio);
       } else {
         const messageText = row.text as string;
@@ -87,25 +77,23 @@ export default async function handleImessageDBFiles(files: File[]): Promise<Anon
           wordCount: messageText.split(/\s+/).length,
           emojiCounts: Object.keys(emojis).length > 0 ? emojis : undefined,
           timestamp,
-          sender: pseudonym,
+          sender: pseudonym
         } as Message);
       }
     }
   });
 
   // Generate conversation pseudonyms based on all participants
-  conversationsMap.forEach((conversation) => {
+  conversationsMap.forEach(conversation => {
     const participants = contactPseudonyms.getOriginalNames(conversation.participants);
     const groupName = groupChats.get(conversation.id!);
-    conversation.conversationPseudonym = chatPseudonyms.getPseudonym(
-      groupName ? [groupName] : participants
-    );
+    conversation.conversationPseudonym = chatPseudonyms.getPseudonym(groupName ? [groupName] : participants);
   });
 
   return {
     anonymizedConversations: Array.from(conversationsMap.values()),
     participantNamesToPseudonyms: contactPseudonyms.getPseudonymMap(),
-    chatMappingToShow: chatPseudonyms.getPseudonymMap(),
+    chatMappingToShow: chatPseudonyms.getPseudonymMap()
   };
 }
 
@@ -113,7 +101,7 @@ async function createDatabase(file: File): Promise<Database> {
   const sqlPromise = import("sql.js/dist/sql-wasm.js");
   const SQL = await sqlPromise;
   const sqlWasm = await SQL.default({
-    locateFile: (file: string) => `/sql-wasm/${file}`,
+    locateFile: (file: string) => `/sql-wasm/${file}`
   });
 
   // Read the file as an ArrayBuffer

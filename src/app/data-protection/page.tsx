@@ -1,10 +1,11 @@
 "use client";
 
-import { useRichTranslations } from "@/hooks/useRichTranslations";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { BlockTitle, ContactBlock, MainTitle } from "@/styles/StyledTypography";
 import Typography from "@mui/material/Typography";
+
+import { useRichTranslations } from "@/hooks/useRichTranslations";
+import { BlockTitle, ContactBlock, MainTitle } from "@/styles/StyledTypography";
 
 export default function DataProtection() {
   const protection = useRichTranslations("dataProtection");

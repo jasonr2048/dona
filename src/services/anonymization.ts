@@ -1,22 +1,12 @@
 import { AnonymizationResult, DataSourceValue } from "@models/processed";
-import handleWhatsappTxtFiles from "@services/parsing/whatsapp/whatsappHandler";
-import { extractTxtFilesFromZip } from "@services/parsing/shared/zipExtraction";
 import { DonationErrors, DonationValidationError } from "@services/errors";
-import {
-  handleFacebookZipFiles,
-  handleInstagramZipFiles,
-} from "@services/parsing/meta/metaHandlers";
 import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
-import {
-  validateMinChatsForDonation,
-  validateMinImportantChatsForDonation,
-  validateMinTimePeriodForDonation,
-} from "@services/validation";
+import { handleFacebookZipFiles, handleInstagramZipFiles } from "@services/parsing/meta/metaHandlers";
+import { extractTxtFilesFromZip } from "@services/parsing/shared/zipExtraction";
+import handleWhatsappTxtFiles from "@services/parsing/whatsapp/whatsappHandler";
+import { validateMinChatsForDonation, validateMinImportantChatsForDonation, validateMinTimePeriodForDonation } from "@services/validation";
 
-export async function anonymizeData(
-  dataSourceValue: DataSourceValue,
-  files: File[]
-): Promise<AnonymizationResult> {
+export async function anonymizeData(dataSourceValue: DataSourceValue, files: File[]): Promise<AnonymizationResult> {
   let resultPromise;
   switch (dataSourceValue) {
     case DataSourceValue.WhatsApp:
@@ -24,7 +14,7 @@ export async function anonymizeData(
       const zipFilesPromises: Promise<File[]>[] = [];
 
       // Separate text files and handle zip files
-      files.forEach((file) => {
+      files.forEach(file => {
         if (file.type === "text/plain") {
           txtFiles.push(file);
         } else {
@@ -32,9 +22,7 @@ export async function anonymizeData(
         }
       });
 
-      resultPromise = Promise.all(zipFilesPromises).then((unzippedFiles) =>
-        handleWhatsappTxtFiles(txtFiles.concat(unzippedFiles.flat()))
-      );
+      resultPromise = Promise.all(zipFilesPromises).then(unzippedFiles => handleWhatsappTxtFiles(txtFiles.concat(unzippedFiles.flat())));
       break;
     case DataSourceValue.Facebook:
       resultPromise = handleFacebookZipFiles(files);

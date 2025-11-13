@@ -165,6 +165,56 @@ docker compose down        # remove containers
 docker volume rm dona-prod_postgres-data  # remove data (irreversible)
 ```
 
+## Code Formatting
+
+This project uses **Prettier** for code formatting with **Husky** and **lint-staged** for pre-commit hooks.
+
+### Setup
+
+The formatting tools are automatically installed when you run:
+
+```bash
+pnpm install
+```
+
+### How It Works
+
+- **Prettier** automatically formats code on save in IntelliJ IDEA
+- **Pre-commit hook** runs Prettier and ESLint on staged files before each commit
+- Configuration is in `.prettierrc.json`
+
+### IntelliJ IDEA Configuration
+
+1. Install the Prettier plugin (should prompt automatically)
+2. Go to **Preferences** → `Languages & Frameworks` → `JavaScript` → `Prettier`
+3. Set **Prettier package** to: `<project-root>/node_modules/prettier`
+4. Enable:
+
+- ✅ On save
+- ✅ On 'Reformat Code' action
+
+### Manual Formatting
+
+Format all files:
+
+```bash
+pnpm exec prettier --write "src/**/*.{js,jsx,ts,tsx,json,css,md}"
+```
+
+Format specific file:
+
+```bash
+pnpm exec prettier --write path/to/file.tsx
+```
+
+### Skipping Pre-commit Hook
+
+If you need to bypass the pre-commit hook (not recommended):
+
+```bash
+git commit --no-verify -m "your message"
+```
+
 ## Deployment
 
 Choose one of the following depending on your target environment.

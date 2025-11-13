@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -7,12 +7,13 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import DatasourceSpecificInstructions from "@components/DatasourceSpecificInstructions";
+import { useTranslations } from "next-intl";
+
 import ConsentModal from "@/components/ConsentModal";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
-import { DataSourceValue } from "@models/processed";
 import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@components/CustomIcon";
+import DatasourceSpecificInstructions from "@components/DatasourceSpecificInstructions";
+import { DataSourceValue } from "@models/processed";
 
 export default function Instructions() {
   const a = useTranslations("actions");
@@ -26,7 +27,7 @@ export default function Instructions() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          textAlign: "center",
+          textAlign: "center"
         }}
       >
         <Box>
@@ -38,9 +39,7 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">
-                {instructions.t("datasource.title_format", { datasource: "Whatsapp" })}
-              </Typography>
+              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "Whatsapp" })}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.WhatsApp} />
@@ -50,9 +49,7 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <FacebookIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">
-                {instructions.t("datasource.title_format", { datasource: "Facebook" })}
-              </Typography>
+              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "Facebook" })}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.Facebook} />
@@ -62,9 +59,7 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <InstagramIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">
-                {instructions.t("datasource.title_format", { datasource: "Instagram" })}
-              </Typography>
+              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "Instagram" })}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.Instagram} />
@@ -74,9 +69,7 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <IMessageIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">
-                {instructions.t("datasource.title_format", { datasource: "iMessage" })}
-              </Typography>
+              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "iMessage" })}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.IMessage} />

@@ -1,5 +1,6 @@
-import { maskName } from "@services/parsing/shared/names";
 import { describe, expect, it } from "@jest/globals";
+
+import { maskName } from "@services/parsing/shared/names";
 
 describe("maskName", () => {
   it("should replace all characters except the first two letters of each word with asterisks", () => {

@@ -30,7 +30,7 @@ function checkAbove12(numericDates: NumericDate[]): boolean | null {
 function checkDecreasing(numericDates: NumericDate[]): boolean | null {
   const datesByYear: NumericDate[][] = groupArrayByValueAtIndex(numericDates, 2);
 
-  const results = datesByYear.map((dates) => {
+  const results = datesByYear.map(dates => {
     const daysFirst = dates.slice(1).some((date, i) => {
       const [first1] = dates[i];
       const [first2] = date;
@@ -48,10 +48,10 @@ function checkDecreasing(numericDates: NumericDate[]): boolean | null {
     return null;
   });
 
-  const anyTrue = results.some((value) => value === true);
+  const anyTrue = results.some(value => value === true);
   if (anyTrue) return true;
 
-  const anyFalse = results.some((value) => value === false);
+  const anyFalse = results.some(value => value === false);
   if (anyFalse) return false;
 
   return null;
@@ -67,9 +67,7 @@ function checkDecreasing(numericDates: NumericDate[]): boolean | null {
  *          failed to understand the order
  */
 function changeFrequencyAnalysis(numericDates: NumericDate[]): boolean | null {
-  const diffs = numericDates
-    .slice(1)
-    .map((date, i) => date.map((num, j) => Math.abs(numericDates[i][j] - num)));
+  const diffs = numericDates.slice(1).map((date, i) => date.map((num, j) => Math.abs(numericDates[i][j] - num)));
 
   const [first, second] = diffs.reduce(
     ([firstSum, secondSum], diff) => {
@@ -126,7 +124,7 @@ function indexAboveValue(index: number, value: number): (array: number[]) => boo
  */
 function groupArrayByValueAtIndex<T extends any[]>(array: T[], index: number): T[][] {
   const map = new Map<string, T[]>();
-  array.forEach((item) => {
+  array.forEach(item => {
     const key = item[index].toString();
     if (!map.has(key)) {
       map.set(key, []);

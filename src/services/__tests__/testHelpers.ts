@@ -10,21 +10,16 @@ export const createConversation = (
   const parsedMessages = messages.map(([year, month, date, sender]) => ({
     timestamp: new Date(year, month - 1, date, 12, 0).getTime(),
     wordCount: 15,
-    sender,
+    sender
   }));
 
   const parsedAudioMessages = audioMessages.map(([year, month, date, sender, lengthSeconds]) => ({
     timestamp: new Date(year, month - 1, date, 12, 0).getTime(),
     lengthSeconds,
-    sender,
+    sender
   }));
 
-  const participants = [
-    ...new Set([
-      ...messages.map(([, , , sender]) => sender),
-      ...audioMessages.map(([, , , sender]) => sender),
-    ]),
-  ];
+  const participants = [...new Set([...messages.map(([, , , sender]) => sender), ...audioMessages.map(([, , , sender]) => sender)])];
 
   return {
     isGroupConversation: participants.length > 2,
@@ -34,6 +29,6 @@ export const createConversation = (
     messagesAudio: parsedAudioMessages,
     dataSource,
     conversationPseudonym,
-    focusInFeedback,
+    focusInFeedback
   };
 };

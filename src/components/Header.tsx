@@ -1,17 +1,18 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import HomeIcon from "@mui/icons-material/Home";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import HomeIcon from "@mui/icons-material/Home";
 import { Locale } from "@/config";
-import Button from "@mui/material/Button";
 
 export default function Header({ locale }: { locale: Locale }) {
   const theme = useTheme();
@@ -44,7 +45,7 @@ export default function Header({ locale }: { locale: Locale }) {
         padding: theme.spacing(1.5),
         transition: "height 0.5s ease-in-out",
         color: theme.palette.common.white,
-        "& .MuiSvgIcon-root": { color: theme.palette.common.white }, // Ensure good visibility
+        "& .MuiSvgIcon-root": { color: theme.palette.common.white } // Ensure good visibility
       }}
     >
       {/* Top bar with Home, Report Problem  & Language Switcher */}
@@ -53,7 +54,7 @@ export default function Header({ locale }: { locale: Locale }) {
           width: "100%",
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         {/* Left: Home Button */}
@@ -70,7 +71,7 @@ export default function Header({ locale }: { locale: Locale }) {
             sx={{
               color: theme.palette.common.white,
               borderColor: theme.palette.common.white,
-              mr: 1,
+              mr: 1
             }}
           >
             {links("reportProblem")}
@@ -90,7 +91,7 @@ export default function Header({ locale }: { locale: Locale }) {
             padding: theme.spacing(3),
             maxWidth: isMobile ? "90%" : "700px",
             textAlign: "center",
-            m: theme.spacing(2),
+            m: theme.spacing(2)
           }}
         >
           <Typography variant="h4" fontWeight={700} gutterBottom>

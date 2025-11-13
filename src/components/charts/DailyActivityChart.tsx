@@ -1,24 +1,18 @@
+import { Box } from "@mui/material";
+import { Chart as ChartJS, Legend, LinearScale, PointElement, TimeScale, Title, Tooltip } from "chart.js";
+import { useTranslations } from "next-intl";
 import React, { useMemo, useState } from "react";
 import { Scatter } from "react-chartjs-2";
-import { Box } from "@mui/material";
-import { useTranslations } from "next-intl";
-import {
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  PointElement,
-  TimeScale,
-  Title,
-  Tooltip,
-} from "chart.js";
+
 import "chartjs-adapter-date-fns";
+import { CHART_LAYOUT, COMMON_CHART_OPTIONS } from "@components/charts/chartConfig";
 import ColorScale from "@components/charts/ColorScale";
-import { calculateZScores } from "@services/charts/zScores";
-import { adjustRange } from "@services/charts/preprocessing";
-import Typography from "@mui/material/Typography";
 import DownloadButtons from "@components/charts/DownloadButtons";
 import { DailyHourPoint } from "@models/graphData";
-import { CHART_LAYOUT, COMMON_CHART_OPTIONS } from "@components/charts/chartConfig";
+import { adjustRange } from "@services/charts/preprocessing";
+import { calculateZScores } from "@services/charts/zScores";
+
+import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Select from "@mui/material/Select";
@@ -35,10 +29,7 @@ interface DailyActivityChartProps {
   listOfConversations: string[];
 }
 
-const DailyActivityChart: React.FC<DailyActivityChartProps> = ({
-  dataSentPerConversation,
-  listOfConversations,
-}) => {
+const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSentPerConversation, listOfConversations }) => {
   const CHART_NAME = "daily-activity-times-scatter-plot";
   const container_name = `chart-wrapper-${CHART_NAME}`;
 
@@ -50,19 +41,19 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({
   const [selectedConversation, setSelectedConversation] = useState<string>(ALL_CHATS);
 
   const preprocessData = (data: DailyHourPoint[]) => {
-    const allData = data.map((point) => ({
+    const allData = data.map(point => ({
       x: `${point.year}-${String(point.month).padStart(2, "0")}-${String(point.date).padStart(2, "0")}`,
       y: `1970-01-01T${String(point.hour).padStart(2, "0")}:${String(point.minute).padStart(2, "0")}:00`,
-      wordCount: point.wordCount,
+      wordCount: point.wordCount
     }));
 
     const zScores = calculateZScores(
-      allData.map((d) => d.wordCount),
+      allData.map(d => d.wordCount),
       Z_SCORE_LIMIT
     ) as number[];
     return allData.map((d, i) => ({
       ...d,
-      z: zScores[i],
+      z: zScores[i]
     }));
   };
 
@@ -81,7 +72,7 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({
   }, [preparedData, selectedConversation, dataSentPerConversation, listOfConversations]);
 
   const { xMin, xMax } = adjustRange(
-    filteredData.map((point) => point.x),
+    filteredData.map(point => point.x),
     0.05
   );
 
@@ -97,9 +88,9 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({
           return backgroundColor(baseOpacity * opacity);
         },
         borderWidth: 0,
-        pointStyle: "circle",
-      },
-    ],
+        pointStyle: "circle"
+      }
+    ]
   };
 
   const options = {
@@ -111,58 +102,46 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({
           unit: "month" as const,
           tooltipFormat: "dd-MM-yyyy",
           displayFormats: {
-            day: "MM-yyyy",
-          },
+            day: "MM-yyyy"
+          }
         },
         ticks: {
           maxTicksLimit: isMobile ? 6 : 20,
           minRotation: 30,
-          includeBounds: true,
+          includeBounds: true
         },
         min: xMin,
-        max: xMax,
+        max: xMax
       },
       y: {
         type: "time" as const,
         time: {
           unit: "hour" as const,
-          displayFormats: { hour: "HH:mm" },
+          displayFormats: { hour: "HH:mm" }
         },
         title: {
           display: true,
-          text: chartTexts("yAxis"),
-        },
-      },
+          text: chartTexts("yAxis")
+        }
+      }
     },
     plugins: {
       ...COMMON_CHART_OPTIONS.plugins,
       tooltip: {
-        enabled: false,
-      },
-    },
+        enabled: false
+      }
+    }
   };
 
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "row", gap: 2, alignItems: "center", width: "100%" }}
-    >
+    <Box sx={{ display: "flex", flexDirection: "row", gap: 2, alignItems: "center", width: "100%" }}>
       <Box sx={{ flex: 1, position: "relative", width: "100%" }}>
-        <Select
-          value={selectedConversation}
-          onChange={(e) => setSelectedConversation(e.target.value)}
-          size="small"
-          variant="outlined"
-          sx={{ mb: -2, pb: 0, fontSize: CHART_LAYOUT.labelFontSize }}
-        >
+        <Select value={selectedConversation} onChange={e => setSelectedConversation(e.target.value)} size="small" variant="outlined" sx={{ mb: -2, pb: 0, fontSize: CHART_LAYOUT.labelFontSize }}>
           <MenuItem value={ALL_CHATS} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
             {labelTexts("overallData")}
           </MenuItem>
-          {listOfConversations.map((conversation) => (
-            <MenuItem
-              sx={{ fontSize: CHART_LAYOUT.labelFontSize }}
-              key={conversation}
-              value={conversation}
-            >
+          {listOfConversations.map(conversation => (
+            <MenuItem sx={{ fontSize: CHART_LAYOUT.labelFontSize }} key={conversation} value={conversation}>
               {conversation}
             </MenuItem>
           ))}
@@ -170,22 +149,10 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({
 
         <Box id={container_name} p={CHART_LAYOUT.paddingX} sx={{ mt: -2, pt: 0 }}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-            <Typography
-              variant="body2"
-              align="right"
-              fontWeight="bold"
-              mt={1}
-              sx={{ fontSize: CHART_LAYOUT.labelFontSize }}
-            >
-              {selectedConversation === ALL_CHATS
-                ? labelTexts("overallData")
-                : selectedConversation}
+            <Typography variant="body2" align="right" fontWeight="bold" mt={1} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
+              {selectedConversation === ALL_CHATS ? labelTexts("overallData") : selectedConversation}
             </Typography>
-            <DownloadButtons
-              chartId={container_name}
-              fileNamePrefix={CHART_NAME}
-              currentLabel={selectedConversation}
-            />
+            <DownloadButtons chartId={container_name} fileNamePrefix={CHART_NAME} currentLabel={selectedConversation} />
           </Box>
 
           <Box
@@ -194,20 +161,13 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({
               flexDirection: "row",
               width: "100%",
               height: CHART_LAYOUT.responsiveChartHeight,
-              ml: -1.5,
+              ml: -1.5
             }}
           >
             <Box sx={{ flex: 1, height: "100%", maxWidth: "100%" }}>
               <Scatter data={data} options={options} />
             </Box>
-            <ColorScale
-              colors={[backgroundColor(1), "white"]}
-              labels={[
-                chartTexts("moreThanAverage"),
-                chartTexts("average"),
-                chartTexts("lessThanAverage"),
-              ]}
-            />
+            <ColorScale colors={[backgroundColor(1), "white"]} labels={[chartTexts("moreThanAverage"), chartTexts("average"), chartTexts("lessThanAverage")]} />
           </Box>
         </Box>
       </Box>

@@ -1,12 +1,13 @@
 "use client";
 
-import { useRichTranslations } from "@/hooks/useRichTranslations";
-import Image from "next/image";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Stack from "@mui/material/Stack";
-import Grid from "@mui/material/Grid2";
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid2";
+import Stack from "@mui/material/Stack";
+import Image from "next/image";
+
+import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle, MainTitle, RichText } from "@/styles/StyledTypography";
 
 export default function HomePage() {
@@ -27,7 +28,7 @@ export default function HomePage() {
         <Box>
           <MainTitle variant="h5">{landing.t("why.title")}</MainTitle>
           <Grid container spacing={3} justifyContent="center">
-            {["col1", "col2", "col3"].map((col) => (
+            {["col1", "col2", "col3"].map(col => (
               <Grid key={col} size={{ xs: 12, md: 4 }} textAlign="center">
                 {/* Force all images to be the same height */}
                 <Box
@@ -35,7 +36,7 @@ export default function HomePage() {
                     height: 180,
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center",
+                    alignItems: "center"
                   }}
                 >
                   <Image
@@ -71,26 +72,12 @@ export default function HomePage() {
         <Box>
           <MainTitle variant="h5">{landing.t("donationInfo.title")}</MainTitle>
           <Grid container spacing={3} justifyContent="center">
-            {["dataRequest", "anonymisation", "storage"].map((section) => (
-              <Grid
-                container
-                key={section}
-                spacing={3}
-                size={{ xs: 12 }}
-                flexDirection={{ xs: "column", md: "row" }}
-                alignItems="center"
-              >
+            {["dataRequest", "anonymisation", "storage"].map(section => (
+              <Grid container key={section} spacing={3} size={{ xs: 12 }} flexDirection={{ xs: "column", md: "row" }} alignItems="center">
                 {/* Image Box */}
                 <Grid size={{ xs: 12, md: 6 }} display="flex" justifyContent="center">
                   <Box sx={{ width: 260, mx: "auto", display: "flex", justifyContent: "center" }}>
-                    <Image
-                      src={landing.t(`donationInfo.${section}.image`)}
-                      alt={landing.t(`donationInfo.${section}.title`)}
-                      width={260}
-                      height={80}
-                      style={{ objectFit: "contain" }}
-                      loading="lazy"
-                    />
+                    <Image src={landing.t(`donationInfo.${section}.image`)} alt={landing.t(`donationInfo.${section}.title`)} width={260} height={80} style={{ objectFit: "contain" }} loading="lazy" />
                   </Box>
                 </Grid>
 

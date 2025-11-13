@@ -1,5 +1,6 @@
-import emojiCount, { mergeEmojiCounts } from "@services/parsing/shared/emojiCount";
 import { describe, expect, it } from "@jest/globals";
+
+import emojiCount, { mergeEmojiCounts } from "@services/parsing/shared/emojiCount";
 
 describe("emojiCount", () => {
   it("should return empty object for messages without emojis", () => {
@@ -74,7 +75,7 @@ describe("mergeEmojiCounts", () => {
     const counts = [
       { "😊": 2, "👍": 1 },
       { "😊": 1, "❤️": 3 },
-      { "👍": 2, "❤️": 1 },
+      { "👍": 2, "❤️": 1 }
     ];
     expect(mergeEmojiCounts(counts)).toEqual({ "😊": 3, "👍": 3, "❤️": 4 });
   });

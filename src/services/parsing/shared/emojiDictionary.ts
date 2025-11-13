@@ -69,5 +69,5 @@ export const EMOJI_SET = new Proxy({} as Set<string>, {
   has(target, prop) {
     const set = getEmojiSet();
     return prop in set;
-  },
+  }
 });

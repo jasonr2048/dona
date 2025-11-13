@@ -1,22 +1,23 @@
-html, body {
-    height: 100%;
-    overflow: auto;
+html,
+body {
+  height: 100%;
+  overflow: auto;
 }
 
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .full-width {
-    width: 100%;
+  width: 100%;
 }
 
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .mobile-padding {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }

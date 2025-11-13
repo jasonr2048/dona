@@ -11,37 +11,37 @@
     "submit": "Ուղարկել"
   },
   "links": {
-    "learn-more": "Իմանալ ավելին",
+    "learnMore": "Իմանալ ավելին",
     "instructions": "Մեկնարկ",
-    "donation-info": "Նվիրաբերել տվյալները",
-    "data-protection": "Գաղտնիության քաղաքականություն",
+    "donationInfo": "Նվիրաբերել տվյալները",
+    "dataProtection": "Գաղտնիության քաղաքականություն",
     "imprint": "Imprint",
-    "report-problem": "Հաղորդել խնդրի մասին"
+    "reportProblem": "Հաղորդել խնդրի մասին"
   },
   "urls": {
-    "learn-more": "/learn-more",
-    "uni-bielefeld": "https://www.uni-bielefeld.de",
-    "dona-responsible-homepage": "https://www.uni-bielefeld.de/fakultaeten/technische-fakultaet/arbeitsgruppen/multimodal-behavior-processing/",
+    "learnMore": "/learn-more",
+    "uniBielefeld": "https://www.uni-bielefeld.de",
+    "donaResponsibleHomepage": "https://www.uni-bielefeld.de/fakultaeten/technische-fakultaet/arbeitsgruppen/multimodal-behavior-processing/",
     "limesurvey": "https://www.limesurvey.org",
-    "limesurvey-data-use": "https://www.limesurvey.org/support/faq/39-data-protection-and-policy",
-    "report-problem": "https://survey.mbp.tf.uni-bielefeld.de/index.php?r=survey/index&sid=486423&lang=hy",
+    "limesurveyDataUse": "https://www.limesurvey.org/support/faq/39-data-protection-and-policy",
+    "reportProblem": "https://survey.mbp.tf.uni-bielefeld.de/index.php?r=survey/index&sid=486423&lang=hy",
     "facebook": {
-      "external-documentation": "https://www.facebook.com/help/contact/2032834846972583"
+      "externalDocumentation": "https://www.facebook.com/help/contact/2032834846972583"
     },
     "instagram": {
-      "external-documentation": "https://help.instagram.com/181231772500920?cms_id=181231772500920"
+      "externalDocumentation": "https://help.instagram.com/181231772500920?cms_id=181231772500920"
     },
     "whatsapp": {
-      "ios-documentation": "https://faq.whatsapp.com/618575946635920/?cms_platform=iphone&helpref=platform_switcher",
-      "android-documentation": "https://faq.whatsapp.com/en/android/23756533"
+      "iosDocumentation": "https://faq.whatsapp.com/618575946635920/?cms_platform=iphone&helpref=platform_switcher",
+      "androidDocumentation": "https://faq.whatsapp.com/en/android/23756533"
     },
     "imessage": {
-      "external-documentation": "https://support.apple.com/en-us/HT201287"
+      "externalDocumentation": "https://support.apple.com/en-us/HT201287"
     },
-    "secure-delete": "https://safecomputing.umich.edu/protect-yourself/prepare-devices-disposal/securely-delete-files",
-    "delete-from-android": "https://wethegeek.com/best-file-data-shredder-apps-to-permanently-delete-data-from-android/",
-    "delete-from-ios": "https://appletoolbox.com/how-to-delete-files-permanently-from-the-files-app-on-iphone-and-ipad/",
-    "cadooz-benefit": "https://www.cadooz.com/en/products/bestchoice-shopping-gift-card/"
+    "secureDelete": "https://safecomputing.umich.edu/protect-yourself/prepare-devices-disposal/securely-delete-files",
+    "deleteFromAndroid": "https://wethegeek.com/best-file-data-shredder-apps-to-permanently-delete-data-from-android/",
+    "deleteFromIos": "https://appletoolbox.com/how-to-delete-files-permanently-from-the-files-app-on-iphone-and-ipad/",
+    "cadoozBenefit": "https://www.cadooz.com/en/products/bestchoice-shopping-gift-card/"
   },
   "landing": {
     "header": {
@@ -57,31 +57,31 @@
       "title": "Ինչու՞ մասնակցել",
       "col1": {
         "title": "Ստացեք Ձեր վարքը նկարագրող գրաֆիկներ",
-        "image-path": "/images/landingExampleFeedback_Armenian.png",
+        "imagePath": "/images/landingExampleFeedback_Armenian.png",
         "body": "Որպես շնորհակալություն կտրամադրենք Ձեր օնլայն շփումների վերլուծության գրաֆիկները, օրինակ, թե քանի հաղորդագրություն եք ստացել ու ուղարկել վերջին ամիսներին։ Այս ուսումնասիրությունը  կլինիկական կամ հոգեբանական ախտորոշում չի ենթադրում։"
       },
       "col2": {
         "title": "Մնացեք անանուն",
         "body": "Մենք ընդունում ու վերլուծում ենք <strong><link>բացառապես անանուն տվյալներ</link></strong> (հաղորդագրության երկարությունը (բառերի կամ ձայնային հաղորդագրության վայրկյանների քանակը), ժամանակը, թվեր՝ հաղորդագրության մասնակիցների անունների փոխարեն)։ Հաղորդագրության տեքստը, նկարներ, ֆայլեր կամ մասնակիցների անունները չեն գրանցվում։ Հավաստիացնում ենք, որ հասանելիություն չունենք Ձեր հաղորդագրությունների բովանդակությանը։",
-        "image-path": "/images/stay-anonymous-illustration.jpg"
+        "imagePath": "/images/stay-anonymous-illustration.jpg"
       },
       "col3": {
         "title": "Աջակցեք գիտությանը",
         "body": "Ուսումնասիրության երկարաժամկետ նպատակը պարզելն է, թե ինչ ազդեցություն ունեն սոցիալական շփումները հոգեվիճակի վրա։",
-        "image-path": "/images/support-research-illustration.jpg"
+        "imagePath": "/images/support-research-illustration.jpg"
       }
     },
-    "how-to-participate": {
+    "howToParticipate": {
       "title": "Մասնակցության ընթացքը",
       "body": "Մասնակցության համար խնդրում ենք պատասխանել մի քանի հարցի և նվիրաբերել Ձեր անանուն տվյալները։ Հաղորդագրությունները ներբեռնելուց հետո, մասնակցությունը Ձեզնից կխլի ընդամենը 10 րոպե։"
     },
-    "how-to-cancel": {
+    "howToCancel": {
       "title": "Կամավոր մասնակցություն",
       "body": "Մասնակցությունը միանգամայն կամավոր է։ Այն ամեն պահին կարող եք դադարեցնել՝ առանց ինչ-որ պատճառ նշելու կամ բացասական հետևանքների։ Համաձայնությունը կարեղ եք չեղարկել մինչև տվյալները մեզ ուղարկելը։"
     },
-    "donation-info": {
+    "donationInfo": {
       "title": "Տվյալների տրամադրման կարգը",
-      "data-request": {
+      "dataRequest": {
         "image": "/images/landingDonationProcedure_1_Armenian.png",
         "title": "Տվյալների ներբեռնում - ",
         "body": "Տվյալները կարող եք ներբեռնել Ձեր ընտրած սոցհարթակից (Facebook և/կամ WhatsApp և/կամ Instagram)։"
@@ -101,24 +101,24 @@
       "body": "Հարցերի դեպքում խնդրում ենք կապ հաստատել ծրագրի ղեկավար պրոֆ․ դր․ Հաննա Դրիմալլայի հետ (AG Multimodal Behavior Processing, Technische Fakultät, Universität Bielefeld, <email>drimalla@techfak.uni-bielefeld.de</email>, հեռ. +49 521 106-12043)"
     }
   },
-  "learn-more": {
-    "data-used": {
+  "learnMore": {
+    "dataUsed": {
       "title": "Ի՞նչ տվյալներ են օգտագործվելու",
       "body1": "<strong>Տվյալների նվիրաբերում:</strong> Մենք ստանում ենք միայն մետա-տվյալներ (հաղորդագրության երկարությունն ու ժամանակը, թվեր՝ հաղորդագրության մասնակիցների անունների փոխարեն), չենք ստանում հաղորդագրությունների բովանդակությունը (տեքստ, ֆայլեր կամ մասնակիցների անունները)։  Անձնական տվյալները չեն լքում Ձեր սարքը, քանի որ տվյալների մշակումը կատարվում է տեղում՝ Ձեր բրաուզերում։ Հետևաբար մենք չենք տեսնում հաղորդագրությունների բովանդակությունը։ Վերբեռնելուց առաջ կարող եք տեսնել, թե ինչ տվյալներ եք մեզ ուղարկում՝ համոզվելով, որ դրանք անանուն են։",
       "body2": "<strong>Հարցաշար:</strong> մասնակցությունը սկսելիս անհրաժեշտ է մի քանի սոցիոդեմոգրաֆիկ հարցի պատասխանել։ Այնուհետև կարող եք նվիրաբերել Ձեր տվյալներն ու ստանալ գրաֆիկներ։ Հարցաշարերից ստացված տվյալները ևս բոլորովին անանուն են և հավաքվում են <link>LimeSurvey</link> հարթակի օգնությամբ."
-      },
-    "data-handling": {
+    },
+    "dataHandling": {
       "title": "Ինչպե՞ս են օգտագործվելու իմ տվյալները",
       "body1": "Քանի որ անուններ կամ նույնականացնող այլ տվյալներ չենք հավաքում, հնարավոր չէ տվյալները կապել Ձեր անձի հետ․ տվյալների բազան լիովին անանուն է։ Անձնական ոչ մի տվյալ չունենալով՝ չենք կարող ավարտից հետո առանձնացնել ու ջնջել Ձեր տվյալները։",
       "body2": "Տվյալներն ու ուսումնասիրության արդյունքները հրապարակվելու են գիտական ամսագրերում։ Հրապարակված տվյալները լինելու են անանուն, այսինքն մարդկանց նույնականացումն անհնար է։ Ամբողջովին անանուն տվյալները պահպանելու ենք հետազոտական պահոցում և կարող ենք տրամադրել այլ գիտնականների։"
     },
     "images": {
-      "text-messages": {
-        "image-path": "/images/dataAnonymizationExample-text-Armenian.svg",
+      "textMessages": {
+        "imagePath": "/images/dataAnonymizationExample-text-Armenian.svg",
         "caption": "Ապանույնականացված հաղորդագրության օրինակ"
       },
-      "voice-messages": {
-        "image-path": "/images/dataAnonymizationExample-voice-Armenian.svg",
+      "voiceMessages": {
+        "imagePath": "/images/dataAnonymizationExample-voice-Armenian.svg",
         "caption": "Ապանույնականացված ձայնային հաղորդագրության օրինակ"
       }
     }
@@ -129,15 +129,15 @@
       "body": "Մասնակցելուց առաջ խնդրում ենք ներբեռնել Ձեր տվյալները Facebook, WhatsApp կամ Instagram հարթակներից։ Կարող եք տվյալներ նվիրաբերել միաժամանակ երկու հարթակից։ Եթե ընտրում եք հարթակներից միայն մեկը, խնդրում ենք ընտրել այն հարթակը, որն ավելի կարևոր է Ձեզ համար։  <b>Խնդրում ենք ուշադիր կարդալ ստորև տրամադրված հրահանգները, քանի որ դրանք կարևոր են հաջորդ քայլերի համար</b>"
     },
     "datasource": {
-      "title-format": "Ներբեռնելու հրահանգներ {datasource} հարթակի համար"
+      "title_format": "Ներբեռնելու հրահանգներ {datasource} հարթակի համար"
     },
     "headers": {
       "devices": "Ի՞նչ սարք պետք է օգտագործել մասնակցության համար",
-      "data-deletion": "Ինչպե՞ս կարող եմ ներբեռնած տվյալները ջնջել իմ սարքից",
+      "dataDeletion": "Ինչպե՞ս կարող եմ ներբեռնած տվյալները ջնջել իմ սարքից",
       "overview": "Ներբեռնման հրահանգներ"
     },
     "continue": {
-      "buttons-header": "Ստացե՞լ եք Ձեր տվյալները",
+      "buttonsHeader": "Ստացե՞լ եք Ձեր տվյալները",
       "body": "Ձեր հաղորդագրությունները ներբեռնելուց հետո, հաջորդ քայլով կարող եք տալ Ձեր համաձայնությունն ու սկսել մասնակցությունը։ Այնուհետև կարող եք տվյալները վերբեռնել, անանուն դարձնել ու նվիրաբերել։"
     }
   },
@@ -149,7 +149,7 @@
       "title": "Ի՞նչ չատ ընտրել",
       "body": "Մարդիկ հաճախ կարիք ունեն կարևոր թեմաներով կիսվելու այն մարդկանց հետ, որոնց վստահում են։  Խոսքը ընտանիքի, ընկերների կամ այլ մարդկանց մասին է, որոնք Ձեզ աջակցել են։ <strong>Ընտրեք հաղորդագրություններ այն մարդկանց հետ, որոնց հետ կարող եք խոսել Ձեր կյանքի կարևոր հարցերի մասին։</strong><br></br><br></br><strong>Ընտրեք 5-7 չատ այն մարդկանց հետ, որոնց հետ կարևոր թեմաներ եք քննարկում, կարող եք ընտրել նաև խմբային չատեր։ </strong>"
     },
-    "data-deletion": {
+    "dataDeletion": {
       "body": "Խորհուրդ ենք տալիս մասնակցությունից հետո ներբեռնած ֆայլերը  ջնջել Ձեր սարքից և էլ․փոստից։ Ուշադրություն դարձրեք, որ տվյալները վերջնականապես հեռացվեն սարքից, ոչ թե տեղափոխվեն զամբյուղ։ Ֆայլերը ջնջելու մասին լրացուցիչ ինֆորմացիա կարող եք ստանալ  <link>այստեղ</link>։"
     },
     "video": {
@@ -157,7 +157,7 @@
       "ios": "/images/whatsapp/whatsapp_eng_iOS.mp4",
       "android": "/images/whatsapp/whatsapp_eng_android.mp4",
       "caption": "Սա Android համակարգով ստեղծված օրինակ է։ Այլ սարքերում քայլերը կարող են փոքր-ինչ տարբերվել, սակայն տրամաբանությունը նույնն է։",
-      "ios-caption": "Սա տեսանյութի համար օգտագործվել է iPhone։",
+      "iosCaption": "Սա տեսանյութի համար օգտագործվել է iPhone։",
       "android-caption": "Այս տեսանյութի համար օգտագործվել է Android սարք։ Կախված սարքից՝ քայլերը կարող են փոքր-ինչ տարբերվել։"
     },
     "steps": {
@@ -170,7 +170,7 @@
       "7": "Ներբեռնեք ֆայլերը Ձեր համակարգիչ։",
       "8": "Կրկնեք 3-7 հրահանգները բոլոր չատերի համար։"
     },
-    "external-documentation": "Տվյալների ներբեռնման պաշտոնական հրահանգները կարող եք ստանալ այստեղ՝  <link_ios>iOS</link_ios> կամ <link_android>Android</link_android>։",
+    "externalDocumentation": "Տվյալների ներբեռնման պաշտոնական հրահանգները կարող եք ստանալ այստեղ՝  <link_ios>iOS</link_ios> կամ <link_android>Android</link_android>։",
     "logo": "w-logo.svg"
   },
   "facebook": {
@@ -181,10 +181,10 @@
       "title": "Ինչքա՞ն է տևում տվյալների ներբեռնումը Facebook-ից",
       "body": "Տվյալների պահանջումը կատարվում է կայքի կարգավորումներում մի քանի տարբերակ ընտրելով (տես ստորև). Երբ տվյալները պատրաստ լինեն ներբեռնման համար,  Facebook-ից ծանուցում կստանաք։ Այդ ժամանակ կարող եք ներբեռնել տվյալները Ձեր համակարգիչ ու սկսել մասնակցությունը։"
     },
-    "data-deletion": {
+    "dataDeletion": {
       "body": "Խորհուրդ ենք տալիս մասնակցությունից հետո ներբեռնած ֆայլերը  ջնջել Ձեր սարքից կամ էլ․ հասցեից։ Ուշադրություն դարձրեք, որ տվյալները վերջնականապես հեռացվեն սարքից, ոչ թե տեղափոխվեն զամբյուղ։ Ֆայլերը ջնջելու մասին լրացուցիչ ինֆորմացիա կարող եք ստանալ <link>այստեղ</link> կամ <link_android>wethegeek.com</link_android> և <link_ios>appletoolbox.com</link_ios> կայքերում."
     },
-    "external-documentation": "Տվյալների ներբեռնման պաշտոնական հրահանգները կարող եք ստանալ <link>այստեղ</link>։",
+    "externalDocumentation": "Տվյալների ներբեռնման պաշտոնական հրահանգները կարող եք ստանալ <link>այստեղ</link>։",
     "steps": {
       "1": "Մուտք գործեք Facebook-ի Ձեր հաշիվ։",
       "2": "Վերին ձախ մասում սեղմեք Ձեր նկարի վրա և ընտրեք «Կարգավորումներ և գաղտնիություն» տարբերակը։",
@@ -208,10 +208,10 @@
       "title": "Ինչքա՞ն է տևում տվյալների ներբեռնումը  Instagram-ից",
       "body": "Տվյալների պահանջումը կատարվում է կայքի կարգավորումներում մի քանի տարբերակ ընտրելով (տես ստորև): Երբ տվյալները պատրաստ լինեն ներբեռնման համար, Instagram-ից ծանուցում կստանաք։ Այդ ժամանակ կարող եք ներբեռնել տվյալները Ձեր համակարգիչ ու սկսել մասնակցությունը։"
     },
-    "data-deletion": {
+    "dataDeletion": {
       "body": "Խորհուրդ ենք տալիս մասնակցությունից հետո ներբեռնած ֆայլերը  ջնջել Ձեր սարքից կամ էլ․ հասցեից։ Ուշադրություն դարձրեք, որ տվյալները վերջնականապես հեռացվեն սարքից, ոչ թե տեղափոխվեն զամբյուղ։ Ֆայլերը ջնջելու մասին լրացուցիչ ինֆորմացիա կարող եք ստանալ <link>այստեղ</link> կամ <link_android>wethegeek.com</link_android> և <link_ios>appletoolbox.com</link_ios> կայքերում."
     },
-    "external-documentation": "Տվյալների ներբեռնման պաշտոնական հրահանգները կարող եք ստանալ <link>այստեղ</link>.",
+    "externalDocumentation": "Տվյալների ներբեռնման պաշտոնական հրահանգները կարող եք ստանալ <link>այստեղ</link>.",
     "steps": {
       "1": "Մուտք գործեք Instagram-ի Ձեր հաշիվ։",
       "2": "Ձեր պրոֆիլում սեղմեք վերին աջ մասում գտնվող երեք գծերի վրա, ապա ընտրեք  \"Ваши действия/Your activity\":",
@@ -236,11 +236,11 @@
       "title": "Որքա՞ն ժամանակ է տևում iMessage-ից տվյալների արտահանումը։",
       "body": "Ձեր տվյալների արտահանման համար անհրաժեշտ ժամանակը կախված է տվյալների քանակից։ Խնդրում ենք համբերատար լինել, քանի որ գործընթացը կարող է որոշ ժամանակ պահանջել։"
     },
-    "data-deletion": {
+    "dataDeletion": {
       "body": "Ձեր iMessage տվյալները ջնջելու համար հետևեք Messages հավելվածում տրամադրված հրահանգներին։ Համոզվեք, որ ջնջումից առաջ պահուստավորել եք կարևոր տվյալները։ Ֆայլերի մշտական ջնջման վերաբերյալ լրացուցիչ տեղեկություններ կարող եք գտնել <link>Միչիգանի համալսարանի կայքում</link>։"
     },
     "description": "Կատարեք Ձեր iMessage տվյալների արտահանման հարցում։ Ձեզ անհրաժեշտ է մուտք ունենալ iPhone կամ Mac։ Հետևեք ստորև նշված քայլերին՝ Ձեր տվյալներն արտահանելու համար։",
-    "external-documentation": "Ավելի մանրամասն հրահանգների համար խնդրում ենք անդրադառնալ պաշտոնական փաստաթղթերին <link>այստեղ</link>։",
+    "externalDocumentation": "Ավելի մանրամասն հրահանգների համար խնդրում ենք անդրադառնալ պաշտոնական փաստաթղթերին <link>այստեղ</link>։",
     "steps": {
       "1": "Բացեք Messages հավելվածը Ձեր iPhone-ում կամ Mac-ում։",
       "2": "Ընտրեք այն զրույցը, որը ցանկանում եք արտահանել։",
@@ -271,20 +271,20 @@
       "title": "Կամավոր մասնակցություն",
       "body": "Ձեր մասնակցությունը միանգամայն կամավոր է։ Մինչև Ձեր անանուն տվյալները մեզ ուղարկելը կարող եք չեղարկել Ձեր համաձայնությունը՝ առանց բացասական հետևանքների։"
     },
-    "data-protection": {
+    "dataProtection": {
       "title": "Տվյալների ապահովություն",
       "body": "Քանի որ անուններ կամ նույնականացնող այլ տվյալներ չենք հավաքում, հնարավոր չէ տվյալները կապել Ձեր անձի հետ․ տվյալների բազան լիովին անանուն է։ Անձնական ոչ մի տվյալ չունենալով՝  չենք կարող ավարտից հետո առանձնացնել ու ջնջել Ձեր տվյալները։  Քանի որ տվյալները ամբողջովին անանուն են, ընդհանուր տվյալների պաշտպանության կանոնակարգը (GDPR) կիրառելի չէ։ Հարցերի կամ մտահոգությունների դեպքում կարող եք կապ հաստատել Բիլեֆելդի համալսարանում տվյալների պաշտպանության հանձնակատարի հետ՝",
       "contact": "Տվյալների պաշտպանության հանձնակատար<br></br>Բիլեֆելդի համալսարան<br></br>Գրասենյակ: UHG T6-234<br></br>Հեռ․ +49 521 106-5225<br></br><email>datenschutzbeauftragte@uni-bielefeld.de</email>"
     },
-    "data-purpose": {
+    "dataPurpose": {
       "title": "Տվյալների օգտագործում",
       "body": "Տվյալներն ու ուսումնասիրության արդյունքները հրապարակվելու են գիտական ամսագրերում։ Հրապարակված տվյալները լինելու են անանուն, այսինքն մարդկանց նույնականացումն անհնար է։ Ամբողջովին անանուն տվյալները պահպանելու ենք հետազոտական պահոցում և կարող ենք տրամադրել այլ գիտնականների։"
     },
     "confirmation": "Սույնով հաստատում եմ, որ կարդացել ու հասկացել եմ վերը նշված տեղեկությունները և համաձայն եմ մասնակցության պայմաններին։"
   },
   "donation": {
-    "datasource-title_format": "{datasource} Տվյալների ուղարկում",
-    "select-data": {
+    "datasourceTitle_format": "{datasource} Տվյալների ուղարկում",
+    "selectData": {
       "title": "Տվյալների ուղարկում",
       "body1": "Խնդրում ենք ընտրել, թե որ հարթակից եք ցանկանում տրամադրել Ձեր տվյալները։ Տվյալները անանուն դարձնելու համար ավտոմատ առանձնացվում է Ձեր օգտանունը։ Օգտանունները չեն պահպանվում կամ գրանցվում։",
       "body2": "Տվյալները մեզ տրամադրելուց առաջ կարող եք տեսնել, թե ինչ ինֆորմացիա է մեզ հասնելու ու համոզվել որ Ձեր տվյալները ապանույնականացվել են։",
@@ -293,13 +293,13 @@
       "browse": "Փնտրել",
       "remove": "Հեռացնել"
     },
-    "select-date": {
-      "choose-period": "Ստորև կարող եք սահմանափակել տրամադրվող տվյալների ժամանակահատվածը",
+    "selectDate": {
+      "choosePeriod": "Ստորև կարող եք սահմանափակել տրամադրվող տվյալների ժամանակահատվածը",
       "start": "Սկիզբ",
       "end": "Վերջ",
       "reset": "Վերականգնել"
     },
-    "preview-data": {
+    "previewData": {
       "title": "Անանուն տվյալների նախադիտում",
       "button": "Սեղմեք այստեղ նախադիտման համար",
       "body1": "Ոչ մի անձնական տվյալ Ձեր սարքից դուրս չի եկել։ Միայն մետա-տվյալներ են առանձնացվել։",
@@ -307,14 +307,14 @@
       "message": "Հաղորդագրություն",
       "sender": "Ուղարկող",
       "receiver": "Ստացող",
-      "word-count": "Բառերի քանակ",
-      "length-seconds": "Տևողությունը՝ ըստ վայրկյանների",
+      "wordCount": "Բառերի քանակ",
+      "lengthSeconds": "Տևողությունը՝ ըստ վայրկյանների",
       "timestamp": "Ժամանակ",
-      "group-conversation": "Խմբային հաղորդագրություն",
-      "voice-message": "Ձայնային հաղորդագրություն",
-      "data-explanation_format": "Ստորև կարող եք տեսնել ապանույնականացված Ձեր նամակներից {num_messages}-ը։ Մնացածը <b>կարող եք դիտել <link>այստեղ</link></b>."
+      "groupConversation": "Խմբային հաղորդագրություն",
+      "voiceMessage": "Ձայնային հաղորդագրություն",
+      "dataExplanation_format": "Ստորև կարող եք տեսնել ապանույնականացված Ձեր նամակներից {num_messages}-ը։ Մնացածը <b>կարող եք դիտել <link>այստեղ</link></b>."
     },
-    "contacts-mapping": {
+    "contactsMapping": {
       "title": "Ձեր կոնտակտների ծածկանունները",
       "subtitle": "Ձեր տվյալներն ու կոնտակտներն այժմ ապանույնականացված են, բովանդակությունը հեռացված։ Եթե գրաֆիկները ուսումնասիրելիս ինքներդ ցանկանում եք վերծանել, թե որ չատերն են ներառված, խնդրում ենք գրի առնել, թե որ համարն է (օր․՝ \"{dataSourceInitials}4\") համապատասխանում յուրաքանչյուր կոնտակտին (օր․ ՝ A**** B*****) ։ Այսուհետ, միայն այս համարներն են երևալու։ Կոնտակների ու համարների համապատասխանությունը չի պահպանվում և կորչում է այս էջը լքելուց հետո։",
       "pseudonyms": "կեղծանուններ",
@@ -325,13 +325,13 @@
       "moreContacts": "ևս {0} կոնտակտ.",
       "onlyYouInConv": "<i>Դուք այս չատի միակ մասնակիցն եք։ Հնարավոր պատճառն այն է, որ մյուս մասնակիցները լքել են չատը։</i>"
     },
-    "chat-selection": "Դուք կարող եք ընտրել մինչև {max_num} զրույց՝ կենտրոնացված կարծիք ստանալու համար, սակայն <b>պետք է</b> ընտրեք առնվազն {min_num}, որպեսզի Ձեզ տրված կարծիքը չդիտարկվի որպես Ձեր կոնտակտների անձնական տվյալների վերլուծություն։ Ներկայումս ընտրված են {default_num} զրույցները՝ հաղորդագրություններում բառերի ամենաբարձր քանակով։",
-    "sending-wait": "Տվյալների ուղարկումը կարող է մի քանի րոպե տևել։ Խնդրում ենք սպասել և չփակել էջը։ Շնորհակալություն։",
-    "sending-batch-progress": "{current}-րդ խմբաքանակը բեռվում է {total}-ից...",
-    "alias-not-required": "Չի պահանջվում",
+    "chatSelection": "Դուք կարող եք ընտրել մինչև {max_num} զրույց՝ կենտրոնացված կարծիք ստանալու համար, սակայն <b>պետք է</b> ընտրեք առնվազն {min_num}, որպեսզի Ձեզ տրված կարծիքը չդիտարկվի որպես Ձեր կոնտակտների անձնական տվյալների վերլուծություն։ Ներկայումս ընտրված են {default_num} զրույցները՝ հաղորդագրություններում բառերի ամենաբարձր քանակով։",
+    "sendingWait": "Տվյալների ուղարկումը կարող է մի քանի րոպե տևել։ Խնդրում ենք սպասել և չփակել էջը։ Շնորհակալություն։",
+    "sendingBatchProgress": "{current}-րդ խմբաքանակը բեռվում է {total}-ից...",
+    "aliasNotRequired": "Չի պահանջվում",
     "alias": "Օգտանուն",
-    "please-insert-alias": "Խնդրում ենք մուտքագրել Ձեր օգտանունը ապանույնականացումը սկսելու համար",
-    "be-patient": "Խնդրում ենք սպասել, այս գործընթացը կարող է փոքր-ինչ երկար տևել",
+    "pleaseInsertAlias": "Խնդրում ենք մուտքագրել Ձեր օգտանունը ապանույնականացումը սկսելու համար",
+    "bePatient": "Խնդրում ենք սպասել, այս գործընթացը կարող է փոքր-ինչ երկար տևել",
     "successful": "Ձեր տվյալները հաջողությամբ ապանույնականացված են, բովանդակությունը՝ հեռացված։",
     "error": "Ցավում ենք, ինչ-որ խնդիր է առաջացել։",
     "anonymisation": {
@@ -355,12 +355,12 @@
       "DuplicateDonorId": "Այս նվիրատուի ID-ն արդեն գոյություն ունի:",
       "TransactionFailed": "Նվիրատվության տվյալները չհաջողվեց պահել: Ստուգեք կապը և նորից փորձեք:",
       "UnknownError": "Ցավում ենք, ինչ-որ խնդիր է առաջացել։ Խնդրում ենք վերանայել գործընթացը։",
-      "no-alias": "Խնդրում ենք մուտքագրել Ձեր օգտանունը։ Այն կարող եք գտնել WhatsApp-ի Ձեր պրոֆիլում։"
+      "noAlias": "Խնդրում ենք մուտքագրել Ձեր օգտանունը։ Այն կարող եք գտնել WhatsApp-ի Ձեր պրոֆիլում։"
     }
   },
-  "data-protection": {
+  "dataProtection": {
     "title": "Գաղտնության քաղաքականություն",
-    "technical-details": {
+    "technicalDetails": {
       "title": "Կայքի անանանուն օգտագործում",
       "body1": "Կայքում գտնվելիս ոչ մի անձնական ինֆորմացիա չի գրանցվում։ Երբ Ձեր բրաուզերից մուտք եք գործում մեր կայք, բրաուզերը համացանցի միջոցով մեր սերվերի հետ կապ հաստատելու համար փոխանցում է Ձեր IP-հասցեն։  Ձեր IP-հասցեն փոփոխվում է և երկարաժամկետ չի պահպանվում՝ վերացնելով նույնականացման հնարավորությունը։",
       "body2": "Երբ մուտք եք գործում մեր կայք, հետևյալ տեխնիկական տվյալներն են փոխանցվում՝ հարցված ֆայլի անունը,  այցի ժամանակը, փոխանցվող տվյալների ծավալը, տեղեկություն փոխանցման հաջողության մասին, URL-ը որից  հարցում է կատարվել, օպերացիոն համակարգը, բրաուզերի տեսակն ու  փոփոխված IP-հասցեն։",
@@ -387,15 +387,15 @@
       "title": "Responsible supervisory authorities",
       "body": "<p>Ministry of Culture and Science in North Rhine-Westphalia<br></br>Völklinger Straße 49<br></br>40221 Düsseldorf</p><p><strong>Value Added Tax identification number</strong><br></br>Pursuant to § 27 a, VAT ID: DE811307718 - according to paragraph 27 a - Finanzamt (tax office) Bielefeld Innenstadt</p>"
     },
-    "responsible-dona": {
+    "responsibleDona": {
       "title": "Responsibility for Content of the Donation Platform Dona",
       "body": "Prof. Dr. Hanna Drimalla<br></br>Leiterin der AG \"Multimodal Behavior Processing\"<br></br>E-mail: <email>drimalla@techfak.uni-bielefeld.de</email><br></br><link>Homepage</link><br></br>Telephone: +49 521 106-12043<br></br>Telephone secretary: +49 521 106-6891<br></br>Room: CITEC-3.108"
     },
-    "responsible-central-website": {
+    "responsibleCentralWebsite": {
       "title": "Responsibility for Content of the Central Websites",
       "body": "<p>Referat für Kommunikation<br></br>Ingo Lohuis<br></br><email>ingo.lohuis@uni-bielefeld.de</email></p><p>Responsibility for the content of all other Internet pages (e.g. the faculties, institutes, seminars or administrative offices) lies with the facility or author who produced or published the pages. If you have any questions about these webpages, please contact the individuals or facility/office named on the Internet page.</p><p>There are also various decentralized services on their own servers that do not belong to the domain \"www.uni-bielefeld.de\". These are all the responsibility of their specific operators.</p><p>URLs beginning with \"http://wwwhomes.uni-bielefeld.de\" lead to private or personal web pages of members of Bielefeld University. The University has no influence on their contents, and these in no way represent any official publication of Bielefeld University.</p>"
     },
-    "liability-disclaimer": {
+    "liabilityDisclaimer": {
       "title": "Liability Disclaimer",
       "body": "<p>While Bielefeld University makes every effort to ensure that the contents of its website are correct, up-to-date, and without omissions, it cannot accept liability for the accuracy and quality of its website at any given time.</p><p>The website provides hyperlinks to other external websites. The authors and distributors of these sites are responsible for their content. Bielefeld University is not liable for the content of external websites and has no influence on the content of external links. Despite carefully checking the contents when linking to external websites, the University has no liability for the content of external links. The University distances itself expressly from the content of external websites, nor does it endorse it. Course offers and services from the University are not offered on external websites.</p>"
     },
@@ -403,26 +403,26 @@
       "title": "Copyright",
       "body": "The copyright and usage rights for texts, graphics, photos, design and source code lie - unless otherwise stated - with Bielefeld University. Permission is needed to distribute, use or pass on copies in digital or printed form. This does not affect \"copying\" the data on to a personal computer to view pages on a browser."
     },
-    "photo-credits": {
+    "photoCredits": {
       "title": "Photo Credits",
       "body": "All photographs remain - unless otherwise stated - copyright of Bielefeld University."
     }
   },
   "footer": {
-    "project-number": "Project No.: 01IS20046"
+    "projectNumber": "Project No.: 01IS20046"
   },
-  "donor-id": {
+  "donorId": {
     "title": "ID-Input",
     "enter": "Please enter your ID to continue:",
     "remember": "Please note your ID:",
-    "your-id": "Your ID"
+    "yourId": "Your ID"
   },
   "feedback": {
     "title": "Շնորհակալություն նվիրատվության համար",
     "genericError": "Ցավում ենք, ինչ-որ խնդիր է առաջացել, խնդրում ենք նորից սկսել։",
     "loading": "Գրաֆիկը բեռնվում է",
     "landscapeMode": "Գրաֆիկները լավ տեսնելու համար էկրանը <b>կողքի</b> շրջեք",
-    "important-message": {
+    "importantMessage": {
       "title": "Կարևոր նշում",
       "disclaimer": "Ցուցադրվող գրաֆիկները <b>թույլ <u>չեն տալիս</u> ուղիղ եզրահանգումներ անել</b> Ձեր հարաբերությունների որակի մասին։ Վերլուծությունը հիմնված է բացառապես հաղորդագրությունների քանակի ու ժամանակի վրա։"
     },
@@ -435,7 +435,7 @@
       "resetView": "Թարմացնել",
       "you": "Դուք",
       "contacts": "Ձեր կոնտակտները",
-      "yearMonth": "Տարի-ամիս",
+      "currentMonth": "Ամիս",
       "chatWith": "Չատ",
       "time": "Ժամանակ",
       "overallData": "Բոլոր չատերը",
@@ -443,14 +443,14 @@
     },
     "statisticsCard": {
       "title": "Պատկերացում Ձեր ակտիվության մասին",
-      "thousand-separator": ",",
-      "total-messages": "Հաղորդագրությունների քանակ",
-      "average-per-active-month": "Ամսական հաղորդագրությունների միջին քանակ",
-      "active-years-explanation_format": "Ձեր տվյալներն ընդգրկում են {years} տարի, որի ընթացքում ուղարկել կամ ստացել եք առնվազն մեկ հաղորդագրություն։",
-      "active-months-explanation_format": "Ձեր հաղորդագրություններն ընդգրկում են {months}  ամիս, որի ընթացքում ուղարկել կամ ստացել եք առնվազն մեկ հաղորդագրություն։",
+      "thousandSeparator": ",",
+      "totalMessages": "Հաղորդագրությունների քանակ",
+      "averagePerActiveMonth": "Միջին մեկ ակտիվ ամսում",
+      "activeYearsExplanation_format": "Ձեր տվյալներն ընդգրկում են {years} տարի, որի ընթացքում ուղարկել կամ ստացել եք առնվազն մեկ հաղորդագրություն։",
+      "activeMonthsExplanation_format": "Ձեր հաղորդագրություններն ընդգրկում են {months}  ամիս, որի ընթացքում ուղարկել կամ ստացել եք առնվազն մեկ հաղորդագրություն։",
       "messages": "Հաղորդագրություն",
-      "total-breakdown": "Ընդհանուր՝ ըստ տեսակի",
-      "average-breakdown": "Միջին՝ ըստ ակտիվ ամսվա և տեսակի",
+      "totalBreakdown": "Ընդհանուր՝ ըստ տեսակի",
+      "averageBreakdown": "Միջին՝ ըստ ակտիվ ամսվա և տեսակի",
       "text": "Տեքստ",
       "audio": "Ձայնային",
       "sent": "Ուղարկած",
@@ -511,7 +511,7 @@
       "textHeader": "Տեքստային հաղորդագրություններում",
       "audioHeader": "Ձայնային հաղորդագրություններում",
       "animatedIntensityPolarChart": {
-        "title": "Մոլորակային պատկերում",
+        "title": "Մոլորակային Պատկերում",
         "description": "Այս տեսանելիացումը Ձեզ ցույց է տալիս որպես դեղին կետ կենտրոնում։ Ձեր նվիրաբերած զրույցները սպիտակ կետերն են Ձեր շուրջը։ Որքան մոտ է կետը Ձեզ, այնքան ավելի շատ բառեր եք գրել այդ զրույցում։ Ստորև ժամանակագծի սահիչով կարող եք տեսնել և ընտրել ամիսն ու տարին, որի համար ցուցադրվում են տվյալները։ Ավելի փոքր, ավելի թեթև սպիտակ կետերը ցույց են տալիս համապատասխան զրույցների ակտիվությունն այլ ամիսներին։ Սեղմեք <button>ԱՅՍՏԵՂ</button>՝ օրինակով բացատրություն տեսնելու համար։",
         "legend": {
           "donor": "Դուք",
@@ -523,7 +523,7 @@
         }
       },
       "animatedWordsPerChatBarChart": {
-        "title": "Ընդհանուր ուղարկված բառեր",
+        "title": "Ընդհանուր Ուղարկված Բառեր",
         "description": "Այստեղ կարող եք տեսնել բառերի ընդհանուր քանակը, որոնք ուղարկել եք Ձեր տարբեր զրույցներում՝ ամսական գումարով։ Ստորև ժամանակագծի սահիչով կարող եք տեսնել և ընտրել ամիսն ու տարին, որի համար ցուցադրվում են տվյալները։ Սեղմեք <button>ԱՅՍՏԵՂ</button>՝ օրինակով բացատրություն տեսնելու համար։",
         "legend": "Ուղարկված բառեր",
         "xAxis": "Ուղարկված բառերի քանակ",
@@ -661,7 +661,7 @@
       "nextButton": "Շարունակել",
       "finishButton": "Ավարտել",
       "toRaffleButton": "Գրանցվել վիճակահանությանը",
-      "complete-survey": {
+      "completeSurvey": {
         "caption": "Լրացնել հարցաշարը"
       }
     }
@@ -674,7 +674,7 @@
       "am": "Հայերեն"
     }
   },
-  "browser-warning": {
+  "browserWarning": {
     "text": "Ձեր օգտագործած բրաուզերը չի սպասարկվում, ուստի էջի անխափան ու ճիշտ աշխատանքը չի երաշխավորվում։ Խնդրում ենք այս կայքի համար օգտագործել  Chrome կամ Firefox բրաուզերների ամենաթարմ տարբերակները։"
   },
   "reportProblem": {

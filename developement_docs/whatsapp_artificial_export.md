@@ -38,10 +38,12 @@ Generate a realistic fake WhatsApp `.txt` export representing the chat history o
 Each message must match the WhatsApp export format exactly:
 
 ### User Message
-```DD/MM/YY, HH:MM - Sender: Message```
+
+`DD/MM/YY, HH:MM - Sender: Message`
 
 ### System Message
-```DD/MM/YY, HH:MM - System message```
+
+`DD/MM/YY, HH:MM - System message`
 
 ## Output
 

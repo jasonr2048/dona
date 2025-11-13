@@ -1,8 +1,8 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
-import {useRichTranslations} from "@/hooks/useRichTranslations";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useRichTranslations } from "@/hooks/useRichTranslations";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -14,16 +14,16 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
-import {Conversation, DataSourceValue} from "@models/processed";
-import {appendConversationBatch, finalizeDonation, startDonation} from "./actions";
+import { Conversation, DataSourceValue } from "@models/processed";
+import { appendConversationBatch, finalizeDonation, startDonation } from "./actions";
 import produceGraphData from "@/services/charts/produceGraphData";
-import {useAliasConfig} from "@/services/parsing/shared/aliasConfig";
+import { useAliasConfig } from "@/services/parsing/shared/aliasConfig";
 import MultiFileSelect from "@/components/MultiFileSelect";
-import {useDonation} from "@/context/DonationContext";
-import {useTranslations} from "next-intl";
-import {MainTitle, RichText} from "@/styles/StyledTypography";
-import {getErrorMessage} from "@services/errors";
-import {FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon} from "@components/CustomIcon";
+import { useDonation } from "@/context/DonationContext";
+import { useTranslations } from "next-intl";
+import { MainTitle, RichText } from "@/styles/StyledTypography";
+import { getErrorMessage } from "@services/errors";
+import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@components/CustomIcon";
 
 const CONVERSATION_BATCH_SIZE = 250;
 
@@ -34,16 +34,19 @@ export default function DataDonationPage() {
     const router = useRouter();
     const actions = useTranslations("actions");
     const donation = useRichTranslations("donation");
-    const donorStrings = useRichTranslations("donor-id");
+    const donorStrings = useRichTranslations("donorId");
     const aliasConfig = useAliasConfig();
-    const { setDonationData, loadExternalDonorIdFromCookie, externalDonorId } = useDonation();
-    const [allDonatedConversationsBySource, setAllDonatedConversationsBySource] = useState<ConversationsBySource>({} as ConversationsBySource);
-    const [feedbackChatsBySource, setFeedbackChatsBySource] = useState<SelectedChatsBySource>({} as SelectedChatsBySource);
+    const {setDonationData, loadExternalDonorIdFromCookie, externalDonorId} = useDonation();
+    const [allDonatedConversationsBySource, setAllDonatedConversationsBySource] =
+        useState<ConversationsBySource>({} as ConversationsBySource);
+    const [feedbackChatsBySource, setFeedbackChatsBySource] = useState<SelectedChatsBySource>(
+        {} as SelectedChatsBySource
+    );
     const [loading, setLoading] = useState(false);
     const [validated, setValidated] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    // New state for batch progress display
+    // State for batch progress display
     const [totalBatches, setTotalBatches] = useState<number>(0);
     const [currentBatchIndex, setCurrentBatchIndex] = useState<number | null>(null);
 
@@ -53,7 +56,10 @@ export default function DataDonationPage() {
         }
     }, [externalDonorId]);
 
-    const handleDonatedConversationsChange = (dataSource: DataSourceValue, newConversations: Conversation[]) => {
+    const handleDonatedConversationsChange = (
+        dataSource: DataSourceValue,
+        newConversations: Conversation[]
+    ) => {
         setAllDonatedConversationsBySource((prev) => ({
             ...prev,
             [dataSource]: newConversations,
@@ -61,7 +67,10 @@ export default function DataDonationPage() {
         setValidated(true);
     };
 
-    const handleFeedbackChatsChange = (dataSource: DataSourceValue, newFeedbackChats: Set<string>) => {
+    const handleFeedbackChatsChange = (
+        dataSource: DataSourceValue,
+        newFeedbackChats: Set<string>
+    ) => {
         setFeedbackChatsBySource((prev) => ({
             ...prev,
             [dataSource]: newFeedbackChats,
@@ -73,14 +82,15 @@ export default function DataDonationPage() {
         setLoading(true);
         setErrorMessage(null);
 
-        const allConversations = Object.entries(allDonatedConversationsBySource).flatMap(([dataSource, conversations]) => {
-            const feedbackChats = feedbackChatsBySource[dataSource as DataSourceValue] || new Set();
-            return conversations
-                .map(conversation => ({
+        const allConversations = Object.entries(allDonatedConversationsBySource).flatMap(
+            ([dataSource, conversations]) => {
+                const feedbackChats = feedbackChatsBySource[dataSource as DataSourceValue] || new Set();
+                return conversations.map((conversation) => ({
                     ...conversation,
-                    focusInFeedback: feedbackChats.has(conversation.conversationPseudonym)
+                    focusInFeedback: feedbackChats.has(conversation.conversationPseudonym),
                 }));
-        });
+            }
+        );
 
         if (allConversations.length > 0) {
             console.log(`[DONATION] Starting donation with ${allConversations.length} conversations.`);
@@ -88,7 +98,7 @@ export default function DataDonationPage() {
                 // 1) Start donation and get IDs
                 const start = await startDonation(externalDonorId);
                 if (!start.success || !start.data) throw start.error;
-                const { donationId, donorId } = start.data;
+                const {donationId, donorId} = start.data;
 
                 // 2) Append in batches
                 const total = Math.ceil(allConversations.length / CONVERSATION_BATCH_SIZE);
@@ -98,7 +108,12 @@ export default function DataDonationPage() {
                     setCurrentBatchIndex(batchNumber); // update current batch for UI
                     const batch = allConversations.slice(i, i + CONVERSATION_BATCH_SIZE);
                     console.log(`[DONATION] Uploading batch ${batchNumber}/${total} (size=${batch.length})`);
-                    const res = await appendConversationBatch(donationId, donorId, batch, aliasConfig.donorAlias);
+                    const res = await appendConversationBatch(
+                        donationId,
+                        donorId,
+                        batch,
+                        aliasConfig.donorAlias
+                    );
                     if (!res.success) throw res.error;
                 }
 
@@ -124,7 +139,7 @@ export default function DataDonationPage() {
     };
 
     return (
-        <Container maxWidth="md" sx={{ flexGrow: 1, position: "relative" }}>
+        <Container maxWidth="md" sx={{flexGrow: 1, position: "relative"}}>
             {/* Full-page overlay to freeze the page */}
             {loading && (
                 <Box
@@ -150,24 +165,28 @@ export default function DataDonationPage() {
                     textAlign: "center",
                 }}
             >
-                <MainTitle variant="h4">{donation.t("select-data.title")}</MainTitle>
+                <MainTitle variant="h4">{donation.t("selectData.title")}</MainTitle>
 
-                <RichText>{donorStrings.t("your-id")}: {externalDonorId}</RichText>
+                <RichText>
+                    {donorStrings.t("yourId")}: {externalDonorId}
+                </RichText>
 
                 {/* Loading spinner and alert  */}
                 {loading && (
-                    <Stack spacing={2} sx={{ zIndex: 10000, alignItems: "center" }}>
-                        <CircularProgress color="inherit" />
+                    <Stack spacing={2} sx={{zIndex: 10000, alignItems: "center"}}>
+                        <CircularProgress color="inherit"/>
                         <Alert severity="info">
-                            {donation.t("sending-wait")}
+                            {donation.t("sendingWait")}
                             {/* Show batch progress only when there are multiple batches */}
                             {totalBatches > 1 && currentBatchIndex != null && (
-                                <Typography variant="body2" sx={{ mt: 1 }}>
-                                    {donation.t("sending-batch-progress", {current: currentBatchIndex, total: totalBatches})}
+                                <Typography variant="body2" sx={{mt: 1}}>
+                                    {donation.t("sendingBatchProgress", {
+                                        current: currentBatchIndex,
+                                        total: totalBatches,
+                                    })}
                                 </Typography>
                             )}
                         </Alert>
-
                     </Stack>
                 )}
 
@@ -175,27 +194,38 @@ export default function DataDonationPage() {
 
                 {!errorMessage && !loading && (
                     <Box>
-                        <RichText>{donation.t("select-data.body1")}</RichText>
-                        <RichText>{donation.rich("select-data.body2")}</RichText>
+                        <RichText>{donation.t("selectData.body1")}</RichText>
+                        <RichText>{donation.rich("selectData.body2")}</RichText>
                     </Box>
                 )}
-                <Box sx={{ my: 4, minWidth: "80%", textAlign: "left" }}>
-                    {[DataSourceValue.WhatsApp, DataSourceValue.Facebook, DataSourceValue.Instagram, DataSourceValue.IMessage].map((source) => (
-                        <Accordion key={source} sx={{ my: 1 }}>
-                            <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-                                {source === DataSourceValue.WhatsApp && <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />}
-                                {source === DataSourceValue.Facebook && <FacebookIcon sx={{ mr: 1, mt: 0.5 }} />}
-                                {source === DataSourceValue.Instagram && <InstagramIcon sx={{ mr: 1, mt: 0.5 }} />}
-                                {source === DataSourceValue.IMessage && <IMessageIcon sx={{ mr: 1, mt: 0.5 }} />}
+                <Box sx={{my: 4, minWidth: "80%", textAlign: "left"}}>
+                    {[
+                        DataSourceValue.WhatsApp,
+                        DataSourceValue.Facebook,
+                        DataSourceValue.Instagram,
+                        DataSourceValue.IMessage,
+                    ].map((source) => (
+                        <Accordion key={source} sx={{my: 1}}>
+                            <AccordionSummary expandIcon={<ArrowDropDownIcon/>}>
+                                {source === DataSourceValue.WhatsApp && <WhatsAppIcon sx={{mr: 1, mt: 0.5}}/>}
+                                {source === DataSourceValue.Facebook && <FacebookIcon sx={{mr: 1, mt: 0.5}}/>}
+                                {source === DataSourceValue.Instagram && <InstagramIcon sx={{mr: 1, mt: 0.5}}/>}
+                                {source === DataSourceValue.IMessage && <IMessageIcon sx={{mr: 1, mt: 0.5}}/>}
                                 <Typography variant="h6">
-                                    {donation.t("datasource-title_format", { datasource: source == DataSourceValue.IMessage ? "iMessage" : source })}
+                                    {donation.t("datasourceTitle_format", {
+                                        datasource: source == DataSourceValue.IMessage ? "iMessage" : source,
+                                    })}
                                 </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <MultiFileSelect
                                     dataSourceValue={source}
-                                    onDonatedConversationsChange={(newConversations) => handleDonatedConversationsChange(source, newConversations)}
-                                    onFeedbackChatsChange={(newFeedbackChats) => handleFeedbackChatsChange(source, newFeedbackChats)}
+                                    onDonatedConversationsChange={(newConversations) =>
+                                        handleDonatedConversationsChange(source, newConversations)
+                                    }
+                                    onFeedbackChatsChange={(newFeedbackChats) =>
+                                        handleFeedbackChatsChange(source, newFeedbackChats)
+                                    }
                                 />
                             </AccordionDetails>
                         </Accordion>
@@ -203,12 +233,16 @@ export default function DataDonationPage() {
                 </Box>
 
                 <Box>
-                    <Stack spacing={2} direction='row' sx={{justifyContent: 'center'}}>
-                        <Button variant='contained' href='/instructions'>
-                            {actions('previous')}
+                    <Stack spacing={2} direction="row" sx={{justifyContent: "center"}}>
+                        <Button variant="contained" href="/instructions">
+                            {actions("previous")}
                         </Button>
-                        <Button variant='contained' onClick={onDataDonationUpload} disabled={loading || !validated}>
-                            {actions('submit')}
+                        <Button
+                            variant="contained"
+                            onClick={onDataDonationUpload}
+                            disabled={loading || !validated}
+                        >
+                            {actions("submit")}
                         </Button>
                     </Stack>
                 </Box>

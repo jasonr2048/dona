@@ -7,15 +7,15 @@
 export function convertTime12to24(time: string, ampm: string): string {
   let [hours, minutes, seconds] = time.split(/[:.]/);
 
-  if (hours === '12') {
-    hours = '00';
+  if (hours === "12") {
+    hours = "00";
   }
 
-  if (ampm === 'PM') {
+  if (ampm === "PM") {
     hours = (parseInt(hours, 10) + 12).toString();
   }
 
-  return `${hours}:${minutes}${seconds ? `:${seconds}` : ''}`;
+  return `${hours}:${minutes}${seconds ? `:${seconds}` : ""}`;
 }
 
 /**
@@ -27,8 +27,8 @@ export function normalizeTime(time: string): string {
   const [hours, minutes, seconds] = time.split(/[:.]/);
 
   const normalizedHours = hours.length === 1 ? `0${hours}` : hours;
-  const normalizedMinutes = minutes || '00';
-  const normalizedSeconds = seconds || '00';
+  const normalizedMinutes = minutes || "00";
+  const normalizedSeconds = seconds || "00";
 
   return `${normalizedHours}:${normalizedMinutes}:${normalizedSeconds}`;
 }
@@ -39,5 +39,5 @@ export function normalizeTime(time: string): string {
  * @returns The normalized string in uppercase ("AM" or "PM").
  */
 export function normalizeAMPM(ampm: string): string {
-  return ampm.replace(/[^apm]/gi, '').toUpperCase();
+  return ampm.replace(/[^apm]/gi, "").toUpperCase();
 }

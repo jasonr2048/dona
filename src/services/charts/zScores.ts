@@ -16,33 +16,33 @@ import _ from "lodash";
  */
 
 export const calculateZScores = (
-    data: number[] | Record<string, number[]>, // Accept either flat or nested data
-    limit: number
+  data: number[] | Record<string, number[]>, // Accept either flat or nested data
+  limit: number
 ): number[] | Record<string, number[]> => {
-    // Flatten data for global calculations if needed
-    const flatData = Array.isArray(data) ? data : Object.values(data).flat();
+  // Flatten data for global calculations if needed
+  const flatData = Array.isArray(data) ? data : Object.values(data).flat();
 
-    const mean = _.mean(flatData);
-    const stdDev = Math.sqrt(_.mean(flatData.map((val) => Math.pow(val - mean, 2))));
+  const mean = _.mean(flatData);
+  const stdDev = Math.sqrt(_.mean(flatData.map((val) => Math.pow(val - mean, 2))));
 
-    const applyZScores = (values: number[]) =>
-        values.map((value) => {
-            let z = (value - mean) / stdDev;
-            if (z > limit) z = limit;
-            if (z < -limit) z = -limit;
-            return z;
-        });
+  const applyZScores = (values: number[]) =>
+    values.map((value) => {
+      let z = (value - mean) / stdDev;
+      if (z > limit) z = limit;
+      if (z < -limit) z = -limit;
+      return z;
+    });
 
-    // Flat data
-    if (Array.isArray(data)) {
-        return applyZScores(data);
-    }
+  // Flat data
+  if (Array.isArray(data)) {
+    return applyZScores(data);
+  }
 
-    // Nested data
-    const zScoresByMonth: Record<string, number[]> = {};
-    for (const [key, values] of Object.entries(data)) {
-        zScoresByMonth[key] = applyZScores(values);
-    }
+  // Nested data
+  const zScoresByMonth: Record<string, number[]> = {};
+  for (const [key, values] of Object.entries(data)) {
+    zScoresByMonth[key] = applyZScores(values);
+  }
 
-    return zScoresByMonth;
+  return zScoresByMonth;
 };

@@ -16,20 +16,27 @@ export const dataSources = p.pgTable("data_sources", {
   name: p.text("name").notNull()
 });
 
-export const conversations = p.pgTable("conversations", {
-  id: p.uuid("id").defaultRandom().primaryKey(),
-  isGroupConversation: p.boolean("is_group_conversation").default(false).notNull(),
-  dataSourceId: p
-    .integer("data_source_id")
-    .notNull()
-    .references(() => dataSources.id),
-  donationId: p
-    .uuid("donation_id")
-    .notNull()
-    .references(() => donations.id),
-  conversationPseudonym: p.varchar("conversation_pseudonym", { length: 20 }).notNull(),
-  focusInFeedback: p.boolean("focus_in_feedback").default(true).notNull()
-});
+export const conversations = p.pgTable(
+  "conversations",
+  {
+    id: p.uuid("id").defaultRandom().primaryKey(),
+    isGroupConversation: p.boolean("is_group_conversation").default(false).notNull(),
+    dataSourceId: p
+      .integer("data_source_id")
+      .notNull()
+      .references(() => dataSources.id),
+    donationId: p
+      .uuid("donation_id")
+      .notNull()
+      .references(() => donations.id),
+    conversationPseudonym: p.varchar("conversation_pseudonym", { length: 20 }).notNull(),
+    focusInFeedback: p.boolean("focus_in_feedback").default(true).notNull(),
+    conversationHash: p.text("conversation_hash")
+  },
+  table => ({
+    conversationHashIdx: p.index("conversation_hash_idx").on(table.conversationHash)
+  })
+);
 
 export const conversationParticipants = p.pgTable("conversation_participants", {
   id: p.uuid("id").defaultRandom().primaryKey(),

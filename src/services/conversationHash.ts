@@ -61,13 +61,12 @@ export function computeConversationHash(conversation: Conversation): string | nu
 
 /**
  * Checks if a conversation meets the minimum message threshold for hash computation.
- * Based on CONFIG.MIN_MESSAGES_PER_CHAT.
  *
  * @param conversation - The conversation to check
- * @param minMessages - Minimum number of messages required (default: 100)
+ * @param minMessages - Minimum number of messages required (default: 50)
  * @returns True if the conversation has enough messages
  */
-export function shouldHashConversation(conversation: Conversation, minMessages: number = 100): boolean {
+export function shouldHashConversation(conversation: Conversation, minMessages: number = 50): boolean {
   const textCount = conversation.messages?.length || 0;
   const audioCount = conversation.messagesAudio?.length || 0;
   const totalMessages = textCount + audioCount;

@@ -1,5 +1,6 @@
 import { computeConversationHash, shouldHashConversation } from "../conversationHash";
-import { Conversation, Message, MessageAudio } from "@models/processed";
+import { Conversation } from "@models/processed";
+import { describe, expect, it } from "@jest/globals";
 
 describe("computeConversationHash", () => {
   it("should return null for a conversation with no messages", () => {

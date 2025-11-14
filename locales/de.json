@@ -328,7 +328,7 @@
     "aliasNotRequired": "Nicht notwendig",
     "alias": "Nutzername",
     "pleaseInsertAlias": "Bitte geben Sie Ihren Nutzernamen ein, um das Hochladen zu ermöglichen",
-    "bePatient": "Das Extrahieren der Daten kann einige Minuten dauern. Haben Sie bitte Geduld...",
+    "bePatient": "Daten werden anonymisiert und auf Duplikate überprüft. Dies kann einige Minuten dauern. Haben Sie bitte Geduld...",
     "successful": "Ihre Daten wurden erfolgreich anonymisiert.",
     "error": "Es ist ein Fehler aufgetreten:",
     "anonymisation": {
@@ -350,6 +350,7 @@
       "NotEnoughMonthsInRange": "Um Ihre Daten zu spenden, wählen Sie bitte einen Zeitraum von mindestens {MIN_DONATION_TIME_PERIOD_MONTHS} Monaten innerhalb des Zeitraums Ihrer Spende aus.",
       "NoMessagesInRange": "In dem ausgewählten Zeitraum befinden sich keine Nachrichten. Bitte wählen Sie einen größeren und validen Zeitraum.",
       "DuplicateDonorId": "Diese Spender-ID existiert bereits.",
+      "DuplicateConversation": "Die hochgeladenen Daten enthalten Konversationen, die bereits gespendet wurden. Sie können dieselben Daten nicht mehrmals spenden, unabhängig vom ausgewählten Zeitraum.",
       "TransactionFailed": "Die Spendendaten konnten nicht gespeichert werden. Überprüfen Sie die Verbindung und versuchen Sie es erneut.",
       "UnknownError": "Es gibt einen Fehler. Bitte überprüfen Sie Ihre Datenspende.",
       "TooShortTimePeriod_format": "Ihre Daten müssen einen Zeitraum von mindestens {MIN_DONATION_TIME_PERIOD_MONTHS} Monaten umfassen.",

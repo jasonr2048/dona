@@ -11,6 +11,8 @@ import React, { ChangeEvent, useState } from "react";
 import { CONFIG } from "@/config";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { anonymizeData } from "@/services/anonymization";
+import { computeConversationHash, shouldHashConversation } from "@/services/conversationHash";
+import { checkForDuplicateConversations } from "@/app/data-donation/actions";
 import AnonymizationPreview from "@components/AnonymizationPreview";
 import DateRangePicker from "@components/DateRangePicker";
 import LoadingSpinner from "@components/LoadingSpinner";
@@ -56,13 +58,36 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDo
 
     setIsLoading(true);
     try {
+      // Step 1: Anonymize data
       const result = await anonymizeData(dataSourceValue, files);
-      const { minDate, maxDate } = calculateMinMaxDates(result.anonymizedConversations);
 
-      setAnonymizationResult(result);
+      // Step 2: Compute hashes and check for duplicates
+      const conversationsWithHashes = result.anonymizedConversations.map(convo => {
+        const hash = shouldHashConversation(convo) ? computeConversationHash(convo) : null;
+        return {
+          ...convo,
+          conversationHash: hash
+        };
+      });
+
+      // Extract valid hashes for duplicate check
+      const hashes = conversationsWithHashes.map(convo => convo.conversationHash).filter((hash): hash is string => hash !== null);
+
+      // Check for duplicates with server
+      if (hashes.length > 0) {
+        const duplicateCheck = await checkForDuplicateConversations(hashes);
+        if (!duplicateCheck.success) {
+          throw duplicateCheck.error;
+        }
+      }
+
+      // Step 3: Only show results if no duplicates found
+      const { minDate, maxDate } = calculateMinMaxDates(conversationsWithHashes);
+
+      setAnonymizationResult({ ...result, anonymizedConversations: conversationsWithHashes });
       setCalculatedRange([minDate, maxDate]);
-      setFilteredConversations(result.anonymizedConversations);
-      onDonatedConversationsChange(result.anonymizedConversations); // Update data for parent
+      setFilteredConversations(conversationsWithHashes);
+      onDonatedConversationsChange(conversationsWithHashes); // Update data for parent
     } catch (err) {
       const errorMessage = getErrorMessage(donation.t, err as Error, CONFIG);
       setError(errorMessage);

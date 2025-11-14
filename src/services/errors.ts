@@ -14,6 +14,7 @@ export enum DonationErrors {
   NoMessageEntries = "NoMessageEntries",
   NoDonorNameFound = "NoDonorNameFound",
   DuplicateDonorId = "DuplicateDonorId",
+  DuplicateConversation = "DuplicateConversation",
   TransactionFailed = "TransactionFailed",
   UnknownError = "UnknownError"
 }

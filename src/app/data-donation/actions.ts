@@ -219,3 +219,57 @@ export async function finalizeDonation(donationId: string, graphDataRecord: Reco
     };
   }
 }
+
+/**
+ * Checks if any of the provided conversation hashes already exist in the database.
+ * This is used to detect duplicate donations before uploading.
+ *
+ * @param hashes - Array of conversation hashes to check
+ * @param dbClient - Database client (defaults to db)
+ * @returns ActionResult with success=false if duplicates found, success=true otherwise
+ */
+export async function checkForDuplicateConversations(hashes: string[], dbClient: DbClient = db): Promise<ActionResult<{ hasDuplicates: boolean }>> {
+  console.log(`[DONATION] checkForDuplicateConversations: checking ${hashes.length} hashes`);
+
+  try {
+    // Filter out null/empty hashes
+    const validHashes = hashes.filter(h => h && h.length > 0);
+
+    if (validHashes.length === 0) {
+      console.log(`[DONATION] ✅ checkForDuplicateConversations: no valid hashes to check`);
+      return { success: true, data: { hasDuplicates: false } };
+    }
+
+    // Query database for existing conversations with these hashes
+    const existingConversations = await dbClient.query.conversations.findMany({
+      where: (conversations, { inArray }) => inArray(conversations.conversationHash, validHashes),
+      columns: {
+        conversationHash: true
+      }
+    });
+
+    const hasDuplicates = existingConversations.length > 0;
+
+    if (hasDuplicates) {
+      console.log(`[DONATION] ❌ checkForDuplicateConversations: found ${existingConversations.length} duplicate(s)`);
+      return {
+        success: false,
+        error: DonationProcessingError(DonationErrors.DuplicateConversation, {
+          duplicateCount: existingConversations.length
+        })
+      };
+    }
+
+    console.log(`[DONATION] ✅ checkForDuplicateConversations: no duplicates found`);
+    return { success: true, data: { hasDuplicates: false } };
+  } catch (err) {
+    console.error(`[DONATION] ❌ checkForDuplicateConversations:`, {
+      error: err,
+      stack: (err as any)?.stack
+    });
+    return {
+      success: false,
+      error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err })
+    };
+  }
+}

@@ -1,118 +1,132 @@
-import {Conversation, DataSourceValue} from "@models/processed";
-import {DailySentReceivedPoint, GraphData} from "@models/graphData";
-import {
-    aggregateDailyCounts,
-    monthlyCountsPerConversation,
-    produceAllDays,
-    produceAnswerTimesPerConversation,
-    produceDailyCountsPerConversation,
-    produceMessagesSentReceivedPerType,
-    produceSlidingWindowMean,
-    produceWordCountDailyHours,
-    aggregateDailyHours
-} from "@services/charts/timeAggregates";
+import { DailySentReceivedPoint, GraphData } from "@models/graphData";
+import { Conversation, DataSourceValue } from "@models/processed";
 import produceBasicStatistics from "@services/charts/produceBasicStatistics";
-import {calculateMinMaxDates} from "@services/rangeFiltering";
+import { aggregateDailyCounts, monthlyCountsPerConversation, produceAllDays, produceAnswerTimesPerConversation, produceDailyCountsPerConversation, produceMessagesSentReceivedPerType, produceSlidingWindowMean, produceWordCountDailyHours, aggregateDailyHours } from "@services/charts/timeAggregates";
+import { calculateMinMaxDates } from "@services/rangeFiltering";
 
 export default function produceGraphData(donorId: string, allConversations: Conversation[]): Record<string, GraphData> {
-    return Object.fromEntries(
-        Map.groupBy(allConversations, ({ dataSource }) => dataSource)
-            .entries()
-            .map(([dataSourceValue, conversations]) => {
-                // Extract focus conversations
-                const focusConversations = conversations
-                    .filter((conversation) => conversation.focusInFeedback)
-                    .map((conversation) => conversation.conversationPseudonym);
+  return Object.fromEntries(
+    Map.groupBy(allConversations, ({ dataSource }) => dataSource)
+      .entries()
+      .map(([dataSourceValue, conversations]) => {
+        // Extract focus conversations
+        const focusConversations = conversations.filter(conversation => conversation.focusInFeedback).map(conversation => conversation.conversationPseudonym);
 
-                // Per conversation data
-                const dailyWordsPerConversation = conversations.map((conversation) =>
-                    produceDailyCountsPerConversation(donorId, conversation, "words")
-                );
-                const dailySecondsPerConversation = conversations.map((conversation) =>
-                    produceDailyCountsPerConversation(donorId, conversation, "seconds")
-                );
-                const participantsPerConversation = conversations.map((conversation) =>
-                    conversation.participants.filter((participant) => participant !== donorId)
-                );
-                const monthlyWordsPerConversation = monthlyCountsPerConversation(donorId, conversations, "words");
-                const monthlySecondsPerConversation = monthlyCountsPerConversation(donorId, conversations, "seconds");
+        // Per conversation data
+        const dailyWordsPerConversation = conversations.map(conversation => produceDailyCountsPerConversation(donorId, conversation, "words"));
+        const dailySecondsPerConversation = conversations.map(conversation => produceDailyCountsPerConversation(donorId, conversation, "seconds"));
+        const participantsPerConversation = conversations.map(conversation => conversation.participants.filter(participant => participant !== donorId));
+        const monthlyWordsPerConversation = monthlyCountsPerConversation(donorId, conversations, "words");
+        const monthlySecondsPerConversation = monthlyCountsPerConversation(donorId, conversations, "seconds");
 
-                // Aggregated conversations data
-                const dailyWords = aggregateDailyCounts(dailyWordsPerConversation);
-                const dailySeconds = aggregateDailyCounts(dailySecondsPerConversation);
+        // Aggregated conversations data
+        const dailyWords = aggregateDailyCounts(dailyWordsPerConversation);
+        const dailySeconds = aggregateDailyCounts(dailySecondsPerConversation);
 
-                // Determine the global date range using calculateMinMaxDates
-                const { minDate, maxDate } = calculateMinMaxDates(conversations, true);
-                let slidingWindowMeanDailyWords: DailySentReceivedPoint[] = [];
-                let slidingWindowMeanDailySeconds: DailySentReceivedPoint[] = [];
-                if (minDate && maxDate) {
-                    // Generate the complete list of all days within the global date range
-                    const completeDaysList = produceAllDays(minDate, maxDate);
-                    // Create sliding window mean using the complete days list
-                    slidingWindowMeanDailyWords = produceSlidingWindowMean(dailyWords, completeDaysList);
-                    slidingWindowMeanDailySeconds = produceSlidingWindowMean(dailySeconds, completeDaysList);
+        // Determine the global date range using calculateMinMaxDates
+        const { minDate, maxDate } = calculateMinMaxDates(conversations, true);
+        let slidingWindowMeanDailyWords: DailySentReceivedPoint[] = [];
+        let slidingWindowMeanDailySeconds: DailySentReceivedPoint[] = [];
+        if (minDate && maxDate) {
+          // Generate the complete list of all days within the global date range
+          const completeDaysList = produceAllDays(minDate, maxDate);
+          // Create sliding window mean using the complete days list
+          slidingWindowMeanDailyWords = produceSlidingWindowMean(dailyWords, completeDaysList);
+          slidingWindowMeanDailySeconds = produceSlidingWindowMean(dailySeconds, completeDaysList);
+        }
+        const dailySentHoursPerConversation = conversations.map(c => produceWordCountDailyHours(donorId, [c], true));
+        const dailySentHours = aggregateDailyHours(dailySentHoursPerConversation);
+        const dailyReceivedHours = produceWordCountDailyHours(donorId, conversations, false);
+
+        const answerTimes = conversations.flatMap(conversation => produceAnswerTimesPerConversation(donorId, conversation));
+
+        // General statistics
+        const messageCounts = produceMessagesSentReceivedPerType(donorId, conversations);
+        const wordCounts = Object.values(monthlyWordsPerConversation).flat();
+        const secondCounts = Object.values(monthlySecondsPerConversation).flat();
+
+        // Initialize audio length distribution
+        let audioLengthDistribution: {
+          sent: Record<string, number>;
+          received: Record<string, number>;
+        } = {
+          sent: {},
+          received: {}
+        };
+
+        // Only calculate if there are audio messages
+        const hasAudioMessages = conversations.some(conversation => conversation.messagesAudio.length > 0);
+        if (hasAudioMessages) {
+          conversations.forEach(conversation => {
+            conversation.messagesAudio.forEach(messageAudio => {
+              if (messageAudio.lengthSeconds > 0) {
+                // Round the length to the nearest second
+                const roundedLength = Math.round(messageAudio.lengthSeconds).toString();
+
+                if (messageAudio.sender === donorId) {
+                  audioLengthDistribution!.sent[roundedLength] = (audioLengthDistribution!.sent[roundedLength] || 0) + 1;
+                } else {
+                  audioLengthDistribution!.received[roundedLength] = (audioLengthDistribution!.received[roundedLength] || 0) + 1;
                 }
-                const dailySentHoursPerConversation = conversations.map((c) => produceWordCountDailyHours(donorId, [c], true));
-                const dailySentHours = aggregateDailyHours(dailySentHoursPerConversation);
-                const dailyReceivedHours = produceWordCountDailyHours(donorId, conversations, false);
+              }
+            });
+          });
+        }
 
-                const answerTimes = conversations.flatMap((conversation) =>
-                    produceAnswerTimesPerConversation(donorId, conversation)
-                );
+        // Initialize emoji distribution
+        let emojiDistribution: { sent: Record<string, number>; received: Record<string, number> } | undefined;
+        let totalEmojisSent = 0;
+        let totalEmojisReceived = 0;
 
-                // General statistics
-                const messageCounts = produceMessagesSentReceivedPerType(donorId, conversations);
-                const wordCounts = Object.values(monthlyWordsPerConversation).flat();
-                const secondCounts = Object.values(monthlySecondsPerConversation).flat();
+        // Calculate emoji distribution across all conversations
+        const hasEmojis = conversations.some(conversation => conversation.messages.some(message => message.emojiCounts && Object.keys(message.emojiCounts).length > 0));
 
-                // Initialize audio length distribution
-                let audioLengthDistribution: { sent: Record<string, number>, received: Record<string, number> }  = {
-                    sent: {},
-                    received: {}
-                };
+        if (hasEmojis) {
+          emojiDistribution = {
+            sent: {},
+            received: {}
+          };
 
-                // Only calculate if there are audio messages
-                const hasAudioMessages = conversations.some(conversation => conversation.messagesAudio.length > 0);
-                if (hasAudioMessages) {
-                    conversations.forEach(conversation => {
-                        conversation.messagesAudio.forEach(messageAudio => {
-                            if (messageAudio.lengthSeconds > 0) {
-                                // Round the length to the nearest second
-                                const roundedLength = Math.round(messageAudio.lengthSeconds).toString();
+          conversations.forEach(conversation => {
+            conversation.messages.forEach(message => {
+              if (message.emojiCounts) {
+                const isSent = message.sender === donorId;
+                const target = isSent ? emojiDistribution!.sent : emojiDistribution!.received;
 
-                                if (messageAudio.sender === donorId) {
-                                    audioLengthDistribution!.sent[roundedLength] = (audioLengthDistribution!.sent[roundedLength] || 0) + 1;
-                                } else {
-                                    audioLengthDistribution!.received[roundedLength] = (audioLengthDistribution!.received[roundedLength] || 0) + 1;
-                                }
-                            }
-                        });
-                    });
+                for (const [emoji, count] of Object.entries(message.emojiCounts)) {
+                  target[emoji] = (target[emoji] || 0) + count;
+                  if (isSent) {
+                    totalEmojisSent += count;
+                  } else {
+                    totalEmojisReceived += count;
+                  }
                 }
+              }
+            });
+          });
+        }
 
-                const basicStatistics = produceBasicStatistics(messageCounts, wordCounts, secondCounts);
+        const basicStatistics = produceBasicStatistics(messageCounts, wordCounts, secondCounts, hasEmojis ? { sent: totalEmojisSent, received: totalEmojisReceived } : undefined);
 
-                const graphData: GraphData = {
-                    focusConversations,
-                    monthlyWordsPerConversation,
-                    monthlySecondsPerConversation,
-                    dailyWords,
-                    slidingWindowMeanDailyWords,
-                    slidingWindowMeanDailySeconds,
-                    dailyWordsPerConversation,
-                    dailySentHours,
-                    dailySentHoursPerConversation,
-                    dailyReceivedHours,
-                    answerTimes,
-                    basicStatistics,
-                    participantsPerConversation,
-                    audioLengthDistribution
-                };
+        const graphData: GraphData = {
+          focusConversations,
+          monthlyWordsPerConversation,
+          monthlySecondsPerConversation,
+          dailyWords,
+          slidingWindowMeanDailyWords,
+          slidingWindowMeanDailySeconds,
+          dailyWordsPerConversation,
+          dailySentHours,
+          dailySentHoursPerConversation,
+          dailyReceivedHours,
+          answerTimes,
+          basicStatistics,
+          participantsPerConversation,
+          audioLengthDistribution,
+          emojiDistribution
+        };
 
-                return [
-                    dataSourceValue,
-                    graphData,
-                ];
-            })
-    ) as Record<DataSourceValue, GraphData>;
+        return [dataSourceValue, graphData];
+      })
+  ) as Record<DataSourceValue, GraphData>;
 }

@@ -34,13 +34,9 @@
         "conversation_participants_conversation_id_conversations_id_fk": {
           "name": "conversation_participants_conversation_id_conversations_id_fk",
           "tableFrom": "conversation_participants",
-          "columnsFrom": [
-            "conversation_id"
-          ],
+          "columnsFrom": ["conversation_id"],
           "tableTo": "conversations",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -93,26 +89,18 @@
         "conversations_data_source_id_data_sources_id_fk": {
           "name": "conversations_data_source_id_data_sources_id_fk",
           "tableFrom": "conversations",
-          "columnsFrom": [
-            "data_source_id"
-          ],
+          "columnsFrom": ["data_source_id"],
           "tableTo": "data_sources",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         },
         "conversations_donation_id_donations_id_fk": {
           "name": "conversations_donation_id_donations_id_fk",
           "tableFrom": "conversations",
-          "columnsFrom": [
-            "donation_id"
-          ],
+          "columnsFrom": ["donation_id"],
           "tableTo": "donations",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -196,9 +184,7 @@
       "uniqueConstraints": {
         "donations_external_donor_id_unique": {
           "name": "donations_external_donor_id_unique",
-          "columns": [
-            "external_donor_id"
-          ],
+          "columns": ["external_donor_id"],
           "nullsNotDistinct": false
         }
       },
@@ -248,13 +234,9 @@
         "messages_conversation_id_conversations_id_fk": {
           "name": "messages_conversation_id_conversations_id_fk",
           "tableFrom": "messages",
-          "columnsFrom": [
-            "conversation_id"
-          ],
+          "columnsFrom": ["conversation_id"],
           "tableTo": "conversations",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -307,13 +289,9 @@
         "messages_audio_conversation_id_conversations_id_fk": {
           "name": "messages_audio_conversation_id_conversations_id_fk",
           "tableFrom": "messages_audio",
-          "columnsFrom": [
-            "conversation_id"
-          ],
+          "columnsFrom": ["conversation_id"],
           "tableTo": "conversations",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -329,12 +307,7 @@
     "public.donation_status": {
       "name": "donation_status",
       "schema": "public",
-      "values": [
-        "notstarted",
-        "pending",
-        "complete",
-        "deleted"
-      ]
+      "values": ["notstarted", "pending", "complete", "deleted"]
     }
   },
   "schemas": {},

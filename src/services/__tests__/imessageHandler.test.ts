@@ -7,7 +7,6 @@ import initSqlJs from "sql.js";
 import { Conversation } from "@models/processed";
 import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
 
-// @ts-ignore
 jest.mock("@services/parsing/shared/aliasConfig", () => ({
   getAliasConfig: () => ({
     systemAlias: "System",

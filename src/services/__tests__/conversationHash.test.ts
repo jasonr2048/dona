@@ -3,7 +3,6 @@ import { Conversation } from "@models/processed";
 import { describe, expect, it } from "@jest/globals";
 
 // Mock aliasConfig so computeConversationHash can resolve donor alias
-// @ts-ignore
 jest.mock("@services/parsing/shared/aliasConfig", () => ({
   getAliasConfig: () => ({
     systemAlias: "System",

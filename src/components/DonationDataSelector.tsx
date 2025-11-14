@@ -27,13 +27,17 @@ const UploadAlert = styled((props: AlertProps) => <Alert severity="error" {...pr
   width: "100%"
 }));
 
-interface MultiFileSelectProps {
+interface DonationDataSelectorProps {
   dataSourceValue: DataSourceValue;
   onDonatedConversationsChange: (newDonatedConversations: Conversation[]) => void;
   onFeedbackChatsChange: (newFeedbackChats: Set<string>) => void;
 }
 
-const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDonatedConversationsChange, onFeedbackChatsChange }) => {
+const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
+  dataSourceValue,
+  onDonatedConversationsChange,
+  onFeedbackChatsChange
+}) => {
   const donation = useRichTranslations("donation");
   const acceptedFileTypes =
     dataSourceValue == DataSourceValue.WhatsApp ? ".txt, .zip" : dataSourceValue == DataSourceValue.IMessage ? ".db" : ".zip";
@@ -64,7 +68,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDo
       // Step 1: Anonymize data
       const result = await anonymizeData(dataSourceValue, files);
 
-      // Step 2: Compute hashes and check for duplicates
+      // Step 2: Compute hashes and check for duplicates with server
       setLoadingStep(2);
       const conversationsWithHashes = result.anonymizedConversations.map(convo => {
         const hash = shouldHashConversation(convo) ? computeConversationHash(convo) : null;
@@ -74,10 +78,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDo
         };
       });
 
-      // Extract valid hashes for duplicate check
       const hashes = conversationsWithHashes.map(convo => convo.conversationHash).filter((hash): hash is string => hash !== null);
-
-      // Check for duplicates with server
       if (hashes.length > 0) {
         const duplicateCheck = await checkForDuplicateConversations(hashes);
         if (!duplicateCheck.success) {
@@ -189,4 +190,4 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDo
   );
 };
 
-export default MultiFileSelect;
+export default DonationDataSelector;

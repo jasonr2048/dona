@@ -26,13 +26,7 @@ interface AnonymizationModalProps {
   n_messages: number;
 }
 
-const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
-  open,
-  onClose,
-  conversations,
-  n_listed_receivers,
-  n_messages
-}) => {
+const AnonymizationModal: React.FC<AnonymizationModalProps> = ({ open, onClose, conversations, n_listed_receivers, n_messages }) => {
   const t = useTranslations("donation.previewData");
   const actions = useTranslations("actions");
   const [messagesData, setMessagesData] = useState<MessageData[]>([]);
@@ -125,11 +119,7 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
         }}
       >
         <Typography variant="h5">{t("title")}</Typography>
-        <Alert
-          icon={<PersonOffIcon fontSize="inherit" />}
-          severity="info"
-          sx={{ padding: 1.5, my: 2, borderRadius: 1.5 }}
-        >
+        <Alert icon={<PersonOffIcon fontSize="inherit" />} severity="info" sx={{ padding: 1.5, my: 2, borderRadius: 1.5 }}>
           <Typography variant="body2">{t("body1")}</Typography>
           <Typography variant="body2">{t("body2")}</Typography>
         </Alert>

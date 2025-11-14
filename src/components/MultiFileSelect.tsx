@@ -33,18 +33,10 @@ interface MultiFileSelectProps {
   onFeedbackChatsChange: (newFeedbackChats: Set<string>) => void;
 }
 
-const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
-  dataSourceValue,
-  onDonatedConversationsChange,
-  onFeedbackChatsChange
-}) => {
+const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDonatedConversationsChange, onFeedbackChatsChange }) => {
   const donation = useRichTranslations("donation");
   const acceptedFileTypes =
-    dataSourceValue == DataSourceValue.WhatsApp
-      ? ".txt, .zip"
-      : dataSourceValue == DataSourceValue.IMessage
-        ? ".db"
-        : ".zip";
+    dataSourceValue == DataSourceValue.WhatsApp ? ".txt, .zip" : dataSourceValue == DataSourceValue.IMessage ? ".db" : ".zip";
 
   // States
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -83,9 +75,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       });
 
       // Extract valid hashes for duplicate check
-      const hashes = conversationsWithHashes
-        .map(convo => convo.conversationHash)
-        .filter((hash): hash is string => hash !== null);
+      const hashes = conversationsWithHashes.map(convo => convo.conversationHash).filter((hash): hash is string => hash !== null);
 
       // Check for duplicates with server
       if (hashes.length > 0) {
@@ -172,8 +162,8 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         <LoadingSpinner
           message={
             loadingStep === 1
-              ? donation.t("anonymisation.processing_step", { step: "1/2" })
-              : donation.t("anonymisation.checkingDuplicates_step", { step: "2/2" })
+              ? donation.t("anonymisation.processingStep", { step: "1/2" })
+              : donation.t("anonymisation.checkingDuplicatesStep", { step: "2/2" })
           }
         />
       )}

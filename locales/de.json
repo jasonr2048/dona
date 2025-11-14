@@ -337,8 +337,8 @@
       "contactInitial": "K",
       "system": "System",
       "processing": "Daten werden extrahiert und anonymisiert...",
-      "processing_step": "{step} Daten werden extrahiert und anonymisiert...",
-      "checkingDuplicates_step": "{step} Prüfung auf doppelte Spenden...",
+      "processingStep": "{step} Daten werden extrahiert und anonymisiert...",
+      "checkingDuplicatesStep": "{step} Prüfung auf doppelte Spenden...",
       "chooseUsername": "Bitte wählen Sie Ihren Nutzernamen aus. Ihr Nutzername wird nicht gespeichert und wir werden ihn nicht erfahren."
     },
     "errors": {

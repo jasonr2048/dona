@@ -340,8 +340,8 @@
       "contactInitial": "C",
       "system": "System",
       "processing": "Your data is being extracted and anonymized...",
-      "processing_step": "{step} Your data is being extracted and anonymized...",
-      "checkingDuplicates_step": "{step} Checking for duplicate donations...",
+      "processingStep": "{step} Your data is being extracted and anonymized...",
+      "checkingDuplicatesStep": "{step} Checking for duplicate donations...",
       "chooseUsername": "Please choose your username. Your username will not be saved and we will not know it."
     },
     "errors": {

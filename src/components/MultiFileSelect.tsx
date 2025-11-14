@@ -51,6 +51,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   const [fileInputKey, setFileInputKey] = useState<number>(0); // Add a key state for file input
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingStep, setLoadingStep] = useState<1 | 2>(1); // Track which step: 1=anonymizing, 2=checking duplicates
   const [anonymizationResult, setAnonymizationResult] = useState<AnonymizationResult | null>(null);
   const [calculatedRange, setCalculatedRange] = useState<NullableRange>([null, null]);
   const [dateRangeError, setDateRangeError] = useState<string | null>(null);
@@ -66,11 +67,13 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     if (files.length === 0) return;
 
     setIsLoading(true);
+    setLoadingStep(1);
     try {
       // Step 1: Anonymize data
       const result = await anonymizeData(dataSourceValue, files);
 
       // Step 2: Compute hashes and check for duplicates
+      setLoadingStep(2);
       const conversationsWithHashes = result.anonymizedConversations.map(convo => {
         const hash = shouldHashConversation(convo) ? computeConversationHash(convo) : null;
         return {
@@ -104,6 +107,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       setError(errorMessage);
     } finally {
       setIsLoading(false);
+      setLoadingStep(1);
     }
   };
 
@@ -164,7 +168,15 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       )}
 
       {/* Loading indicator */}
-      {isLoading && <LoadingSpinner message={donation.t("anonymisation.processing")} />}
+      {isLoading && (
+        <LoadingSpinner
+          message={
+            loadingStep === 1
+              ? donation.t("anonymisation.processing_step", { step: "1/2" })
+              : donation.t("anonymisation.checkingDuplicates_step", { step: "2/2" })
+          }
+        />
+      )}
 
       {/* Display anonymized data */}
       {!error && !isLoading && anonymizationResult && filteredConversations && (

@@ -328,7 +328,6 @@
     "aliasNotRequired": "Nicht notwendig",
     "alias": "Nutzername",
     "pleaseInsertAlias": "Bitte geben Sie Ihren Nutzernamen ein, um das Hochladen zu ermöglichen",
-    "bePatient": "Daten werden anonymisiert und auf Duplikate überprüft. Dies kann einige Minuten dauern. Haben Sie bitte Geduld...",
     "successful": "Ihre Daten wurden erfolgreich anonymisiert.",
     "error": "Es ist ein Fehler aufgetreten:",
     "anonymisation": {
@@ -338,6 +337,8 @@
       "contactInitial": "K",
       "system": "System",
       "processing": "Daten werden extrahiert und anonymisiert...",
+      "processing_step": "{step} Daten werden extrahiert und anonymisiert...",
+      "checkingDuplicates_step": "{step} Prüfung auf doppelte Spenden...",
       "chooseUsername": "Bitte wählen Sie Ihren Nutzernamen aus. Ihr Nutzername wird nicht gespeichert und wir werden ihn nicht erfahren."
     },
     "errors": {

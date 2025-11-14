@@ -43,13 +43,20 @@ interface AnonymizationPreviewProps {
   onFeedbackChatsChange: (feedbackChats: Set<string>) => void;
 }
 
-const AnonymizationPreview: React.FC<AnonymizationPreviewProps> = ({ dataSourceValue, anonymizedConversations, chatMappingToShow, onFeedbackChatsChange }) => {
+const AnonymizationPreview: React.FC<AnonymizationPreviewProps> = ({
+  dataSourceValue,
+  anonymizedConversations,
+  chatMappingToShow,
+  onFeedbackChatsChange
+}) => {
   const donation = useRichTranslations("donation");
   const aliasConfig = useAliasConfig();
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [feedbackChats, setFeedbackChats] = useState<Set<string>>(() => {
     const sortedConversations = sortConversationsByWordCount(anonymizedConversations);
-    const defaultChats = sortedConversations.slice(0, CONFIG.DEFAULT_FEEDBACK_CHATS).map(convo => convo.conversationPseudonym);
+    const defaultChats = sortedConversations
+      .slice(0, CONFIG.DEFAULT_FEEDBACK_CHATS)
+      .map(convo => convo.conversationPseudonym);
     return new Set(defaultChats);
   });
 
@@ -84,7 +91,7 @@ const AnonymizationPreview: React.FC<AnonymizationPreviewProps> = ({ dataSourceV
         })}
       </Typography>
       <Typography variant="body2">
-        {donation.rich("chat-selection", undefined, true, {
+        {donation.rich("chatSelection", undefined, true, {
           min_num: CONFIG.MIN_FEEDBACK_CHATS.toString(),
           max_num: CONFIG.MAX_FEEDBACK_CHATS.toString(),
           default_num: CONFIG.DEFAULT_FEEDBACK_CHATS.toString()
@@ -105,12 +112,20 @@ const AnonymizationPreview: React.FC<AnonymizationPreviewProps> = ({ dataSourceV
             {Array.from(chatMappingToShow.entries()).map(([chatPseudonym, chatParticipants]) => (
               <TableRow key={chatPseudonym} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                 <ResponsiveTableCell padding="checkbox" sx={{ textAlign: "center" }}>
-                  {chatPseudonym != aliasConfig.donorAlias && <Checkbox checked={feedbackChats.has(chatPseudonym)} onChange={() => handleFeedbackCheckboxChange(chatPseudonym)} disabled={!feedbackChats.has(chatPseudonym) && feedbackChats.size >= CONFIG.MAX_FEEDBACK_CHATS} />}
+                  {chatPseudonym != aliasConfig.donorAlias && (
+                    <Checkbox
+                      checked={feedbackChats.has(chatPseudonym)}
+                      onChange={() => handleFeedbackCheckboxChange(chatPseudonym)}
+                      disabled={!feedbackChats.has(chatPseudonym) && feedbackChats.size >= CONFIG.MAX_FEEDBACK_CHATS}
+                    />
+                  )}
                 </ResponsiveTableCell>
                 <ResponsiveTableCell component="th" scope="row">
                   {chatPseudonym}
                 </ResponsiveTableCell>
-                <ResponsiveTableCell>{chatParticipants.join(", ") || donation.rich("contactsMapping.onlyYouInConv")}</ResponsiveTableCell>
+                <ResponsiveTableCell>
+                  {chatParticipants.join(", ") || donation.rich("contactsMapping.onlyYouInConv")}
+                </ResponsiveTableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -130,7 +145,13 @@ const AnonymizationPreview: React.FC<AnonymizationPreviewProps> = ({ dataSourceV
         {donation.t("successful")} {donation.t("previewData.body2")}
       </Alert>
 
-      <AnonymizationModal open={isModalOpen} onClose={handleCloseModal} conversations={anonymizedConversations} n_listed_receivers={3} n_messages={100} />
+      <AnonymizationModal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        conversations={anonymizedConversations}
+        n_listed_receivers={3}
+        n_messages={100}
+      />
     </Box>
   );
 };

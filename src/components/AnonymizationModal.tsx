@@ -33,7 +33,7 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
   n_listed_receivers,
   n_messages
 }) => {
-  const t = useTranslations("donation.preview-data");
+  const t = useTranslations("donation.previewData");
   const actions = useTranslations("actions");
   const [messagesData, setMessagesData] = useState<MessageData[]>([]);
   const [downloadUrl] = useState(() => createJsonDownloadUrl(conversations));
@@ -134,7 +134,7 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
           <Typography variant="body2">{t("body2")}</Typography>
         </Alert>
         <Typography variant="body2" sx={{ mb: 1 }}>
-          {t.rich("data-explanation_format", {
+          {t.rich("dataExplanation_format", {
             b: txt => <b>{txt}</b>,
             num_messages: n_messages,
             link: txt => (

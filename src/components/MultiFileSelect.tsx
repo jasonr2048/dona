@@ -33,9 +33,18 @@ interface MultiFileSelectProps {
   onFeedbackChatsChange: (newFeedbackChats: Set<string>) => void;
 }
 
-const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDonatedConversationsChange, onFeedbackChatsChange }) => {
+const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
+  dataSourceValue,
+  onDonatedConversationsChange,
+  onFeedbackChatsChange
+}) => {
   const donation = useRichTranslations("donation");
-  const acceptedFileTypes = dataSourceValue == DataSourceValue.WhatsApp ? ".txt, .zip" : dataSourceValue == DataSourceValue.IMessage ? ".db" : ".zip";
+  const acceptedFileTypes =
+    dataSourceValue == DataSourceValue.WhatsApp
+      ? ".txt, .zip"
+      : dataSourceValue == DataSourceValue.IMessage
+        ? ".db"
+        : ".zip";
 
   // States
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -71,7 +80,9 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDo
       });
 
       // Extract valid hashes for duplicate check
-      const hashes = conversationsWithHashes.map(convo => convo.conversationHash).filter((hash): hash is string => hash !== null);
+      const hashes = conversationsWithHashes
+        .map(convo => convo.conversationHash)
+        .filter((hash): hash is string => hash !== null);
 
       // Check for duplicates with server
       if (hashes.length > 0) {
@@ -164,7 +175,12 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ dataSourceValue, onDo
               {dateRangeError && <UploadAlert>{getErrorMessage(donation.t, dateRangeError, CONFIG)}</UploadAlert>}
             </>
           )}
-          <AnonymizationPreview dataSourceValue={dataSourceValue} anonymizedConversations={filteredConversations} chatMappingToShow={anonymizationResult.chatMappingToShow} onFeedbackChatsChange={onFeedbackChatsChange} />
+          <AnonymizationPreview
+            dataSourceValue={dataSourceValue}
+            anonymizedConversations={filteredConversations}
+            chatMappingToShow={anonymizationResult.chatMappingToShow}
+            onFeedbackChatsChange={onFeedbackChatsChange}
+          />
         </Box>
       )}
     </Box>

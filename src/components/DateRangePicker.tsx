@@ -16,7 +16,7 @@ interface DateRangePickerProps {
 }
 
 const DateRangePicker: React.FC<DateRangePickerProps> = ({ calculatedRange, setSelectedRange }) => {
-  const t = useTranslations("donation.select-date");
+  const t = useTranslations("donation.selectDate");
   const [startDate, setStartDate] = useState<Dayjs | null>(calculatedRange[0] ? dayjs(calculatedRange[0]) : null);
   const [endDate, setEndDate] = useState<Dayjs | null>(calculatedRange[1] ? dayjs(calculatedRange[1]) : null);
 
@@ -49,17 +49,33 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ calculatedRange, setS
   return (
     <Box>
       <Typography sx={{ fontWeight: "bold" }} gutterBottom>
-        {t("choose-period")}
+        {t("choosePeriod")}
       </Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label={t("start")} value={startDate} onChange={handleStartDateChange} format="DD/MM/YYYY" minDate={calculatedRange[0] ? dayjs(calculatedRange[0]) : undefined} maxDate={calculatedRange[1] ? dayjs(calculatedRange[1]) : undefined} slotProps={{ textField: { size: "small" } }} />
+            <DatePicker
+              label={t("start")}
+              value={startDate}
+              onChange={handleStartDateChange}
+              format="DD/MM/YYYY"
+              minDate={calculatedRange[0] ? dayjs(calculatedRange[0]) : undefined}
+              maxDate={calculatedRange[1] ? dayjs(calculatedRange[1]) : undefined}
+              slotProps={{ textField: { size: "small" } }}
+            />
           </LocalizationProvider>
         </Grid>
         <Grid>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label={t("end")} value={endDate} onChange={handleEndDateChange} format="DD/MM/YYYY" minDate={startDate || calculatedRange[0] ? dayjs(calculatedRange[0]) : undefined} maxDate={calculatedRange[1] ? dayjs(calculatedRange[1]) : undefined} slotProps={{ textField: { size: "small" } }} />
+            <DatePicker
+              label={t("end")}
+              value={endDate}
+              onChange={handleEndDateChange}
+              format="DD/MM/YYYY"
+              minDate={startDate || calculatedRange[0] ? dayjs(calculatedRange[0]) : undefined}
+              maxDate={calculatedRange[1] ? dayjs(calculatedRange[1]) : undefined}
+              slotProps={{ textField: { size: "small" } }}
+            />
           </LocalizationProvider>
         </Grid>
         <Grid>

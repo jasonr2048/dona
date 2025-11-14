@@ -26,7 +26,13 @@ interface AnonymizationModalProps {
   n_messages: number;
 }
 
-const AnonymizationModal: React.FC<AnonymizationModalProps> = ({ open, onClose, conversations, n_listed_receivers, n_messages }) => {
+const AnonymizationModal: React.FC<AnonymizationModalProps> = ({
+  open,
+  onClose,
+  conversations,
+  n_listed_receivers,
+  n_messages
+}) => {
   const t = useTranslations("donation.preview-data");
   const actions = useTranslations("actions");
   const [messagesData, setMessagesData] = useState<MessageData[]>([]);
@@ -54,7 +60,17 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({ open, onClose, 
     return receivers.join(", ");
   };
 
-  const renderMessageCard = ({ message, participants, isGroup, index }: { message: Message | MessageAudio; participants: string[]; isGroup: boolean; index: number }) => {
+  const renderMessageCard = ({
+    message,
+    participants,
+    isGroup,
+    index
+  }: {
+    message: Message | MessageAudio;
+    participants: string[];
+    isGroup: boolean;
+    index: number;
+  }) => {
     const receiver = inferReceivers(participants, message.sender);
     const isAudio = "lengthSeconds" in message;
 
@@ -62,12 +78,12 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({ open, onClose, 
       { label: t("sender"), value: message.sender },
       { label: t("receiver"), value: receiver },
       {
-        label: isAudio ? t("length-seconds") : t("word-count"),
+        label: isAudio ? t("lengthSeconds") : t("wordCount"),
         value: isAudio ? message.lengthSeconds : (message as Message).wordCount
       },
       { label: t("timestamp"), value: new Date(message.timestamp).toLocaleString() },
-      { label: t("group-conversation"), value: isGroup ? actions("yes") : actions("no") },
-      { label: t("voice-message"), value: isAudio ? actions("yes") : actions("no") }
+      { label: t("groupConversation"), value: isGroup ? actions("yes") : actions("no") },
+      { label: t("voiceMessage"), value: isAudio ? actions("yes") : actions("no") }
     ];
 
     return (
@@ -109,7 +125,11 @@ const AnonymizationModal: React.FC<AnonymizationModalProps> = ({ open, onClose, 
         }}
       >
         <Typography variant="h5">{t("title")}</Typography>
-        <Alert icon={<PersonOffIcon fontSize="inherit" />} severity="info" sx={{ padding: 1.5, my: 2, borderRadius: 1.5 }}>
+        <Alert
+          icon={<PersonOffIcon fontSize="inherit" />}
+          severity="info"
+          sx={{ padding: 1.5, my: 2, borderRadius: 1.5 }}
+        >
           <Typography variant="body2">{t("body1")}</Typography>
           <Typography variant="body2">{t("body2")}</Typography>
         </Alert>

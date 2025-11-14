@@ -61,7 +61,9 @@ describe("fetchGraphDataByDonationId", () => {
     // @ts-ignore
     db.query.graphData.findFirst = jest.fn().mockResolvedValue(null);
 
-    await expect(fetchGraphDataByDonationId("test-donation-id")).rejects.toThrow("Graph data not found for the given donation ID.");
+    await expect(fetchGraphDataByDonationId("test-donation-id")).rejects.toThrow(
+      "Graph data not found for the given donation ID."
+    );
   });
 });
 

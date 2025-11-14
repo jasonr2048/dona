@@ -23,7 +23,10 @@ function generateExternalDonorId(): string {
   return Math.random().toString(36).substring(2, 8);
 }
 
-export async function startDonation(externalDonorId?: string, dbClient: DbClient = db): Promise<ActionResult<{ donationId: string; donorId: string }>> {
+export async function startDonation(
+  externalDonorId?: string,
+  dbClient: DbClient = db
+): Promise<ActionResult<{ donationId: string; donorId: string }>> {
   const donorId = uuidv4();
   const externalIdToUse = externalDonorId || generateExternalDonorId();
   console.log(`[DONATION][donorId=${donorId}] startDonation: externalDonorId=${externalIdToUse}`);
@@ -58,8 +61,16 @@ export async function startDonation(externalDonorId?: string, dbClient: DbClient
   }
 }
 
-export async function appendConversationBatch(donationId: string, donorId: string, batch: Conversation[], donorAlias: string, dbClient: DbClient = db): Promise<ActionResult<{ inserted: number }>> {
-  console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`);
+export async function appendConversationBatch(
+  donationId: string,
+  donorId: string,
+  batch: Conversation[],
+  donorAlias: string,
+  dbClient: DbClient = db
+): Promise<ActionResult<{ inserted: number }>> {
+  console.log(
+    `[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`
+  );
 
   try {
     const dataSources = (await dbClient.query.dataSources.findMany()) as any;
@@ -182,10 +193,15 @@ export async function appendConversationBatch(donationId: string, donorId: strin
         }
       }
 
-      console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] ` + `Sub-batch ${subIndex}/${totalSubBatches}: ${convoCount} conversations, ${textCount} messages, ${audioCount} audio messages`);
+      console.log(
+        `[DONATION][donorId=${donorId}][donationId=${donationId}] ` +
+          `Sub-batch ${subIndex}/${totalSubBatches}: ${convoCount} conversations, ${textCount} messages, ${audioCount} audio messages`
+      );
     }
 
-    console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] ✅ appendConversationBatch: inserted ${batch.length} conversations`);
+    console.log(
+      `[DONATION][donorId=${donorId}][donationId=${donationId}] ✅ appendConversationBatch: inserted ${batch.length} conversations`
+    );
     return { success: true };
   } catch (err) {
     console.error(`[DONATION][donorId=${donorId}][donationId=${donationId}] ❌ appendConversationBatch:`, {
@@ -199,7 +215,11 @@ export async function appendConversationBatch(donationId: string, donorId: strin
   }
 }
 
-export async function finalizeDonation(donationId: string, graphDataRecord: Record<string, any>, dbClient: DbClient = db): Promise<ActionResult<{ donationId: string }>> {
+export async function finalizeDonation(
+  donationId: string,
+  graphDataRecord: Record<string, any>,
+  dbClient: DbClient = db
+): Promise<ActionResult<{ donationId: string }>> {
   console.log(`[DONATION][donationId=${donationId}] finalizeDonation`);
   try {
     await dbClient.transaction(async tx => {
@@ -228,7 +248,10 @@ export async function finalizeDonation(donationId: string, graphDataRecord: Reco
  * @param dbClient - Database client (defaults to db)
  * @returns ActionResult with success=false if duplicates found, success=true otherwise
  */
-export async function checkForDuplicateConversations(hashes: string[], dbClient: DbClient = db): Promise<ActionResult<{ hasDuplicates: boolean }>> {
+export async function checkForDuplicateConversations(
+  hashes: string[],
+  dbClient: DbClient = db
+): Promise<ActionResult<{ hasDuplicates: boolean }>> {
   console.log(`[DONATION] checkForDuplicateConversations: checking ${hashes.length} hashes`);
 
   try {
@@ -242,7 +265,8 @@ export async function checkForDuplicateConversations(hashes: string[], dbClient:
 
     // Query database for existing conversations with these hashes
     const existingConversations = await dbClient.query.conversations.findMany({
-      where: (conversations, { inArray }) => inArray(conversations.conversationHash, validHashes),
+      where: (conversations: any, { inArray }: { inArray: any }) =>
+        inArray(conversations.conversationHash, validHashes),
       columns: {
         conversationHash: true
       }

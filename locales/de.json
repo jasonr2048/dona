@@ -493,10 +493,20 @@
         "description": "Dieses Diagramm zeigt die 20 am häufigsten verwendeten Emojis in Ihren Nachrichten. Klicken Sie <button>HIER</button>, um eine Erklärung mit einem Beispiel zu sehen.",
         "legend": {
           "donor": "Ihre Emojis",
-          "contacts": "Emojis der Kontakte"
+          "contacts": "Emojis der Kontakte",
+          "total": "Gesamt (gesendet + empfangen)"
         },
         "xAxis": "Emoji",
         "yAxis": "Anzahl",
+        "yAxisTotal": "Gesamt",
+        "sort": {
+          "label": "Sortieren nach",
+          "options": {
+            "sent": "Gesendet",
+            "received": "Empfangen",
+            "total": "Gesamt"
+          }
+        },
         "noData": "Keine Emoji-Daten verfügbar",
         "example": {
           "image": "images/charts/feedback_example_emojis_english.svg",

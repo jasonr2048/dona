@@ -496,10 +496,20 @@
         "description": "This chart shows the top 20 most frequently used emojis in your messages. Click <button>HERE</button> to see an explanation with an example.",
         "legend": {
           "donor": "Your emojis",
-          "contacts": "Contacts emojis"
+          "contacts": "Contacts emojis",
+          "total": "Total (sent + received)"
         },
         "xAxis": "Emoji",
         "yAxis": "Count",
+        "yAxisTotal": "Total",
+        "sort": {
+          "label": "Sort by",
+          "options": {
+            "sent": "Sent",
+            "received": "Received",
+            "total": "Total"
+          }
+        },
         "noData": "No emoji data available",
         "example": {
           "image": "images/charts/feedback_example_emojis_english.svg",

@@ -17,7 +17,7 @@ const DownloadButtons: React.FC<DownloadButtonsProps> = ({ chartId, fileNamePref
     backgroundColor: "#ffffff",
     padding: 20,
     // Exclude elements with the "download-buttons" class from the chart
-    filter: (element: HTMLElement) => !element.classList?.contains("download-buttons")
+    filter: (element: HTMLElement) => !(element.classList?.contains("download-buttons") || element.classList?.contains("export-hidden"))
   };
 
   const getIconButtonStyle = (hoverContent: string) => ({

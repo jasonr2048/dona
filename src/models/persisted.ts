@@ -4,13 +4,14 @@ import { Conversation, Message, DataSource, MessageAudio } from "@models/process
 type NewConversation = typeof conversations.$inferInsert;
 namespace NewConversation {
   export function create(donationId: string, convo: Conversation, dataSourceOptions: DataSource[]): NewConversation {
-    const { isGroupConversation, dataSource, conversationPseudonym, focusInFeedback } = convo;
+    const { isGroupConversation, dataSource, conversationPseudonym, focusInFeedback, conversationHash } = convo;
     return {
       donationId,
       dataSourceId: dataSourceOptions.find(({ name }) => name === dataSource)!.id,
       isGroupConversation: isGroupConversation || undefined,
       conversationPseudonym: conversationPseudonym,
-      focusInFeedback: focusInFeedback ?? true
+      focusInFeedback: focusInFeedback ?? true,
+      conversationHash: conversationHash || undefined
     };
   }
 }

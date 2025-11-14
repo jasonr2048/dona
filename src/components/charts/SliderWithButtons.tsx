@@ -1,8 +1,9 @@
-import React, {useRef} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Box, Slider, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslations} from "next-intl";
 import {ChartControlButton} from "@/styles/StyledButtons";
 import { styled } from '@mui/material/styles';
+import { sparseMarks } from "@services/charts/sliderUtils";
 
 const RotatedLabelsSlider = styled(Slider)(({ theme }) => ({
     '& .MuiSlider-markLabel': {
@@ -19,18 +20,61 @@ interface SliderWithButtonsProps {
     value: number;
     marks: { value: number; label: string }[];
     setCurrentFrame: React.Dispatch<React.SetStateAction<number>>;
+    alwaysShowValueLabel?: boolean; // if true, always show current selection label on the thumb
 }
 
 const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({
                                                                  value,
                                                                  marks,
-                                                                 setCurrentFrame
+                                                                 setCurrentFrame,
+                                                                 alwaysShowValueLabel = true,
                                                              }) => {
     const labels = useTranslations("feedback.chartLabels");
     const animationRef = useRef<NodeJS.Timeout | null>(null);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const maxTicks = isMobile ? 6 : 10; // Example values for max ticks
+
+    // Measure the actual width of the slider container to adapt label density
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const [containerWidth, setContainerWidth] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (!containerRef.current) return;
+        if (typeof window === 'undefined') return;
+        const el = containerRef.current;
+        const ro = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const cr = entry.contentRect;
+                setContainerWidth(cr.width);
+            }
+        });
+        ro.observe(el);
+        // initial
+        setContainerWidth(el.getBoundingClientRect().width);
+        return () => ro.disconnect();
+    }, []);
+
+    const maxLabels = useMemo(() => {
+        // Fallback to heuristic when no measurement available
+        if (!containerWidth) return isMobile ? 6 : 10;
+
+        // Approximate pitch per label in px considering rotation and mark spacing
+        const minPitch = isMobile ? 64 : 72;
+        // Reserve some padding area inside the slider track
+        const usable = Math.max(0, containerWidth - 24);
+        // Always at least 2 (first/last); cap at 14 to avoid clutter even on huge screens
+        return Math.min(14, Math.max(2, Math.floor(usable / minPitch)));
+    }, [containerWidth, isMobile]);
+
+    // Build full marks for all months, but only show labels for a sparse subset (always include first/last)
+    const renderedMarks = useMemo(() => {
+        const sparse = sparseMarks(marks, maxLabels);
+        const labeledValues = new Set(sparse.map(m => m.value));
+        return marks.map((m) => ({
+            value: m.value,
+            label: labeledValues.has(m.value) ? m.label : '',
+        }));
+    }, [marks, maxLabels]);
 
     const handleStartAnimation = () => {
         if (animationRef.current) clearInterval(animationRef.current);
@@ -64,15 +108,16 @@ const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({
             mb={{ xs: 2, sm: 0 }}
         >
             {/* Slider up to 60% width */}
-            <Box flexGrow={1} width={{ xs: "100%", sm: "60%" }} minWidth="150px" px={2} mb={1}>
+            <Box ref={containerRef} flexGrow={1} width={{ xs: "100%", sm: "60%" }} minWidth="150px" px={2} mb={1}>
                 <RotatedLabelsSlider
                     value={value}
                     onChange={(_, newValue) => setCurrentFrame(newValue as number)}
                     min={0}
-                    max={Math.min(marks.length - 1, maxTicks - 1)}
+                    max={marks.length - 1}
                     step={1}
-                    marks={marks.slice(0, maxTicks)}
-                    valueLabelDisplay="auto"
+                    marks={renderedMarks}
+                    valueLabelDisplay={alwaysShowValueLabel ? "on" : "auto"}
+                    valueLabelFormat={(v) => marks[v]?.label ?? String(v)}
                 />
             </Box>
 

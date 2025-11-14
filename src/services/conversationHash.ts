@@ -1,13 +1,14 @@
 import { createHash } from "crypto";
 import { Conversation, Message, MessageAudio } from "@models/processed";
+import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
 
 /**
  * Computes a SHA-256 hash for a conversation based on its messages.
  *
  * The hash is computed from all messages in a conversation (both text and audio)
  * to enable duplicate detection. The hash includes:
- * - For regular messages: timestamp, wordCount, sender
- * - For audio messages: timestamp, lengthSeconds, sender
+ * - For regular messages: timestamp, wordCount, senderRole ("ego" | "alter")
+ * - For audio messages: timestamp, lengthSeconds, senderRole ("ego" | "alter")
  *
  * Messages are sorted by timestamp before hashing to ensure consistent results
  * regardless of the order in which messages appear in the input.
@@ -29,21 +30,25 @@ export function computeConversationHash(conversation: Conversation): string | nu
     type: "text" | "audio";
     wordCount?: number;
     lengthSeconds?: number;
-    sender: string;
+    senderRole: "ego" | "alter";
   }
+
+  const { donorAlias } = getAliasConfig();
+
+  const toRole = (sender: string): "ego" | "alter" => (sender === donorAlias ? "ego" : "alter");
 
   const messageData: MessageData[] = [
     ...textMessages.map((msg: Message) => ({
       timestamp: msg.timestamp,
       type: "text" as const,
       wordCount: msg.wordCount,
-      sender: msg.sender
+      senderRole: toRole(msg.sender)
     })),
     ...audioMessages.map((msg: MessageAudio) => ({
       timestamp: msg.timestamp,
       type: "audio" as const,
       lengthSeconds: msg.lengthSeconds,
-      sender: msg.sender
+      senderRole: toRole(msg.sender)
     }))
   ];
 

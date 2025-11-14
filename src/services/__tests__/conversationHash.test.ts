@@ -2,6 +2,17 @@ import { computeConversationHash, shouldHashConversation } from "../conversation
 import { Conversation } from "@models/processed";
 import { describe, expect, it } from "@jest/globals";
 
+// Mock aliasConfig so computeConversationHash can resolve donor alias
+// @ts-ignore
+jest.mock("@services/parsing/shared/aliasConfig", () => ({
+  getAliasConfig: () => ({
+    systemAlias: "System",
+    contactAlias: "Contact",
+    donorAlias: "Alice",
+    chatAlias: "Chat"
+  })
+}));
+
 describe("computeConversationHash", () => {
   it("should return null for a conversation with no messages", () => {
     const conversation: Conversation = {
@@ -124,6 +135,35 @@ describe("computeConversationHash", () => {
     const hash1 = computeConversationHash(conversation1);
     const hash2 = computeConversationHash(conversation2);
     expect(hash1).not.toEqual(hash2);
+  });
+
+  it("should produce the same hash when a non-donor sender name changes (role preserved)", () => {
+    // donorAlias is mocked as "Alice" above
+    const conversation1: Conversation = {
+      dataSource: "WhatsApp",
+      messages: [
+        { timestamp: 1000, wordCount: 5, sender: "Alice" }, // donor -> ego
+        { timestamp: 2000, wordCount: 10, sender: "Bob" } // non-donor -> alter
+      ],
+      messagesAudio: [],
+      participants: ["Alice", "Bob"],
+      conversationPseudonym: "Conv1"
+    };
+
+    const conversation2: Conversation = {
+      dataSource: "WhatsApp",
+      messages: [
+        { timestamp: 1000, wordCount: 5, sender: "Alice" }, // donor -> ego
+        { timestamp: 2000, wordCount: 10, sender: "Charlie" } // different non-donor -> still alter
+      ],
+      messagesAudio: [],
+      participants: ["Alice", "Charlie"],
+      conversationPseudonym: "Conv1"
+    };
+
+    const hash1 = computeConversationHash(conversation1);
+    const hash2 = computeConversationHash(conversation2);
+    expect(hash1).toEqual(hash2);
   });
 
   it("should produce different hashes when sender changes", () => {
@@ -315,10 +355,10 @@ describe("shouldHashConversation", () => {
     expect(shouldHashConversation(conversation, 100)).toBe(true);
   });
 
-  it("should use default threshold of 100 when not specified", () => {
+  it("should use default threshold of 50 when not specified", () => {
     const conversation: Conversation = {
       dataSource: "WhatsApp",
-      messages: Array(99)
+      messages: Array(49)
         .fill(null)
         .map((_, i) => ({
           timestamp: i * 1000,

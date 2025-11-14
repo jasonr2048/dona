@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { ChartControlButton } from "@/styles/StyledButtons";
 
-const RotatedLabelsSlider = styled(Slider)(({ theme }) => ({
+const RotatedLabelsSlider = styled(Slider)<{ maxValue: number }>(({ theme, maxValue }) => ({
   "& .MuiSlider-markLabel": {
     transform: "translateX(-60%) rotate(-30deg)",
     transformOrigin: "center center",
@@ -14,6 +14,16 @@ const RotatedLabelsSlider = styled(Slider)(({ theme }) => ({
     marginBottom: "100px",
     whiteSpace: "nowrap",
     fontSize: "0.75rem"
+  },
+  "& .MuiSlider-valueLabelOpen": {
+    transform: "translate(-2px, 135%)",
+    transformOrigin: "center center"
+  },
+  [`& input[aria-valuenow='0'] + .MuiSlider-valueLabelOpen, & input[aria-valuenow='${maxValue}'] + .MuiSlider-valueLabelOpen`]: {
+    display: "none"
+  },
+  "& .MuiSlider-valueLabelOpen::before": {
+    transform: "translate(-50%, -24px) rotate(45deg)"
   }
 }));
 
@@ -95,7 +105,7 @@ const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({ value, marks, set
     <Box display="flex" flexDirection={{ xs: "column", sm: "row" }} alignItems="center" mx="auto" width="95%" gap={{ xs: 0, sm: 3 }} mt={-2} mb={{ xs: 2, sm: 0 }}>
       {/* Slider up to 60% width */}
       <Box ref={containerRef} flexGrow={1} width={{ xs: "100%", sm: "60%" }} minWidth="150px" px={2} mb={1}>
-        <RotatedLabelsSlider value={value} onChange={(_, newValue) => setCurrentFrame(newValue as number)} min={0} max={marks.length - 1} step={1} marks={renderedMarks} valueLabelDisplay={alwaysShowValueLabel ? "on" : "auto"} valueLabelFormat={v => marks[v]?.label ?? String(v)} />
+        <RotatedLabelsSlider value={value} onChange={(_, newValue) => setCurrentFrame(newValue as number)} maxValue={marks.length - 1} min={0} max={marks.length - 1} step={1} marks={renderedMarks} valueLabelDisplay={alwaysShowValueLabel ? "on" : "auto"} valueLabelFormat={v => marks[v]?.label ?? String(v)} />
       </Box>
 
       {/* Buttons, side by side */}

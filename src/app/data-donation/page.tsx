@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 
 import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
-import MultiFileSelect from "@/components/MultiFileSelect";
+import DonationDataSelector from "@components/DonationDataSelector";
 import { useDonation } from "@/context/DonationContext";
 
 import { useRichTranslations } from "@/hooks/useRichTranslations";
@@ -40,7 +40,9 @@ export default function DataDonationPage() {
   const donorStrings = useRichTranslations("donorId");
   const aliasConfig = useAliasConfig();
   const { setDonationData, loadExternalDonorIdFromCookie, externalDonorId } = useDonation();
-  const [allDonatedConversationsBySource, setAllDonatedConversationsBySource] = useState<ConversationsBySource>({} as ConversationsBySource);
+  const [allDonatedConversationsBySource, setAllDonatedConversationsBySource] = useState<ConversationsBySource>(
+    {} as ConversationsBySource
+  );
   const [feedbackChatsBySource, setFeedbackChatsBySource] = useState<SelectedChatsBySource>({} as SelectedChatsBySource);
   const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -200,7 +202,11 @@ export default function DataDonationPage() {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <MultiFileSelect dataSourceValue={source} onDonatedConversationsChange={newConversations => handleDonatedConversationsChange(source, newConversations)} onFeedbackChatsChange={newFeedbackChats => handleFeedbackChatsChange(source, newFeedbackChats)} />
+                <DonationDataSelector
+                  dataSourceValue={source}
+                  onDonatedConversationsChange={newConversations => handleDonatedConversationsChange(source, newConversations)}
+                  onFeedbackChatsChange={newFeedbackChats => handleFeedbackChatsChange(source, newFeedbackChats)}
+                />
               </AccordionDetails>
             </Accordion>
           ))}

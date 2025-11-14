@@ -28,7 +28,7 @@
     },
     "target": "ESNext",
     "typeRoots": ["node_modules/@types"],
-    "types": ["d3"]
+    "types": ["d3", "jest"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

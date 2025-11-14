@@ -1,7 +1,12 @@
-import { beforeEach, describe, expect, test } from "@jest/globals";
+import { beforeEach, describe, expect, test, jest } from "@jest/globals";
 
 import { createMockDbClient } from "@/app/__tests__/mockDbClient";
-import { appendConversationBatch, finalizeDonation, startDonation } from "@/app/data-donation/actions";
+import {
+  appendConversationBatch,
+  finalizeDonation,
+  startDonation,
+  checkForDuplicateConversations
+} from "@/app/data-donation/actions";
 import { DonationErrors } from "@/services/errors";
 
 describe("donation actions - unit", () => {
@@ -102,5 +107,42 @@ describe("donation actions - unit", () => {
     const res = await finalizeDonation("don-4", { foo: "bar" }, throwingTx);
     expect(res.success).toBe(false);
     expect(res.error).toBeDefined();
+  });
+
+  test("checkForDuplicateConversations returns hasDuplicates=false when no duplicate hashes exist", async () => {
+    const overriding = createMockDbClient({
+      query: {
+        conversations: {
+          findMany: jest.fn(async (_opts?: any): Promise<any[]> => [])
+        }
+      }
+    } as any).client;
+
+    const hashes = ["hash-a", "hash-b"];
+    const res = await checkForDuplicateConversations(hashes, overriding);
+
+    expect(overriding.query!.conversations!.findMany).toHaveBeenCalled();
+    expect(res.success).toBe(true);
+    expect(res.data).toBeDefined();
+    expect(res.data!.hasDuplicates).toBe(false);
+  });
+
+  test("checkForDuplicateConversations returns DuplicateConversation error when duplicates exist", async () => {
+    const existing = [{ id: "existing-1", conversationHash: "hash-a" }];
+    const overriding = createMockDbClient({
+      query: {
+        conversations: {
+          findMany: jest.fn(async (_opts?: any): Promise<any[]> => existing)
+        }
+      }
+    } as any).client;
+
+    const hashes = ["hash-a", "hash-b"];
+    const res = await checkForDuplicateConversations(hashes, overriding);
+
+    expect(overriding.query!.conversations!.findMany).toHaveBeenCalled();
+    expect(res.success).toBe(false);
+    expect(res.error).toBeDefined();
+    expect((res.error as any).reason).toBe(DonationErrors.DuplicateConversation);
   });
 });

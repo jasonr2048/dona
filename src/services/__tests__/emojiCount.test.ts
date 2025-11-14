@@ -72,7 +72,7 @@ describe("mergeEmojiCounts", () => {
   });
 
   it("should merge multiple count objects", () => {
-    const counts = [
+    const counts: Record<string, number>[] = [
       { "😊": 2, "👍": 1 },
       { "😊": 1, "❤️": 3 },
       { "👍": 2, "❤️": 1 }
@@ -81,12 +81,12 @@ describe("mergeEmojiCounts", () => {
   });
 
   it("should handle objects with no overlapping emojis", () => {
-    const counts = [{ "😊": 2 }, { "👍": 1 }, { "❤️": 3 }];
+    const counts: Record<string, number>[] = [{ "😊": 2 }, { "👍": 1 }, { "❤️": 3 }];
     expect(mergeEmojiCounts(counts)).toEqual({ "😊": 2, "👍": 1, "❤️": 3 });
   });
 
   it("should handle empty objects in the array", () => {
-    const counts = [{ "😊": 2 }, {}, { "👍": 1 }];
+    const counts: Record<string, number>[] = [{ "😊": 2 }, {}, { "👍": 1 }];
     expect(mergeEmojiCounts(counts)).toEqual({ "😊": 2, "👍": 1 });
   });
 });

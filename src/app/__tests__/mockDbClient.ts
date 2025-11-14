@@ -1,6 +1,13 @@
 import type { DbClient } from "@/db/types";
 
-export function createMockDbClient(overrides?: Partial<DbClient>) {
+/**
+ * Test DB client factory.
+ *
+ * NOTE: `overrides` is intentionally typed as `any` so tests can pass jest.fn()
+ * mocks directly without TypeScript trying to reconcile generated DB types,
+ * which was causing the `never[]` / TS2345 errors.
+ */
+export function createMockDbClient(overrides?: any) {
   let convCounter = 1;
   let genericCounter = 1;
   const storage: Record<string, any[]> = {
@@ -45,7 +52,16 @@ export function createMockDbClient(overrides?: Partial<DbClient>) {
     };
   };
 
-  const client: DbClient = {
+  const defaultQuery = {
+    dataSources: {
+      findMany: async (_opts?: any): Promise<any[]> => [{ id: "ds-default", name: "Default" }]
+    },
+    conversations: {
+      findMany: async (_opts?: any): Promise<any[]> => []
+    }
+  };
+
+  const baseClient: Partial<DbClient> = {
     insert(table: any) {
       const name = typeof table === "string" ? table : undefined;
       return makeInsertBuilder(name) as unknown as any;
@@ -64,12 +80,12 @@ export function createMockDbClient(overrides?: Partial<DbClient>) {
       return fn(tx as any);
     },
 
-    query: {
-      dataSources: {
-        findMany: async () => [{ id: "ds-default", name: "Default" }]
-      }
-    },
+    query: defaultQuery as any
+  };
 
+  // Allow overrides to replace any part of the client (including query).
+  const client: DbClient = {
+    ...(baseClient as any),
     ...(overrides || {})
   } as unknown as DbClient;
 

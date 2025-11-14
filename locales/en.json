@@ -331,7 +331,6 @@
     "aliasNotRequired": "Not required",
     "alias": "Username",
     "pleaseInsertAlias": "Please enter your username to enable anonymization.",
-    "bePatient": "The data extraction process may take some time. Please be patient...",
     "successful": "Your data has been successfully anonymized.",
     "error": "An error occurred:",
     "anonymisation": {
@@ -341,6 +340,8 @@
       "contactInitial": "C",
       "system": "System",
       "processing": "Your data is being extracted and anonymized...",
+      "processingStep": "{step} Your data is being extracted and anonymized...",
+      "checkingDuplicatesStep": "{step} Checking for duplicate donations...",
       "chooseUsername": "Please choose your username. Your username will not be saved and we will not know it."
     },
     "errors": {
@@ -354,6 +355,7 @@
       "NoMessagesInRange": "There are no messages in the selected period. Please select a longer and valid period.",
       "NotEnoughMonthsInRange_format": "To donate your data, please select a period of at least {MIN_DONATION_TIME_PERIOD_MONTHS} months within the period of your donation.",
       "DuplicateDonorId": "This donor ID already exists.",
+      "DuplicateConversation": "The uploaded data contains conversations that have already been donated. You cannot donate the same data more than once, regardless of the time range selected.",
       "TransactionFailed": "The donation data couldn't be saved. Check the connection and try again.",
       "UnknownError": "There is an error somewhere. Please check your data donation.",
       "noAlias": "Please enter your username. You can find it in your WhatsApp profile."

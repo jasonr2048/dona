@@ -7,6 +7,15 @@ import initSqlJs from "sql.js";
 import { Conversation } from "@models/processed";
 import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
 
+jest.mock("@services/parsing/shared/aliasConfig", () => ({
+  getAliasConfig: () => ({
+    systemAlias: "System",
+    contactAlias: "Contact",
+    donorAlias: "Donor",
+    chatAlias: "Chat"
+  })
+}));
+
 async function createMockFile(): Promise<File> {
   const SQL = await initSqlJs();
   const db = new SQL.Database();

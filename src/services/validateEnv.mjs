@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
   DEMO_MODE: z.enum(["true", "false"]).default("false"),
+  ENABLED_DATA_SOURCES: z.string().default("WhatsApp,Facebook,Instagram,IMessage"),
   DONOR_ID_INPUT_METHOD: z.enum(["automated", "showid", "manually"]),
   DONOR_SURVEY_ENABLED: z.enum(["true", "false"]).transform(val => val === "true"),
   FEEDBACK_SURVEY_ENABLED: z.enum(["true", "false"]).transform(val => val === "true"),

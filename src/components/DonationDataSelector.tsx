@@ -21,6 +21,8 @@ import { DonationErrors, getErrorMessage } from "@services/errors";
 import { calculateMinMaxDates, filterDataByRange, NullableRange, validateDateRange } from "@services/rangeFiltering";
 import { validateMinChatsForDonation, validateMinImportantChatsForDonation } from "@services/validation";
 
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
 const UploadAlert = styled((props: AlertProps) => <Alert severity="error" {...props} />)(({ theme }) => ({
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
@@ -72,23 +74,27 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       // Step 1: Anonymize data
       const result = await anonymizeData(dataSourceValue, files);
 
-      // Step 2: Compute hashes and check for duplicates with server
-      setLoadingStep(2);
-      const conversationsWithHashes = result.anonymizedConversations.map(convo => {
-        const hash = shouldHashConversation(convo) ? computeConversationHash(convo) : null;
-        return {
-          ...convo,
-          conversationHash: hash
-        };
-      });
+      let conversationsWithHashes = result.anonymizedConversations;
 
-      const hashes = conversationsWithHashes
-        .map(convo => convo.conversationHash)
-        .filter((hash): hash is string => hash !== null);
-      if (hashes.length > 0) {
-        const duplicateCheck = await checkForDuplicateConversations(hashes);
-        if (!duplicateCheck.success) {
-          throw duplicateCheck.error;
+      if (!isDemoMode) {
+        // Step 2: Compute hashes and check for duplicates with server
+        setLoadingStep(2);
+        conversationsWithHashes = result.anonymizedConversations.map(convo => {
+          const hash = shouldHashConversation(convo) ? computeConversationHash(convo) : null;
+          return {
+            ...convo,
+            conversationHash: hash
+          };
+        });
+
+        const hashes = conversationsWithHashes
+          .map(convo => convo.conversationHash)
+          .filter((hash): hash is string => hash !== null);
+        if (hashes.length > 0) {
+          const duplicateCheck = await checkForDuplicateConversations(hashes);
+          if (!duplicateCheck.success) {
+            throw duplicateCheck.error;
+          }
         }
       }
 

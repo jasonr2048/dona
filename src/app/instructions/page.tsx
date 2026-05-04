@@ -5,6 +5,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -17,9 +18,28 @@ import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@compon
 import DatasourceSpecificInstructions from "@components/DatasourceSpecificInstructions";
 import { DataSourceValue } from "@models/processed";
 
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
+const sampleDataFiles = [
+  {
+    key: "whatsapp",
+    href: "https://uni-bielefeld.sciebo.de/s/EDdRfJzO8p9ndNZ",
+    external: true
+  },
+  {
+    key: "instagram",
+    href: "/documents/sample-data/artificial_instagram_export_valid.zip"
+  },
+  {
+    key: "imessage",
+    href: "/documents/sample-data/valid_data.db"
+  }
+] as const;
+
 export default function Instructions() {
   const a = useTranslations("actions");
   const instructions = useRichTranslations("instructions");
+  const feedback = useRichTranslations("feedback");
 
   return (
     <Container maxWidth="md" sx={{ flexGrow: 1 }}>
@@ -36,6 +56,43 @@ export default function Instructions() {
           <Typography variant="h4">{instructions.t("about.title")}</Typography>
           <Typography variant="body1">{instructions.rich("about.body")}</Typography>
         </Box>
+
+        {isDemoMode && (
+          <Box
+            sx={{
+              width: "100%",
+              border: "2px solid",
+              borderColor: "primary.main",
+              borderRadius: 2,
+              p: 2,
+              textAlign: "left",
+              mt: 3
+            }}
+          >
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              {feedback.t("sampleData.title")}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              {feedback.t("sampleData.body")}
+            </Typography>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+              {sampleDataFiles.map(file => (
+                <Button
+                  key={file.key}
+                  variant="outlined"
+                  component="a"
+                  href={file.href}
+                  download={file.external ? undefined : true}
+                  target={file.external ? "_blank" : undefined}
+                  rel={file.external ? "noopener noreferrer" : undefined}
+                >
+                  {feedback.t(`sampleData.${file.key}`)}
+                </Button>
+              ))}
+            </Stack>
+          </Box>
+        )}
+
         <Box sx={{ my: 4 }}>
           {/* WhatsApp */}
           <Accordion sx={{ my: 1 }}>

@@ -105,6 +105,10 @@
       "signUpButton": "Պետք է գրանցվեմ",
       "hasTokenButton": "Ես ստացել եմ իմ token-ը",
       "signupUrl": "https://landing.dona.tf.uni-bielefeld.de/"
+    },
+    "demoMode": {
+      "title": "Դեմո տարբերակ",
+      "body": "Սա դեմո տարբերակ է։ Տվյալները մեզ չեն ուղարկվում, և փոխհատուցում չի նախատեսվում։"
     }
   },
   "learnMore": {

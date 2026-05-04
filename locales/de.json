@@ -104,6 +104,10 @@
       "signUpButton": "Ich muss mich anmelden",
       "hasTokenButton": "Ich habe meinen Token erhalten",
       "signupUrl": "https://landing.dona.tf.uni-bielefeld.de/"
+    },
+    "demoMode": {
+      "title": "Demo-Version",
+      "body": "Dies ist eine Demo-Version. Es werden keine Daten an uns übermittelt und es besteht kein Anspruch auf Vergütung."
     }
   },
   "learnMore": {

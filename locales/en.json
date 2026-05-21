@@ -144,7 +144,26 @@
     },
     "continue": {
       "buttonsHeader": "Do you have your data ready?",
-      "body": "If you have received your data using these instructions, you can now start with the declaration of consent and survey. Afterwards you can donate your data."
+      "body": "If you have received your data using these instructions, continue to the quick test page first. If the test works, you can proceed to the declaration of consent and survey, and then donate your data."
+    }
+  },
+  "testUpload": {
+    "title": "Test if it works",
+    "placeholder": "Use this quick check to make sure your files can be processed before you continue.",
+    "datasourceTitle_format": "Test {datasource} data",
+    "requirements": {
+      "title": "Requirements check",
+      "minChats": "At least {MIN_CHATS_FOR_DONATION} chats are included.",
+      "minImportantChats": "At least {MIN_CHATS_FOR_DONATION} chats have at least {MIN_MESSAGES_PER_CHAT} messages and at least {MIN_CONTACTS_PER_CHAT} chat participants.",
+      "minTimePeriod": "Data spans at least {MIN_DONATION_TIME_PERIOD_MONTHS} months."
+    },
+    "success": "Everything looks good. Please move forward.",
+    "errorHelp": "Something went wrong. You cannot participate with these data. Please help us understand the issue in this <link>survey</link>.",
+    "consentHint": "Please complete at least one successful test to continue.",
+    "copy": {
+      "button": "Copy error message",
+      "success": "Copied",
+      "fail": "Copy failed"
     }
   },
   "whatsapp": {

@@ -1,6 +1,37 @@
 import { CONFIG } from "@/config";
 import { Conversation } from "@/models/processed";
+import { DonationErrors } from "@/services/errors";
 import { calculateMinMaxDates } from "@services/rangeFiltering";
+
+export interface DonationRequirementChecks {
+  minChats: boolean;
+  minImportantChats: boolean;
+  minTimePeriod: boolean;
+}
+
+export function getDonationRequirementChecks(conversations: Conversation[]): DonationRequirementChecks {
+  return {
+    minChats: validateMinChatsForDonation(conversations),
+    minImportantChats: validateMinImportantChatsForDonation(conversations),
+    minTimePeriod: validateMinTimePeriodForDonation(conversations)
+  };
+}
+
+export function getFailedDonationRequirementErrors(checks: DonationRequirementChecks): DonationErrors[] {
+  const failures: DonationErrors[] = [];
+
+  if (!checks.minChats) {
+    failures.push(DonationErrors.TooFewChats);
+  }
+  if (!checks.minImportantChats) {
+    failures.push(DonationErrors.TooFewContactsOrMessages);
+  }
+  if (!checks.minTimePeriod) {
+    failures.push(DonationErrors.TooShortTimePeriod);
+  }
+
+  return failures;
+}
 
 export function validateMinChatsForDonation(conversations: Conversation[] | File[]): boolean {
   return conversations.length >= CONFIG.MIN_CHATS_FOR_DONATION;

@@ -10,7 +10,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useTranslations } from "next-intl";
 
-import ConsentModal from "@/components/ConsentModal";
 import { LinkButton } from "@/components/LinkButton";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@components/CustomIcon";
@@ -95,7 +94,9 @@ export default function Instructions() {
             <LinkButton variant="contained" href="/">
               {a("previous")}
             </LinkButton>
-            <ConsentModal />
+            <LinkButton variant="contained" href="/upload-test">
+              {a("next")}
+            </LinkButton>
           </Stack>
         </Box>
       </Stack>

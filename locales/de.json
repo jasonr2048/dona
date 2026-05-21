@@ -143,7 +143,26 @@
     },
     "continue": {
       "buttonsHeader": "Haben Sie Ihre Daten bereit?",
-      "body": "Wenn Sie anhand dieser Anleitung Ihre Daten erhalten haben, können Sie jetzt mit der Einverständniserklärung und dem  Fragebogen beginnen. Im Anschluss können Sie dann Ihre Daten spenden."
+      "body": "Wenn Sie anhand dieser Anleitung Ihre Daten erhalten haben, gehen Sie zuerst zur kurzen Testseite. Wenn der Test funktioniert, können Sie mit der Einverständniserklärung und dem Fragebogen beginnen und danach Ihre Daten spenden."
+    }
+  },
+  "testUpload": {
+    "title": "Testen, ob es funktioniert",
+    "placeholder": "Nutzen Sie diesen kurzen Check, um sicherzustellen, dass Ihre Dateien verarbeitet werden können, bevor Sie fortfahren.",
+    "datasourceTitle_format": "{datasource}-Daten testen",
+    "requirements": {
+      "title": "Prüfung der Anforderungen",
+      "minChats": "Es sind mindestens {MIN_CHATS_FOR_DONATION} Chats enthalten.",
+      "minImportantChats": "Mindestens {MIN_CHATS_FOR_DONATION} Chats haben jeweils mindestens {MIN_MESSAGES_PER_CHAT} Nachrichten und mindestens {MIN_CONTACTS_PER_CHAT} Chat-Teilnehmende.",
+      "minTimePeriod": "Die Daten umfassen mindestens {MIN_DONATION_TIME_PERIOD_MONTHS} Monate."
+    },
+    "success": "Alles sieht gut aus. Bitte fahren Sie fort.",
+    "errorHelp": "Es ist etwas schiefgelaufen. Mit diesen Daten können Sie nicht teilnehmen. Bitte helfen Sie uns, das Problem in dieser <link>Umfrage</link> zu verstehen.",
+    "consentHint": "Bitte führen Sie mindestens einen erfolgreichen Test durch, um fortzufahren.",
+    "copy": {
+      "button": "Fehlermeldung kopieren",
+      "success": "Kopiert",
+      "fail": "Kopieren fehlgeschlagen"
     }
   },
   "whatsapp": {

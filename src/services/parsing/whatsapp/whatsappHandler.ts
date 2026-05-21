@@ -56,7 +56,7 @@ async function readFile(file: File): Promise<string> {
   });
 }
 
-function determineDonorName(contacts: string[][]): string | undefined {
+export function determineDonorName(contacts: string[][]): string | undefined {
   // Find intersection of all contacts arrays
   const intersection = _.intersection(...contacts);
   if (intersection.length === 1) {

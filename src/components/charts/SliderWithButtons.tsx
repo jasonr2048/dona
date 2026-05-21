@@ -21,9 +21,10 @@ const RotatedLabelsSlider = styled(Slider, {
     transform: "translate(-2px, 135%)",
     transformOrigin: "center center"
   },
-  [`& input[aria-valuenow='0'] + .MuiSlider-valueLabelOpen, & input[aria-valuenow='${maxValue}'] + .MuiSlider-valueLabelOpen`]: {
-    display: "none"
-  },
+  [`& input[aria-valuenow='0'] + .MuiSlider-valueLabelOpen, & input[aria-valuenow='${maxValue}'] + .MuiSlider-valueLabelOpen`]:
+    {
+      display: "none"
+    },
   "& .MuiSlider-valueLabelOpen::before": {
     transform: "translate(-50%, -24px) rotate(45deg)"
   }
@@ -36,7 +37,12 @@ interface SliderWithButtonsProps {
   alwaysShowValueLabel?: boolean; // if true, always show current selection label on the thumb
 }
 
-const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({ value, marks, setCurrentFrame, alwaysShowValueLabel = true }) => {
+const SliderWithButtons: React.FC<SliderWithButtonsProps> = ({
+  value,
+  marks,
+  setCurrentFrame,
+  alwaysShowValueLabel = true
+}) => {
   const labels = useTranslations("feedback.chartLabels");
   const animationRef = useRef<NodeJS.Timeout | null>(null);
   const theme = useTheme();

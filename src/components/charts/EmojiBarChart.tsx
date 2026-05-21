@@ -4,7 +4,17 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend, LineElement, PointElement, ChartDataset } from "chart.js";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  LineElement,
+  PointElement,
+  ChartDataset
+} from "chart.js";
 import { useTranslations } from "next-intl";
 import React from "react";
 import { Bar } from "react-chartjs-2";
@@ -139,7 +149,13 @@ const EmojiBarChart: React.FC<EmojiBarChartProps> = ({ emojiDistribution }) => {
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
         <FormControl size="small" sx={{ minWidth: 160 }} className="export-hidden">
           <InputLabel id={`${container_name}-sort-label`}>{chartTexts("sort.label")}</InputLabel>
-          <Select labelId={`${container_name}-sort-label`} id={`${container_name}-sort`} value={sortBy} label={chartTexts("sort.label")} onChange={e => setSortBy(e.target.value as any)}>
+          <Select
+            labelId={`${container_name}-sort-label`}
+            id={`${container_name}-sort`}
+            value={sortBy}
+            label={chartTexts("sort.label")}
+            onChange={e => setSortBy(e.target.value as any)}
+          >
             <MenuItem value="sent">{chartTexts("sort.options.sent")}</MenuItem>
             <MenuItem value="received">{chartTexts("sort.options.received")}</MenuItem>
             <MenuItem value="total">{chartTexts("sort.options.total")}</MenuItem>

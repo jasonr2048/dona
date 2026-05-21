@@ -1,10 +1,17 @@
 import { BasicStatistics, MessageCounts, SentReceived, SentReceivedPoint } from "@models/graphData";
 
-const produceBasicStatistics = (messageCounts: MessageCounts, wordCounts: SentReceivedPoint[], secondCounts: SentReceivedPoint[], emojiTotals?: SentReceived): BasicStatistics => {
+const produceBasicStatistics = (
+  messageCounts: MessageCounts,
+  wordCounts: SentReceivedPoint[],
+  secondCounts: SentReceivedPoint[],
+  emojiTotals?: SentReceived
+): BasicStatistics => {
   // Totals
-  const calculateTotal = (data: SentReceivedPoint[], key: keyof SentReceivedPoint): number => data.map(point => point[key]).reduce((a, b) => a + b, 0);
+  const calculateTotal = (data: SentReceivedPoint[], key: keyof SentReceivedPoint): number =>
+    data.map(point => point[key]).reduce((a, b) => a + b, 0);
 
-  const calculateActiveMonthAverage = (totalCount: number, numMonths: number): number => (numMonths > 0 ? Math.round(totalCount / numMonths) : 0);
+  const calculateActiveMonthAverage = (totalCount: number, numMonths: number): number =>
+    numMonths > 0 ? Math.round(totalCount / numMonths) : 0;
 
   const sentWordsTotal = calculateTotal(wordCounts, "sentCount");
   const receivedWordsTotal = calculateTotal(wordCounts, "receivedCount");

@@ -11,7 +11,8 @@ const isExcludedEntry = (entry: Entry): boolean =>
   entry.filename.startsWith("__MACOSX/") || entry.filename.endsWith(".DS_Store") || entry.filename.trim() === "";
 
 // Check that entry name matches the pattern provided
-const isMatchingEntry = (entry: Entry, contentPattern: string): boolean => entry.filename.trim().includes(contentPattern);
+const isMatchingEntry = (entry: Entry, contentPattern: string): boolean =>
+  entry.filename.trim().includes(contentPattern);
 
 const getEntryText = (entry: ValidEntry): Promise<string> => entry.getData(new TextWriter());
 

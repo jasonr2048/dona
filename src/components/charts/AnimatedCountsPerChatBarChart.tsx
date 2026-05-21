@@ -62,7 +62,13 @@ const AnimatedCountsBarChart: React.FC<AnimatedCountsBarChartProps> = ({ dataMon
       <Box id={container_name} position="relative" px={CHART_LAYOUT.paddingX} py={CHART_LAYOUT.paddingY}>
         {/* Year/Month Label + Download Buttons */}
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="body2" align="right" fontWeight="bold" mt={1} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
+          <Typography
+            variant="body2"
+            align="right"
+            fontWeight="bold"
+            mt={1}
+            sx={{ fontSize: CHART_LAYOUT.labelFontSize }}
+          >
             {labelTexts("currentMonth")} {labels[currentFrame]}
           </Typography>
           <DownloadButtons chartId={container_name} fileNamePrefix={CHART_NAME} currentLabel={labels[currentFrame]} />
@@ -98,7 +104,11 @@ const AnimatedCountsBarChart: React.FC<AnimatedCountsBarChartProps> = ({ dataMon
         </Box>
       </Box>
 
-      <SliderWithButtons value={currentFrame} marks={labels.map((label, index) => ({ value: index, label }))} setCurrentFrame={setCurrentFrame} />
+      <SliderWithButtons
+        value={currentFrame}
+        marks={labels.map((label, index) => ({ value: index, label }))}
+        setCurrentFrame={setCurrentFrame}
+      />
     </Box>
   );
 };

@@ -13,24 +13,26 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 
-import { useTranslations } from "next-intl";
-import React, { useEffect, useState } from "react";
-import DonationDataSelector from "@components/DonationDataSelector";
-import { useDonation } from "@/context/DonationContext";
 import { LinkButton } from "@/components/LinkButton";
+import { useDonation } from "@/context/DonationContext";
+import DonationDataSelector from "@components/DonationDataSelector";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import produceGraphData from "@/services/charts/produceGraphData";
 import { useAliasConfig } from "@/services/parsing/shared/aliasConfig";
 import { MainTitle, RichText } from "@/styles/StyledTypography";
+import { ENABLED_DATA_SOURCES } from "@/config";
 import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@components/CustomIcon";
 import { Conversation, DataSourceValue } from "@models/processed";
 import { getErrorMessage } from "@services/errors";
 
-import { appendConversationBatch, finalizeDonation, logClientError, startDonation } from "./actions";
 import { calculateDonationStats } from "@services/donationStats";
+import { appendConversationBatch, finalizeDonation, logClientError, startDonation } from "./actions";
 
 const CONVERSATION_BATCH_SIZE = 250;
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 type ConversationsBySource = Record<DataSourceValue, Conversation[]>;
 type SelectedChatsBySource = Record<DataSourceValue, Set<string>>;
@@ -45,7 +47,9 @@ export default function DataDonationPage() {
   const [allDonatedConversationsBySource, setAllDonatedConversationsBySource] = useState<ConversationsBySource>(
     {} as ConversationsBySource
   );
-  const [feedbackChatsBySource, setFeedbackChatsBySource] = useState<SelectedChatsBySource>({} as SelectedChatsBySource);
+  const [feedbackChatsBySource, setFeedbackChatsBySource] = useState<SelectedChatsBySource>(
+    {} as SelectedChatsBySource
+  );
   const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -91,6 +95,13 @@ export default function DataDonationPage() {
     if (allConversations.length > 0) {
       console.log(`[DONATION] Starting donation with ${allConversations.length} conversations.`);
       try {
+        if (isDemoMode) {
+          const graphDataRecord = produceGraphData(aliasConfig.donorAlias, allConversations);
+          setDonationData("demo-mode", graphDataRecord);
+          router.push("/donation-feedback");
+          return;
+        }
+
         // Calculate donation stats for logging
         const stats = calculateDonationStats(allConversations);
 
@@ -163,6 +174,23 @@ export default function DataDonationPage() {
           textAlign: "center"
         }}
       >
+        {isDemoMode && (
+          <Box
+            sx={{
+              width: "100%",
+              mb: 2,
+              border: "2px solid",
+              borderColor: "warning.main",
+              borderRadius: 2,
+              p: 2,
+              bgcolor: "warning.light"
+            }}
+          >
+            <Typography variant="h6">{donation.t("demoMode.title")}</Typography>
+            <RichText sx={{ mb: 0 }}>{donation.t("demoMode.body")}</RichText>
+          </Box>
+        )}
+
         <MainTitle variant="h4">{donation.t("selectData.title")}</MainTitle>
 
         <RichText>
@@ -197,7 +225,7 @@ export default function DataDonationPage() {
           </Box>
         )}
         <Box sx={{ my: 4, minWidth: "80%", textAlign: "left" }}>
-          {[DataSourceValue.WhatsApp, DataSourceValue.Facebook, DataSourceValue.Instagram, DataSourceValue.IMessage].map(source => (
+          {ENABLED_DATA_SOURCES.map(source => (
             <Accordion key={source} sx={{ my: 1 }}>
               <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
                 {source === DataSourceValue.WhatsApp && <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />}
@@ -213,7 +241,9 @@ export default function DataDonationPage() {
               <AccordionDetails>
                 <DonationDataSelector
                   dataSourceValue={source}
-                  onDonatedConversationsChange={newConversations => handleDonatedConversationsChange(source, newConversations)}
+                  onDonatedConversationsChange={newConversations =>
+                    handleDonatedConversationsChange(source, newConversations)
+                  }
                   onFeedbackChatsChange={newFeedbackChats => handleFeedbackChatsChange(source, newFeedbackChats)}
                 />
               </AccordionDetails>
@@ -227,7 +257,7 @@ export default function DataDonationPage() {
               {actions("previous")}
             </LinkButton>
             <Button variant="contained" onClick={onDataDonationUpload} disabled={loading || !validated}>
-              {actions("submit")}
+              {isDemoMode ? donation.t("demoMode.submitLabel") : actions("submit")}
             </Button>
           </Stack>
         </Box>

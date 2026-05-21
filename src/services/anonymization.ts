@@ -5,6 +5,11 @@ import { handleFacebookZipFiles, handleInstagramZipFiles } from "@services/parsi
 import { extractTxtFilesFromZip } from "@services/parsing/shared/zipExtraction";
 import handleWhatsappTxtFiles from "@services/parsing/whatsapp/whatsappHandler";
 import { getDonationRequirementChecks, getFailedDonationRequirementErrors } from "@services/validation";
+import {
+  validateMinChatsForDonation,
+  validateMinImportantChatsForDonation,
+  validateMinTimePeriodForDonation
+} from "@services/validation";
 
 interface AnonymizeDataOptions {
   skipValidation?: boolean;
@@ -30,7 +35,9 @@ export async function anonymizeData(
         }
       });
 
-      resultPromise = Promise.all(zipFilesPromises).then(unzippedFiles => handleWhatsappTxtFiles(txtFiles.concat(unzippedFiles.flat())));
+      resultPromise = Promise.all(zipFilesPromises).then(unzippedFiles =>
+        handleWhatsappTxtFiles(txtFiles.concat(unzippedFiles.flat()))
+      );
       break;
     case DataSourceValue.Facebook:
       resultPromise = handleFacebookZipFiles(files);

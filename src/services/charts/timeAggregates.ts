@@ -1,4 +1,11 @@
-import { AnswerTimePoint, CountOption, DailyHourPoint, DailySentReceivedPoint, MessageCounts, SentReceivedPoint } from "@models/graphData";
+import {
+  AnswerTimePoint,
+  CountOption,
+  DailyHourPoint,
+  DailySentReceivedPoint,
+  MessageCounts,
+  SentReceivedPoint
+} from "@models/graphData";
 import { Conversation, Message, MessageAudio } from "@models/processed";
 
 type DatePoint = {
@@ -63,7 +70,11 @@ export const produceMessagesSentReceivedPerType = (donorId: string, conversation
  * @param toCount - The type of count to aggregate: "words", "seconds", or "messages".
  * @returns An array of SentReceivedPoint objects, each representing word counts for a specific month.
  */
-export const produceMonthlySentReceived = (donorId: string, conversations: Conversation[], toCount: CountOption): SentReceivedPoint[] => {
+export const produceMonthlySentReceived = (
+  donorId: string,
+  conversations: Conversation[],
+  toCount: CountOption
+): SentReceivedPoint[] => {
   const monthlyMap = new Map<string, { sent: number; received: number }>();
   const { getMessages, getToCount } = gettersFromToCount(toCount);
 
@@ -96,7 +107,13 @@ export const produceMonthlySentReceived = (donorId: string, conversations: Conve
  * @param toCount - The type of count to aggregate: "words", "seconds", or "messages".
  * @returns An object where each key is a conversation pseudonym and the value is an array of SentReceivedPoint objects.
  */
-export const monthlyCountsPerConversation = (donorId: string, conversations: Conversation[], toCount: CountOption) => Object.fromEntries(conversations.map(conversation => [conversation.conversationPseudonym, produceMonthlySentReceived(donorId, [conversation], toCount)]));
+export const monthlyCountsPerConversation = (donorId: string, conversations: Conversation[], toCount: CountOption) =>
+  Object.fromEntries(
+    conversations.map(conversation => [
+      conversation.conversationPseudonym,
+      produceMonthlySentReceived(donorId, [conversation], toCount)
+    ])
+  );
 
 /**
  * Aggregates the total sent and received word counts per day for a specific conversation.
@@ -106,7 +123,11 @@ export const monthlyCountsPerConversation = (donorId: string, conversations: Con
  * @param toCount - The type of count to aggregate: "words" or "seconds".
  * @returns An array of DailySentReceivedPoint objects, each representing word counts for a specific day.
  */
-export const produceDailyCountsPerConversation = (donorId: string, conversation: Conversation, toCount: CountOption): DailySentReceivedPoint[] => {
+export const produceDailyCountsPerConversation = (
+  donorId: string,
+  conversation: Conversation,
+  toCount: CountOption
+): DailySentReceivedPoint[] => {
   const dailyMap = new Map<string, { sent: number; received: number }>();
   const { getMessages, getToCount } = gettersFromToCount(toCount);
 
@@ -162,7 +183,11 @@ export const aggregateDailyCounts = (perConversationData: DailySentReceivedPoint
  * @param sent - If true, computes word counts for sent messages; otherwise, for received messages.
  * @returns An array of DailyHourPoint objects, each representing word counts for a specific hour.
  */
-export const produceWordCountDailyHours = (donorId: string, conversations: Conversation[], sent: boolean): DailyHourPoint[] => {
+export const produceWordCountDailyHours = (
+  donorId: string,
+  conversations: Conversation[],
+  sent: boolean
+): DailyHourPoint[] => {
   const hourlyMap = new Map<string, number>();
 
   conversations.forEach(conversation => {
@@ -211,7 +236,9 @@ export const aggregateDailyHours = (perConversationHours: DailyHourPoint[][]): D
  * @returns An array of AnswerTimePoint objects, each representing the response time for a message.
  */
 export const produceAnswerTimesPerConversation = (donorId: string, conversation: Conversation): AnswerTimePoint[] => {
-  const sortedMessages = [...conversation.messages, ...conversation.messagesAudio].sort((a, b) => a.timestamp - b.timestamp);
+  const sortedMessages = [...conversation.messages, ...conversation.messagesAudio].sort(
+    (a, b) => a.timestamp - b.timestamp
+  );
 
   return sortedMessages
     .slice(1)
@@ -229,7 +256,13 @@ export const produceAnswerTimesPerConversation = (donorId: string, conversation:
     .filter((point): point is AnswerTimePoint => point !== null);
 };
 
-export const getEpochSeconds = (year: number, month: number, date: number, hour: number = 12, minute: number = 30): number => {
+export const getEpochSeconds = (
+  year: number,
+  month: number,
+  date: number,
+  hour: number = 12,
+  minute: number = 30
+): number => {
   return Math.floor(new Date(year, month - 1, date, hour, minute).getTime() / 1000);
 };
 
@@ -265,7 +298,11 @@ export function produceAllDays(startDate: Date, endDate: Date): { year: number; 
  * @param windowSize - The size of the sliding window.
  * @returns A list of DailySentReceivedPoint objects with computed sliding means, skipping zero means that aren't the very first or last.
  */
-export function produceSlidingWindowMean(dailyData: DailySentReceivedPoint[], completeDays: DatePoint[], windowSize: number = 30): DailySentReceivedPoint[] {
+export function produceSlidingWindowMean(
+  dailyData: DailySentReceivedPoint[],
+  completeDays: DatePoint[],
+  windowSize: number = 30
+): DailySentReceivedPoint[] {
   const dataMap = new Map<string, DailySentReceivedPoint>();
 
   // Populate the map for quick lookups
@@ -282,16 +319,18 @@ export function produceSlidingWindowMean(dailyData: DailySentReceivedPoint[], co
     let sentSum = 0;
     let receivedSum = 0;
     let count = 0;
-    completeDays.slice(Math.max(0, index - halfWindow), Math.min(completeDays.length, index + halfWindow + 1)).forEach(({ year: y, month: m, date: d }) => {
-      const dayKey = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-      const dayData = dataMap.get(dayKey);
+    completeDays
+      .slice(Math.max(0, index - halfWindow), Math.min(completeDays.length, index + halfWindow + 1))
+      .forEach(({ year: y, month: m, date: d }) => {
+        const dayKey = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+        const dayData = dataMap.get(dayKey);
 
-      if (dayData) {
-        sentSum += dayData.sentCount;
-        receivedSum += dayData.receivedCount;
-      }
-      count++; // Include all days, even without data, as long as they're within the donation
-    });
+        if (dayData) {
+          sentSum += dayData.sentCount;
+          receivedSum += dayData.receivedCount;
+        }
+        count++; // Include all days, even without data, as long as they're within the donation
+      });
 
     // Compute the means
     const meanSent = count > 1 ? Math.round(sentSum / count) : 0;

@@ -3,7 +3,8 @@ import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
 import { daysBeforeMonths, normalizeDate, NumericDate } from "./utils/date";
 import { convertTime12to24, normalizeAMPM, normalizeTime } from "./utils/time";
 
-const regexStartsWithDateTime = /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),?\s(\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?:\s?([ap]\.?m\.?))?\]?/i;
+const regexStartsWithDateTime =
+  /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),?\s(\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?:\s?([ap]\.?m\.?))?\]?/i;
 const regexMessageEntryParser =
   /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),?\s(\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?:\s?([ap]\.?m\.?))?\]?(?:\s-|\s:)?\s?(?:(.+?):\s)?((?:.|\s)*)/i;
 
@@ -54,10 +55,19 @@ function computeDateTime(date: string, time: string, ampm: string | null, daysFi
   }
   [year, month, day] = normalizeDate(year, month, day);
 
-  const [hours, minutes, seconds] = normalizeTime(ampm ? convertTime12to24(time, normalizeAMPM(ampm)) : time).split(/[:.]/);
+  const [hours, minutes, seconds] = normalizeTime(ampm ? convertTime12to24(time, normalizeAMPM(ampm)) : time).split(
+    /[:.]/
+  );
 
   // Convert month and year to numbers before using them in Date constructor
-  return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes), Number(seconds)).getTime();
+  return new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hours),
+    Number(minutes),
+    Number(seconds)
+  ).getTime();
 }
 
 /**

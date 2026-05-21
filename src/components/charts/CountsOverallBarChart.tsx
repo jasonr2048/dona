@@ -16,7 +16,11 @@ interface WordCountOverallBarChartProps {
   mode: "text" | "audio";
 }
 
-const CountsOverallBarChart: React.FC<WordCountOverallBarChartProps> = ({ sentWordsTotal, receivedWordsTotal, mode }) => {
+const CountsOverallBarChart: React.FC<WordCountOverallBarChartProps> = ({
+  sentWordsTotal,
+  receivedWordsTotal,
+  mode
+}) => {
   const CHART_NAME = `count-overall-${mode}-barchart`;
   const container_name = `chart-wrapper-${CHART_NAME}`;
 

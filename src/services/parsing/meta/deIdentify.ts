@@ -8,7 +8,12 @@ import { ChatPseudonyms, ContactPseudonyms } from "@services/parsing/shared/pseu
 import wordCount from "@services/parsing/shared/wordCount";
 import { ValidEntry } from "@services/parsing/shared/zipExtraction";
 
-export default async function deIdentify(parsedConversations: ParsedConversation[], audioEntries: ValidEntry[], donorName: string, dataSourceValue: DataSourceValue): Promise<AnonymizationResult> {
+export default async function deIdentify(
+  parsedConversations: ParsedConversation[],
+  audioEntries: ValidEntry[],
+  donorName: string,
+  dataSourceValue: DataSourceValue
+): Promise<AnonymizationResult> {
   const aliasConfig = getAliasConfig();
   const contactPseudonyms = new ContactPseudonyms(aliasConfig.contactAlias);
   const chatPseudonyms = new ChatPseudonyms(aliasConfig.donorAlias, aliasConfig.chatAlias, dataSourceValue);

@@ -15,7 +15,13 @@ interface MoreChartsModalProps {
   showDetailedAudioFeedback: boolean;
 }
 
-const MoreChartsModal: React.FC<MoreChartsModalProps> = ({ open, onClose, graphData, section, showDetailedAudioFeedback }) => {
+const MoreChartsModal: React.FC<MoreChartsModalProps> = ({
+  open,
+  onClose,
+  graphData,
+  section,
+  showDetailedAudioFeedback
+}) => {
   const sectionTexts = useRichTranslations(`feedback.${section}`);
 
   const chartsData =

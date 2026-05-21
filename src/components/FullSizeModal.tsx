@@ -30,7 +30,12 @@ const FullSizeModal: React.FC<FullSizeModalProps> = ({ open, onClose, children, 
   const actions = useTranslations("actions");
 
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby={ariaLabel ? "modal-title" : undefined} aria-describedby={ariaLabel ? "modal-content" : undefined}>
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby={ariaLabel ? "modal-title" : undefined}
+      aria-describedby={ariaLabel ? "modal-content" : undefined}
+    >
       <StyledModalBox>
         {/* Optional aria label */}
         {ariaLabel && (

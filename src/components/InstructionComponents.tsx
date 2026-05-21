@@ -22,7 +22,12 @@ interface TabbedInstructionVideoProps {
   androidCaption: string;
 }
 
-export function TabbedInstructionVideo({ iosVideoUrl, androidVideoUrl, iosCaption, androidCaption }: TabbedInstructionVideoProps) {
+export function TabbedInstructionVideo({
+  iosVideoUrl,
+  androidVideoUrl,
+  iosCaption,
+  androidCaption
+}: TabbedInstructionVideoProps) {
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -38,8 +43,20 @@ export function TabbedInstructionVideo({ iosVideoUrl, androidVideoUrl, iosCaptio
         </Tabs>
       </Box>
       <Box width="100%" display="flex" justifyContent="center" position="relative">
-        <CardMedia component="video" image={iosVideoUrl} title="iOS Instructions" controls sx={{ display: value === 0 ? "block" : "none", width: "100%" }} />
-        <CardMedia component="video" image={androidVideoUrl} title="Android Instructions" controls sx={{ display: value === 1 ? "block" : "none", width: "100%" }} />
+        <CardMedia
+          component="video"
+          image={iosVideoUrl}
+          title="iOS Instructions"
+          controls
+          sx={{ display: value === 0 ? "block" : "none", width: "100%" }}
+        />
+        <CardMedia
+          component="video"
+          image={androidVideoUrl}
+          title="Android Instructions"
+          controls
+          sx={{ display: value === 1 ? "block" : "none", width: "100%" }}
+        />
       </Box>
       <Typography variant="caption" sx={{ mt: 1 }}>
         {value === 0 ? iosCaption : androidCaption}

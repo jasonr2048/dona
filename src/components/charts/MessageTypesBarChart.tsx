@@ -28,7 +28,10 @@ const MessageTypesBarChart: React.FC<MessageTypesBarChartProps> = ({ basicStatis
       datasets: [
         {
           label: chartTexts("legend.contacts"),
-          data: [basicStatistics.messagesTotal.textMessages.received, basicStatistics.messagesTotal.audioMessages.received],
+          data: [
+            basicStatistics.messagesTotal.textMessages.received,
+            basicStatistics.messagesTotal.audioMessages.received
+          ],
           backgroundColor: [CHART_COLORS.secondary, secondaryPattern],
           maxBarThickness: CHART_LAYOUT.maxBarThickness * CHART_LAYOUT.barPercentageNarrow
         },

@@ -62,7 +62,9 @@ const AnimatedResponseTimeBarChart: React.FC<AnimatedResponseTimeBarChartProps> 
     const sortedMonths = Object.keys(groupedByMonth).sort();
     sortedMonths.forEach(monthKey => {
       const totalResponses = groupedByMonth[monthKey].reduce((a, b) => a + b, 0);
-      groupedByMonth[monthKey] = totalResponses ? groupedByMonth[monthKey].map(count => (count / totalResponses) * 100) : new Array(timeRanges.length).fill(0);
+      groupedByMonth[monthKey] = totalResponses
+        ? groupedByMonth[monthKey].map(count => (count / totalResponses) * 100)
+        : new Array(timeRanges.length).fill(0);
     });
 
     return { counts: groupedByMonth, sortedMonths };
@@ -93,7 +95,13 @@ const AnimatedResponseTimeBarChart: React.FC<AnimatedResponseTimeBarChartProps> 
     <Box sx={CHART_BOX_PROPS.main}>
       <Box id={container_name} position="relative" px={CHART_LAYOUT.paddingX} py={CHART_LAYOUT.paddingY}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="body2" align="right" fontWeight="bold" mt={1} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
+          <Typography
+            variant="body2"
+            align="right"
+            fontWeight="bold"
+            mt={1}
+            sx={{ fontSize: CHART_LAYOUT.labelFontSize }}
+          >
             {labelTexts("currentMonth")} {labels[currentFrame]}
           </Typography>
           <DownloadButtons chartId={container_name} fileNamePrefix={CHART_NAME} currentLabel={labels[currentFrame]} />
@@ -127,7 +135,11 @@ const AnimatedResponseTimeBarChart: React.FC<AnimatedResponseTimeBarChartProps> 
         </Box>
       </Box>
 
-      <SliderWithButtons value={currentFrame} marks={labels.map((label, index) => ({ value: index, label }))} setCurrentFrame={setCurrentFrame} />
+      <SliderWithButtons
+        value={currentFrame}
+        marks={labels.map((label, index) => ({ value: index, label }))}
+        setCurrentFrame={setCurrentFrame}
+      />
     </Box>
   );
 };

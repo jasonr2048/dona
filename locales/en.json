@@ -99,6 +99,12 @@
     },
     "contact": {
       "body": "The purpose of this website is to inform you about the background and process of this online study. If any questions or concerns arise during the process, please write to the principal investigator (Prof. Dr. Hanna Drimalla, AG Multimodal Behavior Processing, Technische Fakultät, Universität Bielefeld, <email>drimalla@techfak.uni-bielefeld.de</email>, Tel. +49 521 106-12043)"
+    },
+    "enrollment": {
+      "body": "To participate in the study, you need to sign up and get a personal token. This is important to make sure you can get your compensation at the end. If you have already received your token (via email), please continue.",
+      "signUpButton": "I need to sign up",
+      "hasTokenButton": "I have received my token",
+      "signupUrl": "https://landing.dona.tf.uni-bielefeld.de/"
     }
   },
   "learnMore": {
@@ -299,7 +305,11 @@
       "title": "Usage of data",
       "body": "The data and results of these surveys will be published in scientific journals. The published data will be anonymous, meaning that it cannot be associated with individuals. The fully anonymized data will be uploaded to a research data repository and qualified scientists will be granted access."
     },
-    "confirmation": "I hereby confirm that I have read and understood the information above and agree to the conditions for participation."
+    "confirmation": "I hereby confirm that I have read and understood the information above and agree to the conditions for participation.",
+    "demoMode": {
+      "title": "Demo Version",
+      "body": "This is a demo version. No data will be submitted to us, and no compensation can be expected."
+    }
   },
   "donation": {
     "datasourceTitle_format": "{datasource} data donation",
@@ -378,6 +388,11 @@
       "TransactionFailed": "The donation data couldn't be saved. Check the connection and try again.",
       "UnknownError": "There is an error somewhere. Please check your data donation.",
       "noAlias": "Please enter your username. You can find it in your WhatsApp profile."
+    },
+    "demoMode": {
+      "title": "Demo Version",
+      "body": "This is a demo version. Your data stays in your browser and is not submitted to us. No compensation can be expected.",
+      "submitLabel": "Show demo feedback"
     }
   },
   "dataProtection": {
@@ -689,6 +704,17 @@
       }
     },
     "thanks": "We hope you had exciting insights. Thanks a lot!",
+    "demoMode": {
+      "title": "Demo Version",
+      "body": "This is a demo version. No data has been submitted to us and no compensation can be expected."
+    },
+    "sampleData": {
+      "title": "Try with sample data",
+      "body": "Download sample exports and use them in this demo instance.",
+      "whatsapp": "Download WhatsApp sample",
+      "instagram": "Download Instagram sample",
+      "imessage": "Download iMessage sample"
+    },
     "buttons": {
       "nextButton": "Next",
       "finishButton": "Finish",

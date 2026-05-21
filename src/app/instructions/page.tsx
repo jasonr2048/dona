@@ -40,7 +40,9 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "Whatsapp" })}</Typography>
+              <Typography variant="h6">
+                {instructions.t("datasource.title_format", { datasource: "Whatsapp" })}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.WhatsApp} />
@@ -50,7 +52,9 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <FacebookIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "Facebook" })}</Typography>
+              <Typography variant="h6">
+                {instructions.t("datasource.title_format", { datasource: "Facebook" })}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.Facebook} />
@@ -60,7 +64,9 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <InstagramIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "Instagram" })}</Typography>
+              <Typography variant="h6">
+                {instructions.t("datasource.title_format", { datasource: "Instagram" })}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.Instagram} />
@@ -70,7 +76,9 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <IMessageIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "iMessage" })}</Typography>
+              <Typography variant="h6">
+                {instructions.t("datasource.title_format", { datasource: "iMessage" })}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.IMessage} />

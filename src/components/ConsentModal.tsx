@@ -23,6 +23,7 @@ import { IdInputMethod } from "@models/settings";
 const idInputMethod = process.env.NEXT_PUBLIC_DONOR_ID_INPUT_METHOD as IdInputMethod;
 const isDonorSurveyEnabled = process.env.NEXT_PUBLIC_DONOR_SURVEY_ENABLED === "true";
 const donorSurveyLink = process.env.NEXT_PUBLIC_DONOR_SURVEY_LINK;
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 export default function ConsentModal() {
   const actions = useRichTranslations("actions");
@@ -88,7 +89,9 @@ export default function ConsentModal() {
     }
 
     window.location.href =
-      isDonorSurveyEnabled && donorSurveyLink ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}` : "/data-donation";
+      isDonorSurveyEnabled && donorSurveyLink
+        ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}`
+        : "/data-donation";
   };
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -117,6 +120,12 @@ export default function ConsentModal() {
         </Box>
 
         <BlockTitle>{consent.t("about.title")}</BlockTitle>
+        {isDemoMode && (
+          <Box sx={{ my: 2, border: "2px solid", borderColor: "warning.main", borderRadius: 2, p: 2, bgcolor: "warning.light" }}>
+            <Typography variant="h6">{consent.t("demoMode.title")}</Typography>
+            <Typography>{consent.t("demoMode.body")}</Typography>
+          </Box>
+        )}
         <Typography>{consent.t("about.body1")}</Typography>
         <Typography sx={{ mt: 1 }}>{consent.t("about.body2")}</Typography>
 

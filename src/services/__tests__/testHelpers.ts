@@ -19,7 +19,9 @@ export const createConversation = (
     sender
   }));
 
-  const participants = [...new Set([...messages.map(([, , , sender]) => sender), ...audioMessages.map(([, , , sender]) => sender)])];
+  const participants = [
+    ...new Set([...messages.map(([, , , sender]) => sender), ...audioMessages.map(([, , , sender]) => sender)])
+  ];
 
   return {
     isGroupConversation: participants.length > 2,

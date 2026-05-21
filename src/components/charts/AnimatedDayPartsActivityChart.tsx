@@ -21,7 +21,10 @@ interface AnimatedDayPartsActivityChartProps {
   listOfConversations: string[];
 }
 
-const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps> = ({ dataSentPerConversation, listOfConversations }) => {
+const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps> = ({
+  dataSentPerConversation,
+  listOfConversations
+}) => {
   const CHART_NAME = "day-parts-activity-barchart";
   const container_name = `chart-wrapper-${CHART_NAME}`;
   const selection_label_name = `select-label-${CHART_NAME}`;
@@ -54,7 +57,9 @@ const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps
     const sortedMonths = Array.from(monthsSet).sort();
     sortedMonths.forEach(monthKey => {
       const total = groupedByMonth[monthKey].reduce((a, b) => a + b, 0);
-      groupedByMonth[monthKey] = total ? groupedByMonth[monthKey].map(count => (count / total) * 100) : new Array(buckets.length).fill(0);
+      groupedByMonth[monthKey] = total
+        ? groupedByMonth[monthKey].map(count => (count / total) * 100)
+        : new Array(buckets.length).fill(0);
     });
 
     return { counts: groupedByMonth, sortedMonths };
@@ -107,7 +112,13 @@ const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps
   return (
     <Box sx={CHART_BOX_PROPS.main}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <Select value={selectedConversation} onChange={e => setSelectedConversation(e.target.value)} size="small" variant="outlined" sx={{ alignSelf: "flex-start", mb: -1, pb: 0, fontSize: CHART_LAYOUT.labelFontSize }}>
+        <Select
+          value={selectedConversation}
+          onChange={e => setSelectedConversation(e.target.value)}
+          size="small"
+          variant="outlined"
+          sx={{ alignSelf: "flex-start", mb: -1, pb: 0, fontSize: CHART_LAYOUT.labelFontSize }}
+        >
           <MenuItem value={ALL_CHATS} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
             {labelTexts("overallData")}
           </MenuItem>
@@ -120,10 +131,21 @@ const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps
 
         <Box id={container_name} position="relative" px={CHART_LAYOUT.paddingX} py={CHART_LAYOUT.paddingY}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-            <Typography id={selection_label_name} variant="body2" align="right" fontWeight="bold" mt={1} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
+            <Typography
+              id={selection_label_name}
+              variant="body2"
+              align="right"
+              fontWeight="bold"
+              mt={1}
+              sx={{ fontSize: CHART_LAYOUT.labelFontSize }}
+            >
               {labelTexts("currentMonth")} {currentView.sortedMonths[currentFrame]}
             </Typography>
-            <DownloadButtons chartId={container_name} fileNamePrefix={`${CHART_NAME}-${selectedConversation}`} currentLabel={currentView.sortedMonths[currentFrame]} />
+            <DownloadButtons
+              chartId={container_name}
+              fileNamePrefix={`${CHART_NAME}-${selectedConversation}`}
+              currentLabel={currentView.sortedMonths[currentFrame]}
+            />
           </Box>
 
           <Box
@@ -153,7 +175,11 @@ const AnimatedDayPartsActivityChart: React.FC<AnimatedDayPartsActivityChartProps
           </Box>
         </Box>
 
-        <SliderWithButtons value={currentFrame} marks={currentView.sortedMonths.map((label, index) => ({ value: index, label }))} setCurrentFrame={setCurrentFrame} />
+        <SliderWithButtons
+          value={currentFrame}
+          marks={currentView.sortedMonths.map((label, index) => ({ value: index, label }))}
+          setCurrentFrame={setCurrentFrame}
+        />
       </Box>
     </Box>
   );

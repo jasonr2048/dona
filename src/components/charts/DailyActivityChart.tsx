@@ -136,7 +136,13 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSentPerConv
   return (
     <Box sx={{ display: "flex", flexDirection: "row", gap: 2, alignItems: "center", width: "100%" }}>
       <Box sx={{ flex: 1, position: "relative", width: "100%" }}>
-        <Select value={selectedConversation} onChange={e => setSelectedConversation(e.target.value)} size="small" variant="outlined" sx={{ mb: -2, pb: 0, fontSize: CHART_LAYOUT.labelFontSize }}>
+        <Select
+          value={selectedConversation}
+          onChange={e => setSelectedConversation(e.target.value)}
+          size="small"
+          variant="outlined"
+          sx={{ mb: -2, pb: 0, fontSize: CHART_LAYOUT.labelFontSize }}
+        >
           <MenuItem value={ALL_CHATS} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
             {labelTexts("overallData")}
           </MenuItem>
@@ -149,7 +155,13 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSentPerConv
 
         <Box id={container_name} p={CHART_LAYOUT.paddingX} sx={{ mt: -2, pt: 0 }}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-            <Typography variant="body2" align="right" fontWeight="bold" mt={1} sx={{ fontSize: CHART_LAYOUT.labelFontSize }}>
+            <Typography
+              variant="body2"
+              align="right"
+              fontWeight="bold"
+              mt={1}
+              sx={{ fontSize: CHART_LAYOUT.labelFontSize }}
+            >
               {selectedConversation === ALL_CHATS ? labelTexts("overallData") : selectedConversation}
             </Typography>
             <DownloadButtons chartId={container_name} fileNamePrefix={CHART_NAME} currentLabel={selectedConversation} />
@@ -167,7 +179,10 @@ const DailyActivityChart: React.FC<DailyActivityChartProps> = ({ dataSentPerConv
             <Box sx={{ flex: 1, height: "100%", maxWidth: "100%" }}>
               <Scatter data={data} options={options} />
             </Box>
-            <ColorScale colors={[backgroundColor(1), "white"]} labels={[chartTexts("moreThanAverage"), chartTexts("average"), chartTexts("lessThanAverage")]} />
+            <ColorScale
+              colors={[backgroundColor(1), "white"]}
+              labels={[chartTexts("moreThanAverage"), chartTexts("average"), chartTexts("lessThanAverage")]}
+            />
           </Box>
         </Box>
       </Box>

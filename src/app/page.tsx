@@ -11,6 +11,7 @@ import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle, MainTitle, RichText } from "@/styles/StyledTypography";
 
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const isDemoShowHasTokenButton = process.env.NEXT_PUBLIC_DEMO_SHOW_HAS_TOKEN_BUTTON === "true";
 
 export default function HomePage() {
   const landing = useRichTranslations("landing");
@@ -19,7 +20,16 @@ export default function HomePage() {
     <Container maxWidth="md" sx={{ flexGrow: 1 }}>
       <Stack spacing={2} alignItems="center" textAlign="center">
         {isDemoMode && (
-          <Box sx={{ width: "100%", border: "2px solid", borderColor: "warning.main", borderRadius: 2, p: 2, bgcolor: "warning.light" }}>
+          <Box
+            sx={{
+              width: "100%",
+              border: "2px solid",
+              borderColor: "warning.main",
+              borderRadius: 2,
+              p: 2,
+              bgcolor: "warning.light"
+            }}
+          >
             <MainTitle variant="h6" sx={{ m: 0 }}>
               {landing.t("demoMode.title")}
             </MainTitle>
@@ -142,9 +152,11 @@ export default function HomePage() {
             <LinkButton variant="outlined" href={landing.t("enrollment.signupUrl")} target="_blank">
               {landing.t("enrollment.signUpButton")}
             </LinkButton>
-            <LinkButton variant="contained" href="/instructions">
-              {landing.t("enrollment.hasTokenButton")}
-            </LinkButton>
+            {(!isDemoMode || isDemoShowHasTokenButton) && (
+              <LinkButton variant="contained" href="/instructions">
+                {landing.t("enrollment.hasTokenButton")}
+              </LinkButton>
+            )}
           </Stack>
         </Box>
       </Stack>

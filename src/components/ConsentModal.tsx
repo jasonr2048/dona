@@ -50,6 +50,10 @@ export default function ConsentModal() {
   }, []);
 
   const validateDonorId = async (id: string) => {
+    if (isDemoMode) {
+      return;
+    }
+
     if (!id.trim()) {
       return;
     }
@@ -113,15 +117,30 @@ export default function ConsentModal() {
             {consent.t("title")}
           </Typography>
           <Box sx={{ alignSelf: "center" }}>
-            <LinkButton variant="contained" target="_blank" href={consent.t("pdf.file")} size="small">
-              {consent.t("pdf.button")}
-            </LinkButton>
+            {isDemoMode ? (
+              <Button variant="contained" size="small" disabled>
+                {consent.t("pdf.button")}
+              </Button>
+            ) : (
+              <LinkButton variant="contained" target="_blank" href={consent.t("pdf.file")} size="small">
+                {consent.t("pdf.button")}
+              </LinkButton>
+            )}
           </Box>
         </Box>
 
         <BlockTitle>{consent.t("about.title")}</BlockTitle>
         {isDemoMode && (
-          <Box sx={{ my: 2, border: "2px solid", borderColor: "warning.main", borderRadius: 2, p: 2, bgcolor: "warning.light" }}>
+          <Box
+            sx={{
+              my: 2,
+              border: "2px solid",
+              borderColor: "warning.main",
+              borderRadius: 2,
+              p: 2,
+              bgcolor: "warning.light"
+            }}
+          >
             <Typography variant="h6">{consent.t("demoMode.title")}</Typography>
             <Typography>{consent.t("demoMode.body")}</Typography>
           </Box>

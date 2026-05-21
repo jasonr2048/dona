@@ -48,6 +48,10 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
 - `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` — used by docker-compose for local DB
 - `DATABASE_URL` — Postgres connection string used by the app (compose sets this automatically for the containerized app)
 - `DONOR_ID_INPUT_METHOD`, `DONOR_SURVEY_ENABLED`, `FEEDBACK_SURVEY_ENABLED`, `DONOR_SURVEY_LINK`, `FEEDBACK_SURVEY_LINK` — feature flags/links
+- `ENABLED_LANGUAGES` — comma-separated active UI languages (supported values: `en,de,hy`)
+- `DEFAULT_LANGUAGE` — default UI language (must be one of `ENABLED_LANGUAGES`)
+- `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, no duplicate checks, demo notices in flow, sample data downloads on the instructions page, disabled consent PDF download, and no final survey CTA)
+- `DEMO_SHOW_HAS_TOKEN_BUTTON` — set to `true` to show the "I have received my token" button in demo mode
 - `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, demo notices in flow, sample data downloads on feedback page, and no final survey CTA)
 - `NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED` — set to `false` to skip duplicate-donation rejection during upload (default: `true`)
 - `DUPLICATE_DONATION_CHECK_ENABLED` — server-side toggle for duplicate checking, should usually match `NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED` (default: `true`)
@@ -164,9 +168,13 @@ APP_PORT=3000
 APP_INTERNAL_PORT=3000
 DONOR_ID_INPUT_METHOD=manually
 DONOR_SURVEY_ENABLED=false
+DEMO_MODE=false
+DEMO_SHOW_HAS_TOKEN_BUTTON=false
 FEEDBACK_SURVEY_ENABLED=true
 DONOR_SURVEY_LINK=
 FEEDBACK_SURVEY_LINK=
+ENABLED_LANGUAGES=en,de
+DEFAULT_LANGUAGE=en
 ```
 
 2. Launch all services

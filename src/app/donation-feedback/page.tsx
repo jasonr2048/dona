@@ -2,7 +2,6 @@
 
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -15,27 +14,13 @@ import { MainTitle, RichText } from "@/styles/StyledTypography";
 import DataSourceFeedbackSection from "@components/DataSourceFeedbackSection";
 import LoadingSpinner from "@components/LoadingSpinner";
 import { DataSourceValue } from "@models/processed";
+import Button from "@mui/material/Button";
 
 import { fetchOrComputeGraphDataByDonationId, getDonationId } from "./actions";
 
 const isFeedbackSurveyEnabled = process.env.NEXT_PUBLIC_FEEDBACK_SURVEY_ENABLED === "true";
 const feedbackSurveyLink = process.env.NEXT_PUBLIC_FEEDBACK_SURVEY_LINK;
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
-
-const sampleDataFiles = [
-  {
-    key: "whatsapp",
-    href: "/documents/sample-data/whatsapp_artificial_export.zip"
-  },
-  {
-    key: "instagram",
-    href: "/documents/sample-data/artificial_instagram_export_valid.zip"
-  },
-  {
-    key: "imessage",
-    href: "/documents/sample-data/valid_data.db"
-  }
-] as const;
 
 export default function DonationFeedbackPage() {
   const actions = useTranslations("actions");
@@ -71,33 +56,6 @@ export default function DonationFeedbackPage() {
         : "/";
   };
 
-  const sampleDataDownloads = (
-    <Box
-      sx={{
-        width: "100%",
-        border: "2px solid",
-        borderColor: "primary.main",
-        borderRadius: 2,
-        p: 2,
-        textAlign: "left"
-      }}
-    >
-      <Typography variant="h6" sx={{ mb: 1 }}>
-        {feedback.t("sampleData.title")}
-      </Typography>
-      <Typography variant="body2" sx={{ mb: 2 }}>
-        {feedback.t("sampleData.body")}
-      </Typography>
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-        {sampleDataFiles.map(file => (
-          <Button key={file.key} variant="outlined" component="a" href={file.href} download>
-            {feedback.t(`sampleData.${file.key}`)}
-          </Button>
-        ))}
-      </Stack>
-    </Box>
-  );
-
   return (
     <Container maxWidth="md" sx={{ flexGrow: 1 }}>
       <Stack
@@ -120,8 +78,6 @@ export default function DonationFeedbackPage() {
             <Typography variant="body2">{feedback.t("demoMode.body")}</Typography>
           </Alert>
         )}
-
-        {isDemoMode && sampleDataDownloads}
 
         {/* Loading indicator */}
         {isLoading && <LoadingSpinner message={feedback.t("loading")} />}
@@ -152,8 +108,6 @@ export default function DonationFeedbackPage() {
                 {actions("next")}
               </Button>
             )}
-
-            {isDemoMode && sampleDataDownloads}
           </>
         )}
       </Stack>

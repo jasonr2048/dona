@@ -12,7 +12,13 @@ const envSchema = z.object({
 
 export const validateEnv = () => {
   try {
-    const parsedEnv = envSchema.parse(process.env);
+    // Docker/Compose can inject empty strings for unset variables (e.g., DEMO_MODE="").
+    // Treat empty strings as undefined so zod defaults can be applied.
+    const normalizedEnv = Object.fromEntries(
+      Object.entries(process.env).map(([key, value]) => [key, value === "" ? undefined : value])
+    );
+
+    const parsedEnv = envSchema.parse(normalizedEnv);
 
     // Convert non-string values to strings for Next.js compatibility
     return Object.fromEntries(Object.entries(parsedEnv).map(([key, value]) => [key, String(value)]));

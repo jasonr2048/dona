@@ -2,6 +2,7 @@
 
 import Alert, { AlertProps } from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
 import { FileList, FileUploadButton, RemoveButton } from "@components/DonationComponents";
 import styled from "@mui/material/styles/styled";
@@ -12,6 +13,7 @@ import { CONFIG } from "@/config";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { anonymizeData } from "@/services/anonymization";
 import { computeConversationHash, shouldHashConversation } from "@/services/conversationHash";
+import { collectDuplicateCheckFeatures, duplicateCheckFeaturesToCsv } from "@/services/duplicateCheckFeatures";
 import { checkForDuplicateConversations } from "@/app/data-donation/actions";
 import AnonymizationPreview from "@components/AnonymizationPreview";
 import DateRangePicker from "@components/DateRangePicker";
@@ -149,6 +151,24 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
     }
   };
 
+  const handleDownloadDuplicateCheckCsv = () => {
+    if (!anonymizationResult) {
+      return;
+    }
+
+    const features = collectDuplicateCheckFeatures(anonymizationResult.anonymizedConversations, CONFIG.MIN_MESSAGES_FOR_DUPLICATE_CHECK);
+    const csvContent = duplicateCheckFeaturesToCsv(features);
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `duplicate-check-features-${String(dataSourceValue).toLowerCase()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <Box>
       <Typography sx={{ fontWeight: "bold" }}>{donation.t("selectData.instruction")}</Typography>
@@ -174,9 +194,11 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       {isLoading && (
         <LoadingSpinner
           message={
-            loadingStep === 1
-              ? donation.t("anonymisation.processingStep", { step: "1/2" })
-              : donation.t("anonymisation.checkingDuplicatesStep", { step: "2/2" })
+            !duplicateCheckEnabled
+              ? donation.t("anonymisation.processingStep", { step: "1/1" })
+              : loadingStep === 1
+                ? donation.t("anonymisation.processingStep", { step: "1/2" })
+                : donation.t("anonymisation.checkingDuplicatesStep", { step: "2/2" })
           }
         />
       )}
@@ -184,6 +206,9 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       {/* Display anonymized data */}
       {!error && !isLoading && anonymizationResult && filteredConversations && (
         <Box sx={{ my: 3 }}>
+          <Button variant="outlined" sx={{ mb: 2 }} onClick={handleDownloadDuplicateCheckCsv}>
+            Download Duplicate-Check CSV
+          </Button>
           {dataSourceValue !== DataSourceValue.Facebook && dataSourceValue !== DataSourceValue.Instagram && (
             <>
               <DateRangePicker calculatedRange={calculatedRange} setSelectedRange={handleDateRangeChange} />

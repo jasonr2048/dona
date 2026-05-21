@@ -4,13 +4,22 @@ import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
 import { handleFacebookZipFiles, handleInstagramZipFiles } from "@services/parsing/meta/metaHandlers";
 import { extractTxtFilesFromZip } from "@services/parsing/shared/zipExtraction";
 import handleWhatsappTxtFiles from "@services/parsing/whatsapp/whatsappHandler";
+import { getDonationRequirementChecks, getFailedDonationRequirementErrors } from "@services/validation";
 import {
   validateMinChatsForDonation,
   validateMinImportantChatsForDonation,
   validateMinTimePeriodForDonation
 } from "@services/validation";
 
-export async function anonymizeData(dataSourceValue: DataSourceValue, files: File[]): Promise<AnonymizationResult> {
+interface AnonymizeDataOptions {
+  skipValidation?: boolean;
+}
+
+export async function anonymizeData(
+  dataSourceValue: DataSourceValue,
+  files: File[],
+  options: AnonymizeDataOptions = {}
+): Promise<AnonymizationResult> {
   let resultPromise;
   switch (dataSourceValue) {
     case DataSourceValue.WhatsApp:
@@ -43,17 +52,14 @@ export async function anonymizeData(dataSourceValue: DataSourceValue, files: Fil
 
   const result = await resultPromise;
 
-  // Validation for the number of conversations
-  if (!validateMinChatsForDonation(result.anonymizedConversations)) {
-    throw DonationValidationError(DonationErrors.TooFewChats);
+  if (options.skipValidation) {
+    return result;
   }
-  // Validation for the number of "important" conversations (based on number of messages and contacts)
-  if (!validateMinImportantChatsForDonation(result.anonymizedConversations)) {
-    throw DonationValidationError(DonationErrors.TooFewContactsOrMessages);
-  }
-  // Validation for the time period of the conversations
-  if (!validateMinTimePeriodForDonation(result.anonymizedConversations)) {
-    throw DonationValidationError(DonationErrors.TooShortTimePeriod);
+
+  const checks = getDonationRequirementChecks(result.anonymizedConversations);
+  const failures = getFailedDonationRequirementErrors(checks);
+  if (failures.length > 0) {
+    throw DonationValidationError(failures[0] as DonationErrors);
   }
 
   return result;

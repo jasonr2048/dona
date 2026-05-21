@@ -52,6 +52,12 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
 - `DEFAULT_LANGUAGE` — default UI language (must be one of `ENABLED_LANGUAGES`)
 - `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, no duplicate checks, demo notices in flow, sample data downloads on the instructions page, disabled consent PDF download, and no final survey CTA)
 - `DEMO_SHOW_HAS_TOKEN_BUTTON` — set to `true` to show the "I have received my token" button in demo mode
+- `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, demo notices in flow, sample data downloads on feedback page, and no final survey CTA)
+- `NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED` — set to `false` to skip duplicate-donation rejection during upload (default: `true`)
+- `DUPLICATE_DONATION_CHECK_ENABLED` — server-side toggle for duplicate checking, should usually match `NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED` (default: `true`)
+- `NEXT_PUBLIC_MIN_MESSAGES_FOR_DUPLICATE_CHECK` — minimum combined text+audio messages per conversation before a hash is computed (default: `100`)
+- `DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH` — path to a CSV containing allowed duplicate hashes (default: `public/documents/sample-data/duplicate-check-exceptions.csv`)
+- `ENABLED_DATA_SOURCES` — comma-separated list of enabled sources for the donation page (e.g. `WhatsApp,Facebook` or `WA,FB,IG,IMSG`)
 - Ports (configurable):
   - `APP_PORT` — host port to bind the web app to in docker-compose (default: `3000`)
   - `APP_INTERNAL_PORT` — container/internal port the Next.js server listens on (default: `3000`)
@@ -101,6 +107,15 @@ PORT=3001 pnpm dev
 ```bash
 pnpm test
 ```
+
+## Duplicate-Check Exception Workflow
+
+To allow known test exports without disabling duplicate checking globally:
+
+1. Upload the test export in Dona (Data Donation page).
+2. Click **Download Duplicate-Check CSV** after parsing finishes.
+3. Add the CSV rows (or just the `conversationHash` column) to the file at `DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH`.
+4. Restart the app so new environment/config values are reloaded.
 
 ### Checking logs and data
 

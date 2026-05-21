@@ -1,0 +1,3 @@
+conversationHash,dataSource,conversationPseudonym,textMessages,audioMessages,totalMessages,minTimestamp,maxTimestamp
+# Add one row per allowed test conversation hash.
+# Only the first column (conversationHash) is required by duplicate checking.

@@ -12,12 +12,19 @@ interface DownloadButtonsProps {
   labelsBelow?: boolean;
 }
 
-const DownloadButtons: React.FC<DownloadButtonsProps> = ({ chartId, fileNamePrefix, currentLabel, color = "gray", labelsBelow = false }) => {
+const DownloadButtons: React.FC<DownloadButtonsProps> = ({
+  chartId,
+  fileNamePrefix,
+  currentLabel,
+  color = "gray",
+  labelsBelow = false
+}) => {
   const exportOptions = {
     backgroundColor: "#ffffff",
     padding: 20,
     // Exclude elements with the "download-buttons" class from the chart
-    filter: (element: HTMLElement) => !(element.classList?.contains("download-buttons") || element.classList?.contains("export-hidden"))
+    filter: (element: HTMLElement) =>
+      !(element.classList?.contains("download-buttons") || element.classList?.contains("export-hidden"))
   };
 
   const getIconButtonStyle = (hoverContent: string) => ({
@@ -39,7 +46,8 @@ const DownloadButtons: React.FC<DownloadButtonsProps> = ({ chartId, fileNamePref
     if (!chartElement) return;
 
     try {
-      const dataUrl = format === "png" ? await toPng(chartElement, exportOptions) : await toSvg(chartElement, exportOptions);
+      const dataUrl =
+        format === "png" ? await toPng(chartElement, exportOptions) : await toSvg(chartElement, exportOptions);
       const link = document.createElement("a");
       link.href = dataUrl;
       link.download = currentLabel ? `${fileNamePrefix}-${currentLabel}.${format}` : `${fileNamePrefix}.${format}`;

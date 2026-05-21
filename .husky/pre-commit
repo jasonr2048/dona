@@ -1,1 +1,7 @@
-npx lint-staged
+#!/bin/sh
+# Check if pnpm is available, otherwise fall back to npx
+if command -v pnpm >/dev/null 2>&1; then
+  pnpm exec lint-staged
+else
+  npx lint-staged
+fi

@@ -66,13 +66,32 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
 
       // Aggregated data only
       case ChartType.WordCountOverallBarChart:
-        return <CountsOverallBarChart sentWordsTotal={data.basicStatistics.wordsTotal.sent} receivedWordsTotal={data.basicStatistics.wordsTotal.received} mode="text" />;
+        return (
+          <CountsOverallBarChart
+            sentWordsTotal={data.basicStatistics.wordsTotal.sent}
+            receivedWordsTotal={data.basicStatistics.wordsTotal.received}
+            mode="text"
+          />
+        );
       case ChartType.SecondCountOverallBarChart:
-        return <CountsOverallBarChart sentWordsTotal={data.basicStatistics.secondsTotal.sent} receivedWordsTotal={data.basicStatistics.secondsTotal.received} mode="audio" />;
+        return (
+          <CountsOverallBarChart
+            sentWordsTotal={data.basicStatistics.secondsTotal.sent}
+            receivedWordsTotal={data.basicStatistics.secondsTotal.received}
+            mode="audio"
+          />
+        );
       case ChartType.WordCountSlidingWindowMean:
-        return <SentReceivedSlidingWindowChart slidingWindowMeanDailyWords={data.slidingWindowMeanDailyWords} mode="text" />;
+        return (
+          <SentReceivedSlidingWindowChart slidingWindowMeanDailyWords={data.slidingWindowMeanDailyWords} mode="text" />
+        );
       case ChartType.SecondCountSlidingWindowMean:
-        return <SentReceivedSlidingWindowChart slidingWindowMeanDailyWords={data.slidingWindowMeanDailySeconds} mode="audio" />;
+        return (
+          <SentReceivedSlidingWindowChart
+            slidingWindowMeanDailyWords={data.slidingWindowMeanDailySeconds}
+            mode="audio"
+          />
+        );
 
       // Response times
       case ChartType.ResponseTimeBarChart:
@@ -82,11 +101,26 @@ export default function ChartContainer({ type, data }: ChartContainerProps) {
 
       // Daily activity times
       case ChartType.DailyActivityHoursChart:
-        return <DailyActivityChart dataSentPerConversation={data.dailySentHoursPerConversation} listOfConversations={data.focusConversations} />;
+        return (
+          <DailyActivityChart
+            dataSentPerConversation={data.dailySentHoursPerConversation}
+            listOfConversations={data.focusConversations}
+          />
+        );
       case ChartType.DayPartsActivityOverallChart:
-        return <DayPartsActivityOverallChart dailySentHours={data.dailySentHours} dailyReceivedHours={data.dailyReceivedHours} />;
+        return (
+          <DayPartsActivityOverallChart
+            dailySentHours={data.dailySentHours}
+            dailyReceivedHours={data.dailyReceivedHours}
+          />
+        );
       case ChartType.AnimatedDayPartsActivityChart:
-        return <AnimatedDayPartsActivityChart dataSentPerConversation={data.dailySentHoursPerConversation} listOfConversations={data.focusConversations} />;
+        return (
+          <AnimatedDayPartsActivityChart
+            dataSentPerConversation={data.dailySentHoursPerConversation}
+            listOfConversations={data.focusConversations}
+          />
+        );
 
       default:
         return (

@@ -100,9 +100,11 @@
     "contact": {
       "body": "The purpose of this website is to inform you about the background and process of this online study. If any questions or concerns arise during the process, please write to the principal investigator (Prof. Dr. Hanna Drimalla, AG Multimodal Behavior Processing, Technische Fakultät, Universität Bielefeld, <email>drimalla@techfak.uni-bielefeld.de</email>, Tel. +49 521 106-12043)"
     },
-    "demoMode": {
-      "title": "Demo Version",
-      "body": "This is a demo version. No data will be submitted to us, and no compensation can be expected."
+    "enrollment": {
+      "body": "To participate in the study, you need to sign up and get a personal token. This is important to make sure you can get your compensation at the end. If you have already received your token (via email), please continue.",
+      "signUpButton": "I need to sign up",
+      "hasTokenButton": "I have received my token",
+      "signupUrl": "https://landing.dona.tf.uni-bielefeld.de/"
     }
   },
   "learnMore": {

@@ -1,27 +1,27 @@
-import * as SQLite from "@journeyapps/wa-sqlite";
-import SQLiteESMFactory from "@journeyapps/wa-sqlite/dist/wa-sqlite-async.mjs";
-
 import { AnonymizationResult, Conversation, DataSourceValue, Message, MessageAudio } from "@/models/processed";
 import { ChatPseudonyms, ContactPseudonyms } from "@/services/parsing/shared/pseudonyms";
 import { DonationErrors, DonationValidationError } from "@services/errors";
 import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
 import emojiCount from "@services/parsing/shared/emojiCount";
+import { SQLiteAdapter } from "./sqliteAdapter";
+import { WaSQLiteAdapter } from "./waSqliteAdapter";
 
-interface WaSQLiteDB {
-  api: SQLiteAPI;
-  db: number;
-}
-
-export default async function handleImessageDBFiles(files: File[]): Promise<AnonymizationResult> {
+export default async function handleImessageDBFiles(
+  files: File[],
+  dbAdapter?: SQLiteAdapter
+): Promise<AnonymizationResult> {
   if (files.length !== 1) {
     throw DonationValidationError(DonationErrors.NotSingleDBFile);
   }
 
+  // Use provided adapter or default to WaSQLite for browser
+  const adapter = dbAdapter || new WaSQLiteAdapter();
+
   // Get data from database
-  const db = await createDatabase(files[0]);
-  const messages: any[] = await getMessages(db);
-  const groupChats: Map<string, string> = await getGroupChats(db);
-  await db.api.close(db.db);
+  await adapter.open(files[0]);
+  const messages: any[] = await getMessages(adapter);
+  const groupChats: Map<string, string> = await getGroupChats(adapter);
+  await adapter.close();
 
   const aliasConfig = getAliasConfig();
   let donorName = "";
@@ -103,53 +103,8 @@ export default async function handleImessageDBFiles(files: File[]): Promise<Anon
   };
 }
 
-async function createDatabase(file: File): Promise<WaSQLiteDB> {
-  // Initialize wa-sqlite
-  const module = await SQLiteESMFactory();
-  const sqlite3 = SQLite.Factory(module);
-  const api = sqlite3;
-
-  // Read the file data
-  const fileBuffer = await file.arrayBuffer();
-
-  // Create and register a custom VFS that has the file pre-loaded
-  const vfs = await createVFSWithFile(module, "imessage.db", fileBuffer);
-  api.vfs_register(vfs, true);
-
-  // Open the database (it will now read from our pre-populated VFS)
-  const db = await api.open_v2("imessage.db");
-
-  return { api, db };
-}
-
-// Create a simple in-memory VFS with a pre-loaded database file
-async function createVFSWithFile(module: any, filename: string, data: ArrayBuffer) {
-  // Import MemoryAsyncVFS
-  const { MemoryAsyncVFS } = await import("@journeyapps/wa-sqlite/src/examples/MemoryAsyncVFS.js");
-
-  // Create the VFS using the static create method
-  const vfs: any = await (MemoryAsyncVFS as any).create("imessage-vfs", module);
-
-  // Pre-populate the file in the VFS
-  // We do this by accessing the internal map directly
-  const url = new URL(filename, "file://");
-  const pathname = url.pathname;
-
-  vfs.mapNameToFile.set(pathname, {
-    pathname,
-    flags: 0,
-    size: data.byteLength,
-    data: data
-  });
-
-  return vfs;
-}
-
 // Helper function to get messages from the database
-async function getMessages(dbObj: WaSQLiteDB): Promise<any[]> {
-  const { api, db } = dbObj;
-  const messages: any[] = [];
-
+async function getMessages(adapter: SQLiteAdapter): Promise<any[]> {
   const sql = `
     SELECT COALESCE(m.text, '') AS text,
            m.date,
@@ -168,25 +123,11 @@ async function getMessages(dbObj: WaSQLiteDB): Promise<any[]> {
     WHERE m.error = 0 AND c.group_id IS NOT NULL;
   `;
 
-  // Use the statements iterator API
-  for await (const stmt of api.statements(db, sql)) {
-    const cols = api.column_names(stmt);
-
-    while ((await api.step(stmt)) === SQLite.SQLITE_ROW) {
-      const row: any = {};
-      for (let i = 0; i < cols.length; i++) {
-        row[cols[i]] = api.column(stmt, i);
-      }
-      messages.push(row);
-    }
-  }
-
-  return messages;
+  return adapter.query(sql);
 }
 
 // Helper function to get chat information from the database
-async function getGroupChats(dbObj: WaSQLiteDB): Promise<Map<string, string>> {
-  const { api, db } = dbObj;
+async function getGroupChats(adapter: SQLiteAdapter): Promise<Map<string, string>> {
   const groupChats = new Map<string, string>();
 
   const sql = `
@@ -195,14 +136,13 @@ async function getGroupChats(dbObj: WaSQLiteDB): Promise<Map<string, string>> {
     WHERE group_id IS NOT NULL;
   `;
 
-  // Use the statements iterator API
-  for await (const stmt of api.statements(db, sql)) {
-    while ((await api.step(stmt)) === SQLite.SQLITE_ROW) {
-      const group_id = String(api.column(stmt, 0) ?? "");
-      const display_name = String(api.column(stmt, 1) ?? "");
-      groupChats.set(group_id, display_name);
-    }
-  }
+  const results = await adapter.query(sql);
+
+  results.forEach(row => {
+    const group_id = String(row.group_id ?? "");
+    const display_name = String(row.display_name ?? "");
+    groupChats.set(group_id, display_name);
+  });
 
   return groupChats;
 }

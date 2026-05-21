@@ -89,7 +89,9 @@ export default function ConsentModal() {
     }
 
     window.location.href =
-      isDonorSurveyEnabled && donorSurveyLink ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}` : "/data-donation";
+      isDonorSurveyEnabled && donorSurveyLink
+        ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}`
+        : "/data-donation";
   };
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

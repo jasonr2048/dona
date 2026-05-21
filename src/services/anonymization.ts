@@ -4,7 +4,11 @@ import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
 import { handleFacebookZipFiles, handleInstagramZipFiles } from "@services/parsing/meta/metaHandlers";
 import { extractTxtFilesFromZip } from "@services/parsing/shared/zipExtraction";
 import handleWhatsappTxtFiles from "@services/parsing/whatsapp/whatsappHandler";
-import { validateMinChatsForDonation, validateMinImportantChatsForDonation, validateMinTimePeriodForDonation } from "@services/validation";
+import {
+  validateMinChatsForDonation,
+  validateMinImportantChatsForDonation,
+  validateMinTimePeriodForDonation
+} from "@services/validation";
 
 export async function anonymizeData(dataSourceValue: DataSourceValue, files: File[]): Promise<AnonymizationResult> {
   let resultPromise;
@@ -22,7 +26,9 @@ export async function anonymizeData(dataSourceValue: DataSourceValue, files: Fil
         }
       });
 
-      resultPromise = Promise.all(zipFilesPromises).then(unzippedFiles => handleWhatsappTxtFiles(txtFiles.concat(unzippedFiles.flat())));
+      resultPromise = Promise.all(zipFilesPromises).then(unzippedFiles =>
+        handleWhatsappTxtFiles(txtFiles.concat(unzippedFiles.flat()))
+      );
       break;
     case DataSourceValue.Facebook:
       resultPromise = handleFacebookZipFiles(files);

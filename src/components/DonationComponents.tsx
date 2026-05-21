@@ -3,7 +3,15 @@ import { Button, Divider, List, ListItem, ListItemIcon, ListItemText } from "@mu
 import { useTranslations } from "next-intl";
 import React from "react";
 
-export function FileUploadButton({ onChange, loading, accept }: { onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; loading: boolean; accept: string }) {
+export function FileUploadButton({
+  onChange,
+  loading,
+  accept
+}: {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  loading: boolean;
+  accept: string;
+}) {
   const t = useTranslations("donation");
 
   return (
@@ -14,7 +22,13 @@ export function FileUploadButton({ onChange, loading, accept }: { onChange: (e: 
   );
 }
 
-export function RemoveButton({ onClick, loading }: { onClick: React.MouseEventHandler<HTMLButtonElement>; loading: boolean }) {
+export function RemoveButton({
+  onClick,
+  loading
+}: {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  loading: boolean;
+}) {
   const t = useTranslations("donation");
 
   return (

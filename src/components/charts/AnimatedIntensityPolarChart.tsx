@@ -73,11 +73,23 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
   return (
     <Box>
       <Box id={container_name} position="relative" p={2} mb={1}>
-        <Box position="relative" display="flex" justifyContent="space-between" alignItems="center" sx={{ zIndex: 1, ml: 1, mb: -4, color: "#ccc" }}>
+        <Box
+          position="relative"
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ zIndex: 1, ml: 1, mb: -4, color: "#ccc" }}
+        >
           <Typography variant="body2" align="right" sx={{ color: "#ccc" }}>
             <b>{labelTexts("currentMonth")}</b> {labels[currentFrame]}
           </Typography>
-          <DownloadButtons chartId={container_name} fileNamePrefix={CHART_NAME} currentLabel={labels[currentFrame]} color="#d5d5d5" labelsBelow={true} />
+          <DownloadButtons
+            chartId={container_name}
+            fileNamePrefix={CHART_NAME}
+            currentLabel={labels[currentFrame]}
+            color="#d5d5d5"
+            labelsBelow={true}
+          />
         </Box>
         <Box
           position="relative"
@@ -146,7 +158,11 @@ const AnimatedIntensityPolarChart: React.FC<AnimatedIntensityPolarChartProps> = 
         </Box>
       </Box>
 
-      <SliderWithButtons value={currentFrame} marks={labels.map((label, index) => ({ value: index, label }))} setCurrentFrame={setCurrentFrame} />
+      <SliderWithButtons
+        value={currentFrame}
+        marks={labels.map((label, index) => ({ value: index, label }))}
+        setCurrentFrame={setCurrentFrame}
+      />
     </Box>
   );
 };

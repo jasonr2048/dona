@@ -4,7 +4,7 @@ export interface SliderMark {
 }
 
 export function parseYearMonth(label: string): { year: number; month: number } {
-  const [y, m] = label.split('-').map(Number);
+  const [y, m] = label.split("-").map(Number);
   return { year: y, month: m };
 }
 
@@ -45,7 +45,10 @@ export function sparseMarks(all: SliderMark[], maxLabels: number): SliderMark[] 
   // First pass: exact divisors of (n-1) with no singleton hole, maximizing k
   for (let k = kCandidate; k >= 2; k--) {
     if (n - k === 1) continue; // avoid single unlabeled month
-    if (((n - 1) % (k - 1)) === 0) { kCandidate = k; break; }
+    if ((n - 1) % (k - 1) === 0) {
+      kCandidate = k;
+      break;
+    }
   }
 
   // If we didn't find an exact divisor and we landed on a singleton hole, step down once
@@ -59,7 +62,7 @@ export function sparseMarks(all: SliderMark[], maxLabels: number): SliderMark[] 
   const gaps = kCandidate - 1;
   const totalSteps = lastIdx;
   const baseGap = Math.floor(totalSteps / Math.max(gaps, 1));
-  const remainder = gaps > 0 ? (totalSteps % gaps) : 0; // first `remainder` gaps get +1
+  const remainder = gaps > 0 ? totalSteps % gaps : 0; // first `remainder` gaps get +1
 
   const indices: number[] = [0];
   let current = 0;
@@ -70,11 +73,11 @@ export function sparseMarks(all: SliderMark[], maxLabels: number): SliderMark[] 
   }
 
   // Map indices to marks (values align with indices in our usage)
-  const result: SliderMark[] = indices.map((idx) => all[idx]);
+  const result: SliderMark[] = indices.map(idx => all[idx]);
 
   // Safety: Deduplicate by value while preserving order
   const seen = new Set<number>();
-  return result.filter((mark) => {
+  return result.filter(mark => {
     if (seen.has(mark.value)) return false;
     seen.add(mark.value);
     return true;

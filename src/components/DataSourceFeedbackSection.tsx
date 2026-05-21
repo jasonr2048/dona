@@ -18,7 +18,13 @@ import { DataSourceValue } from "@models/processed";
 
 type SectionName = "responseTimes" | "dailyActivityTimes" | "interactionIntensity";
 
-export default function DataSourceFeedbackSection({ dataSourceValue, graphData }: { dataSourceValue: DataSourceValue; graphData: GraphData }) {
+export default function DataSourceFeedbackSection({
+  dataSourceValue,
+  graphData
+}: {
+  dataSourceValue: DataSourceValue;
+  graphData: GraphData;
+}) {
   const showDetailedAudioFeedback = [DataSourceValue.Facebook, DataSourceValue.Instagram].includes(dataSourceValue);
   // console.log("[FEEDBACK][CLIENT] Full graph data:", graphData);  # For development only
   let t = useTranslations("feedback");
@@ -59,7 +65,16 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
   };
 
   const openModalSpan = (content: ReactNode, translator: any, chartName: string) => (
-    <span style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }} onClick={() => openExplanationModal(translator(translator.has(`${chartName}.title`) ? `${chartName}.title` : "title"), translator.raw(`${chartName}.example.text`), translator(`${chartName}.example.image`))}>
+    <span
+      style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }}
+      onClick={() =>
+        openExplanationModal(
+          translator(translator.has(`${chartName}.title`) ? `${chartName}.title` : "title"),
+          translator.raw(`${chartName}.example.text`),
+          translator(`${chartName}.example.image`)
+        )
+      }
+    >
       {content}
     </span>
   );
@@ -70,7 +85,11 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
         <Typography variant="h6">{t("sourceTitle", { source: dataSourceValue })}</Typography>
       </AccordionSummary>
       <AccordionDetails sx={{ width: "100%", overflowX: "hidden" }}>
-        <Stack direction="column" spacing={2} sx={{ display: "flex", textAlign: "center", bgcolor: "background.paper" }}>
+        <Stack
+          direction="column"
+          spacing={2}
+          sx={{ display: "flex", textAlign: "center", bgcolor: "background.paper" }}
+        >
           {/* Statistics card */}
           <Typography variant="h6">{t("statisticsCard.title")}</Typography>
           <StatisticsCard stats={graphData.basicStatistics} />
@@ -101,7 +120,11 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                   })}
                 </Typography>
               </Box>
-              <ChartContainer type={ChartType.AudioLengthsBarChart} data={graphData} dataSourceValue={dataSourceValue} />
+              <ChartContainer
+                type={ChartType.AudioLengthsBarChart}
+                data={graphData}
+                dataSourceValue={dataSourceValue}
+              />
             </>
           )}
           {/* Emoji analysis */}
@@ -134,7 +157,11 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
               })}
             </Typography>
           </Box>
-          <ChartContainer type={ChartType.AnimatedIntensityPolarChart} data={graphData} dataSourceValue={dataSourceValue} />
+          <ChartContainer
+            type={ChartType.AnimatedIntensityPolarChart}
+            data={graphData}
+            dataSourceValue={dataSourceValue}
+          />
           <Box>
             <Typography variant="body1" fontWeight="fontWeightBold">
               {ii("animatedWordsPerChatBarChart.title")}
@@ -145,7 +172,11 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
               })}
             </Typography>
           </Box>
-          <ChartContainer type={ChartType.AnimatedWordsPerChatBarChart} data={graphData} dataSourceValue={dataSourceValue} />
+          <ChartContainer
+            type={ChartType.AnimatedWordsPerChatBarChart}
+            data={graphData}
+            dataSourceValue={dataSourceValue}
+          />
           {showDetailedAudioFeedback && (
             <>
               <Box>
@@ -158,7 +189,11 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
                   })}
                 </Typography>
               </Box>
-              <ChartContainer type={ChartType.AnimatedSecondsPerChatBarChart} data={graphData} dataSourceValue={dataSourceValue} />
+              <ChartContainer
+                type={ChartType.AnimatedSecondsPerChatBarChart}
+                data={graphData}
+                dataSourceValue={dataSourceValue}
+              />
             </>
           )}
           <Button onClick={() => openSectionModal("interactionIntensity")}>{ii("moreAbout")}</Button>
@@ -190,10 +225,24 @@ export default function DataSourceFeedbackSection({ dataSourceValue, graphData }
       </AccordionDetails>
 
       {/* ChartExplanationModal */}
-      <ChartExplanationModal open={isModalOpen} onClose={closeExplanationModal} title={modalContent?.title || ""} contentHtml={modalContent?.contentHtml || ""} imageSrc={modalContent?.imageSrc} />
+      <ChartExplanationModal
+        open={isModalOpen}
+        onClose={closeExplanationModal}
+        title={modalContent?.title || ""}
+        contentHtml={modalContent?.contentHtml || ""}
+        imageSrc={modalContent?.imageSrc}
+      />
 
       {/* MoreChartsModal */}
-      {currentSection && <MoreChartsModal open={isSectionModalOpen} onClose={closeSectionModal} graphData={graphData} section={currentSection} showDetailedAudioFeedback={showDetailedAudioFeedback} />}
+      {currentSection && (
+        <MoreChartsModal
+          open={isSectionModalOpen}
+          onClose={closeSectionModal}
+          graphData={graphData}
+          section={currentSection}
+          showDetailedAudioFeedback={showDetailedAudioFeedback}
+        />
+      )}
     </Accordion>
   );
 }

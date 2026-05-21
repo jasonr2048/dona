@@ -5,7 +5,10 @@ import { ChatPseudonyms, ContactPseudonyms } from "@services/parsing/shared/pseu
 import wordCount from "@services/parsing/shared/wordCount";
 import { ParsedMessage } from "@services/parsing/whatsapp/whatsappParser";
 
-export default async function deIdentify(parsedFiles: ParsedMessage[][], donorName: string): Promise<AnonymizationResult> {
+export default async function deIdentify(
+  parsedFiles: ParsedMessage[][],
+  donorName: string
+): Promise<AnonymizationResult> {
   const aliasConfig = getAliasConfig();
   const contactPseudonyms = new ContactPseudonyms(aliasConfig.contactAlias, aliasConfig.systemAlias);
   const chatPseudonyms = new ChatPseudonyms(aliasConfig.donorAlias, aliasConfig.chatAlias, DataSourceValue.WhatsApp);
@@ -17,7 +20,9 @@ export default async function deIdentify(parsedFiles: ParsedMessage[][], donorNa
     const participantPseudonyms = new Set<string>();
 
     // Filter out system messages
-    const filteredMessages: ParsedMessage[] = parsedMessaged.filter(parsedMessage => parsedMessage.message && parsedMessage.author != aliasConfig.systemAlias); // Filter out system messages
+    const filteredMessages: ParsedMessage[] = parsedMessaged.filter(
+      parsedMessage => parsedMessage.message && parsedMessage.author != aliasConfig.systemAlias
+    ); // Filter out system messages
 
     console.log("Processing conversation", conv_idx + 1, "with", parsedMessaged.length, "messages");
     console.log("Filtered messages count:", filteredMessages.length);

@@ -23,6 +23,7 @@ import { useRichTranslations } from "@/hooks/useRichTranslations";
 import produceGraphData from "@/services/charts/produceGraphData";
 import { useAliasConfig } from "@/services/parsing/shared/aliasConfig";
 import { MainTitle, RichText } from "@/styles/StyledTypography";
+import { ENABLED_DATA_SOURCES } from "@/config";
 import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@components/CustomIcon";
 import { Conversation, DataSourceValue } from "@models/processed";
 import { getErrorMessage } from "@services/errors";
@@ -46,7 +47,9 @@ export default function DataDonationPage() {
   const [allDonatedConversationsBySource, setAllDonatedConversationsBySource] = useState<ConversationsBySource>(
     {} as ConversationsBySource
   );
-  const [feedbackChatsBySource, setFeedbackChatsBySource] = useState<SelectedChatsBySource>({} as SelectedChatsBySource);
+  const [feedbackChatsBySource, setFeedbackChatsBySource] = useState<SelectedChatsBySource>(
+    {} as SelectedChatsBySource
+  );
   const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -173,7 +176,15 @@ export default function DataDonationPage() {
       >
         {isDemoMode && (
           <Box
-            sx={{ width: "100%", mb: 2, border: "2px solid", borderColor: "warning.main", borderRadius: 2, p: 2, bgcolor: "warning.light" }}
+            sx={{
+              width: "100%",
+              mb: 2,
+              border: "2px solid",
+              borderColor: "warning.main",
+              borderRadius: 2,
+              p: 2,
+              bgcolor: "warning.light"
+            }}
           >
             <Typography variant="h6">{donation.t("demoMode.title")}</Typography>
             <RichText sx={{ mb: 0 }}>{donation.t("demoMode.body")}</RichText>
@@ -214,7 +225,7 @@ export default function DataDonationPage() {
           </Box>
         )}
         <Box sx={{ my: 4, minWidth: "80%", textAlign: "left" }}>
-          {[DataSourceValue.WhatsApp, DataSourceValue.Facebook, DataSourceValue.Instagram, DataSourceValue.IMessage].map(source => (
+          {ENABLED_DATA_SOURCES.map(source => (
             <Accordion key={source} sx={{ my: 1 }}>
               <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
                 {source === DataSourceValue.WhatsApp && <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />}
@@ -230,7 +241,9 @@ export default function DataDonationPage() {
               <AccordionDetails>
                 <DonationDataSelector
                   dataSourceValue={source}
-                  onDonatedConversationsChange={newConversations => handleDonatedConversationsChange(source, newConversations)}
+                  onDonatedConversationsChange={newConversations =>
+                    handleDonatedConversationsChange(source, newConversations)
+                  }
                   onFeedbackChatsChange={newFeedbackChats => handleFeedbackChatsChange(source, newFeedbackChats)}
                 />
               </AccordionDetails>

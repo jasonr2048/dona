@@ -1,7 +1,12 @@
 import { AnonymizationResult, DataSourceValue } from "@models/processed";
 import { DonationErrors, DonationValidationError } from "@services/errors";
 import { decode, processJsonContent } from "@services/parsing/shared/decoding";
-import { extractEntriesFromZips, getEntryText, isMatchingEntry, ValidEntry } from "@services/parsing/shared/zipExtraction";
+import {
+  extractEntriesFromZips,
+  getEntryText,
+  isMatchingEntry,
+  ValidEntry
+} from "@services/parsing/shared/zipExtraction";
 
 import deIdentify from "./deIdentify";
 
@@ -19,11 +24,21 @@ export interface ParsedConversation {
 }
 
 export async function handleInstagramZipFiles(fileList: File[]): Promise<AnonymizationResult> {
-  return handleMetaZipFiles(fileList, "personal_information.json", extractDonorNameFromInstagramProfile, DataSourceValue.Instagram);
+  return handleMetaZipFiles(
+    fileList,
+    "personal_information.json",
+    extractDonorNameFromInstagramProfile,
+    DataSourceValue.Instagram
+  );
 }
 
 export async function handleFacebookZipFiles(fileList: File[]): Promise<AnonymizationResult> {
-  return handleMetaZipFiles(fileList, "profile_information.json", extractDonorNameFromFacebookProfile, DataSourceValue.Facebook);
+  return handleMetaZipFiles(
+    fileList,
+    "profile_information.json",
+    extractDonorNameFromFacebookProfile,
+    DataSourceValue.Facebook
+  );
 }
 
 const extractDonorNameFromFacebookProfile = (profileText: string): string => {
@@ -39,8 +54,9 @@ const extractDonorNameFromFacebookProfile = (profileText: string): string => {
 
 const extractDonorNameFromInstagramProfile = (profileText: string): string => {
   interface ProfileUser {
-    string_map_data: {
-      Name: { value: string };
+    string_map_data?: {
+      Name?: { value?: string };
+      Username?: { value?: string };
     };
   }
 
@@ -48,15 +64,26 @@ const extractDonorNameFromInstagramProfile = (profileText: string): string => {
     profile_user: ProfileUser[];
   }
 
-  const profileJson: ProfileInfo = JSON.parse(profileText);
+  let profileJson: ProfileInfo;
+  try {
+    profileJson = JSON.parse(profileText);
+  } catch {
+    throw DonationValidationError(DonationErrors.NoDonorNameFound);
+  }
 
-  const name = profileJson?.profile_user?.[0]?.string_map_data?.Name?.value;
+  const stringMap = profileJson?.profile_user?.[0]?.string_map_data;
+  const name = stringMap?.Name?.value ?? stringMap?.Username?.value;
   if (name) return decode(name);
 
   throw DonationValidationError(DonationErrors.NoDonorNameFound);
 };
 
-async function handleMetaZipFiles(fileList: File[], profileInfoFilePattern: string, userNameExtractor: (profileText: string) => string, dataSourceValue: DataSourceValue): Promise<AnonymizationResult> {
+async function handleMetaZipFiles(
+  fileList: File[],
+  profileInfoFilePattern: string,
+  userNameExtractor: (profileText: string) => string,
+  dataSourceValue: DataSourceValue
+): Promise<AnonymizationResult> {
   const allEntries: ValidEntry[] = await extractEntriesFromZips(fileList);
 
   // Check for the presence of profile information
@@ -65,7 +92,9 @@ async function handleMetaZipFiles(fileList: File[], profileInfoFilePattern: stri
     throw DonationValidationError(DonationErrors.NoProfile);
   }
   // Filter for message entries
-  const messageEntries = allEntries.filter(entry => isMatchingEntry(entry, "message.json") || isMatchingEntry(entry, "message_1.json"));
+  const messageEntries = allEntries.filter(
+    entry => isMatchingEntry(entry, "message.json") || isMatchingEntry(entry, "message_1.json")
+  );
   if (messageEntries.length < 1) {
     throw DonationValidationError(DonationErrors.NoMessageEntries);
   }
@@ -83,6 +112,10 @@ async function handleMetaZipFiles(fileList: File[], profileInfoFilePattern: stri
     // Process the extracted data
     return deIdentify(parsedConversations, audioEntries, donorName, dataSourceValue);
   } catch (error) {
+    // Keep actionable validation reasons for the UI instead of collapsing to UnknownError.
+    if (error && typeof error === "object" && "reason" in error) {
+      throw error;
+    }
     throw DonationValidationError(DonationErrors.UnknownError);
   }
 }

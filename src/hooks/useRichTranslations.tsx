@@ -35,7 +35,12 @@ export function useRichTranslations(namespace: string) {
     {
       [namespace]: {
         t: translate,
-        rich: (key: string, urlKeys?: Record<string, string>, newTab: boolean = true, templateValues?: Record<string, any>) =>
+        rich: (
+          key: string,
+          urlKeys?: Record<string, string>,
+          newTab: boolean = true,
+          templateValues?: Record<string, any>
+        ) =>
           translate.rich(key, {
             ...makeLinkHandlers(urlKeys, newTab),
             br: () => <br />,

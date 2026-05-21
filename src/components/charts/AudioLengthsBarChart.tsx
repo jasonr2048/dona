@@ -72,8 +72,12 @@ const AudioLengthsBarChart: React.FC<AudioLengthsBarChartProps> = ({ audioLength
   const contactTotalAudioMessages = Object.values(binnedDistribution.received).reduce((sum, count) => sum + count, 0);
 
   // Calculate percentages for each range
-  const donorPercentages = donorCounts.map(count => (donorTotalAudioMessages > 0 ? (count / donorTotalAudioMessages) * 100 : 0));
-  const contactPercentages = contactCounts.map(count => (contactTotalAudioMessages > 0 ? (count / contactTotalAudioMessages) * 100 : 0));
+  const donorPercentages = donorCounts.map(count =>
+    donorTotalAudioMessages > 0 ? (count / donorTotalAudioMessages) * 100 : 0
+  );
+  const contactPercentages = contactCounts.map(count =>
+    contactTotalAudioMessages > 0 ? (count / contactTotalAudioMessages) * 100 : 0
+  );
 
   // Create datasets for the chart
   const datasets = [

@@ -100,9 +100,11 @@
     "contact": {
       "body": "Հարցերի դեպքում խնդրում ենք կապ հաստատել ծրագրի ղեկավար պրոֆ․ դր․ Հաննա Դրիմալլայի հետ (AG Multimodal Behavior Processing, Technische Fakultät, Universität Bielefeld, <email>drimalla@techfak.uni-bielefeld.de</email>, հեռ. +49 521 106-12043)"
     },
-    "demoMode": {
-      "title": "Դեմո տարբերակ",
-      "body": "Սա դեմո տարբերակ է։ Տվյալները մեզ չեն ուղարկվում, և փոխհատուցում չի նախատեսվում։"
+    "enrollment": {
+      "body": "Ուսումնասիրությանը մասնակցելու համար անհրաժեշտ է գրանցվել և ստանալ անձնական token։ Սա կարևոր է, որպեսզի վերջում կարողանաք ստանալ նախատեսված փոխհատուցումը։ Եթե արդեն ստացել եք token-ը (էլ. փոստով), խնդրում ենք շարունակել։",
+      "signUpButton": "Պետք է գրանցվեմ",
+      "hasTokenButton": "Ես ստացել եմ իմ token-ը",
+      "signupUrl": "https://landing.dona.tf.uni-bielefeld.de/"
     }
   },
   "learnMore": {

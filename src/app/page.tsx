@@ -13,7 +13,6 @@ import { BlockTitle, MainTitle, RichText } from "@/styles/StyledTypography";
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 export default function HomePage() {
-  const actions = useRichTranslations("actions");
   const landing = useRichTranslations("landing");
 
   return (
@@ -84,7 +83,14 @@ export default function HomePage() {
           <MainTitle variant="h5">{landing.t("donationInfo.title")}</MainTitle>
           <Grid container spacing={3} justifyContent="center">
             {["dataRequest", "anonymisation", "storage"].map(section => (
-              <Grid container key={section} spacing={3} size={{ xs: 12 }} flexDirection={{ xs: "column", md: "row" }} alignItems="center">
+              <Grid
+                container
+                key={section}
+                spacing={3}
+                size={{ xs: 12 }}
+                flexDirection={{ xs: "column", md: "row" }}
+                alignItems="center"
+              >
                 {/* Image Box */}
                 <Grid size={{ xs: 12, md: 6 }} display="flex" justifyContent="center">
                   <Box sx={{ width: 260, mx: "auto", display: "flex", justifyContent: "center" }}>
@@ -116,11 +122,30 @@ export default function HomePage() {
           <RichText sx={{ fontStyle: "italic" }}>{landing.rich("contact.body")}</RichText>
         </Box>
 
-        {/* Start Button */}
-        <Box>
-          <LinkButton variant="contained" href="/instructions">
-            {actions.t("start")}
-          </LinkButton>
+        {/* Enrollment Section */}
+        <Box
+          sx={{
+            width: "100%",
+            border: "2px solid",
+            borderColor: "warning.main",
+            borderRadius: 2,
+            p: 3,
+            bgcolor: "warning.light"
+          }}
+        >
+          <RichText sx={{ fontWeight: 700, mb: 2 }}>{landing.t("enrollment.body")}</RichText>
+          <Stack
+            spacing={2}
+            direction={{ xs: "column", sm: "row" }}
+            sx={{ justifyContent: "center", alignItems: "center" }}
+          >
+            <LinkButton variant="outlined" href={landing.t("enrollment.signupUrl")} target="_blank">
+              {landing.t("enrollment.signUpButton")}
+            </LinkButton>
+            <LinkButton variant="contained" href="/instructions">
+              {landing.t("enrollment.hasTokenButton")}
+            </LinkButton>
+          </Stack>
         </Box>
       </Stack>
     </Container>

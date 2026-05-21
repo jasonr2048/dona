@@ -48,7 +48,18 @@ export default function DatasourceSpecificInstructions({ dataSource }: { dataSou
       {verticalVideo ? (
         <Grid container spacing={2} alignItems="flex-start">
           <FirstBlock halfWidth />
-          <Grid size={{ xs: 12, md: 6 }}>{isWhatsApp ? <TabbedInstructionVideo iosVideoUrl={source.t("video.ios")} androidVideoUrl={source.t("video.android")} iosCaption={source.t("video.iosCaption")} androidCaption={source.t("video.androidCaption")} /> : <InstructionVideo videoUrl={source.t("video")} />}</Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            {isWhatsApp ? (
+              <TabbedInstructionVideo
+                iosVideoUrl={source.t("video.ios")}
+                androidVideoUrl={source.t("video.android")}
+                iosCaption={source.t("video.iosCaption")}
+                androidCaption={source.t("video.androidCaption")}
+              />
+            ) : (
+              <InstructionVideo videoUrl={source.t("video")} />
+            )}
+          </Grid>
         </Grid>
       ) : (
         <>

@@ -1,5 +1,14 @@
-export function createListOfConversations(conversationContacts: string[][], chat: string, chatInitial: string, chatWith: string, contactInitial: string, systemName: string): string[] {
-  const conversationsWithoutSystem = conversationContacts.map(conversation => conversation.filter(contact => contact !== systemName));
+export function createListOfConversations(
+  conversationContacts: string[][],
+  chat: string,
+  chatInitial: string,
+  chatWith: string,
+  contactInitial: string,
+  systemName: string
+): string[] {
+  const conversationsWithoutSystem = conversationContacts.map(conversation =>
+    conversation.filter(contact => contact !== systemName)
+  );
 
   return conversationsWithoutSystem.map((contacts, index) => {
     const shortenedContacts = contacts.map(contact => shortenContactPseudonym(contact, contactInitial, systemName));

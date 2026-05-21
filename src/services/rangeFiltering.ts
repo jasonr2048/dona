@@ -4,7 +4,10 @@ import { RangeErrors } from "@services/errors";
 
 export type NullableRange = [Date | null, Date | null];
 
-export function calculateMinMaxDates(conversations: Conversation[], textOnly: boolean = false): { minDate: Date | null; maxDate: Date | null } {
+export function calculateMinMaxDates(
+  conversations: Conversation[],
+  textOnly: boolean = false
+): { minDate: Date | null; maxDate: Date | null } {
   let min = Infinity;
   let max = -Infinity;
 

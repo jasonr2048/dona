@@ -12,7 +12,10 @@ interface DayPartsActivityOverallPlotProps {
   dailyReceivedHours: DailyHourPoint[];
 }
 
-const DayPartsActivityOverallChart: React.FC<DayPartsActivityOverallPlotProps> = ({ dailySentHours, dailyReceivedHours }) => {
+const DayPartsActivityOverallChart: React.FC<DayPartsActivityOverallPlotProps> = ({
+  dailySentHours,
+  dailyReceivedHours
+}) => {
   const CHART_NAME = "dayparts-activity-overall-barchart";
   const container_name = `chart-wrapper-${CHART_NAME}`;
 

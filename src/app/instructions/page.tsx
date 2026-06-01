@@ -13,11 +13,13 @@ import { useTranslations } from "next-intl";
 
 import { LinkButton } from "@/components/LinkButton";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
+import { ENABLED_DATA_SOURCES } from "@/config";
 import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@components/CustomIcon";
 import DatasourceSpecificInstructions from "@components/DatasourceSpecificInstructions";
 import { DataSourceValue } from "@models/processed";
 
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const isUploadTestEnabled = process.env.NEXT_PUBLIC_UPLOAD_TEST_ENABLED !== "false";
 
 const sampleDataFiles = [
   {
@@ -34,6 +36,12 @@ const sampleDataFiles = [
     href: "/documents/sample-data/valid_data.db"
   }
 ] as const;
+
+const getDataSourceLabel = (source: DataSourceValue) => {
+  if (source === DataSourceValue.IMessage) return "iMessage";
+  if (source === DataSourceValue.WhatsApp) return "Whatsapp";
+  return source;
+};
 
 export default function Instructions() {
   const a = useTranslations("actions");
@@ -93,54 +101,22 @@ export default function Instructions() {
         )}
 
         <Box sx={{ my: 4 }}>
-          {/* WhatsApp */}
-          <Accordion sx={{ my: 1 }}>
-            <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-              <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">
-                {instructions.t("datasource.title_format", { datasource: "Whatsapp" })}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <DatasourceSpecificInstructions dataSource={DataSourceValue.WhatsApp} />
-            </AccordionDetails>
-          </Accordion>
-          {/* Facebook */}
-          <Accordion sx={{ my: 1 }}>
-            <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-              <FacebookIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">
-                {instructions.t("datasource.title_format", { datasource: "Facebook" })}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <DatasourceSpecificInstructions dataSource={DataSourceValue.Facebook} />
-            </AccordionDetails>
-          </Accordion>
-          {/* Instagram */}
-          <Accordion sx={{ my: 1 }}>
-            <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-              <InstagramIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">
-                {instructions.t("datasource.title_format", { datasource: "Instagram" })}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <DatasourceSpecificInstructions dataSource={DataSourceValue.Instagram} />
-            </AccordionDetails>
-          </Accordion>
-          {/* iMessage */}
-          <Accordion sx={{ my: 1 }}>
-            <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-              <IMessageIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">
-                {instructions.t("datasource.title_format", { datasource: "iMessage" })}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <DatasourceSpecificInstructions dataSource={DataSourceValue.IMessage} />
-            </AccordionDetails>
-          </Accordion>
+          {ENABLED_DATA_SOURCES.map(source => (
+            <Accordion key={source} sx={{ my: 1 }}>
+              <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
+                {source === DataSourceValue.WhatsApp && <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />}
+                {source === DataSourceValue.Facebook && <FacebookIcon sx={{ mr: 1, mt: 0.5 }} />}
+                {source === DataSourceValue.Instagram && <InstagramIcon sx={{ mr: 1, mt: 0.5 }} />}
+                {source === DataSourceValue.IMessage && <IMessageIcon sx={{ mr: 1, mt: 0.5 }} />}
+                <Typography variant="h6">
+                  {instructions.t("datasource.title_format", { datasource: getDataSourceLabel(source) })}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <DatasourceSpecificInstructions dataSource={source} />
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </Box>
         <Box>
           <Typography variant="body1">{instructions.t("continue.body")}</Typography>
@@ -151,7 +127,7 @@ export default function Instructions() {
             <LinkButton variant="contained" href="/">
               {a("previous")}
             </LinkButton>
-            <LinkButton variant="contained" href="/upload-test">
+            <LinkButton variant="contained" href={isUploadTestEnabled ? "/upload-test" : "/data-donation"}>
               {a("next")}
             </LinkButton>
           </Stack>

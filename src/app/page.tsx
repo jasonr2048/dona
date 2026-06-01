@@ -12,9 +12,11 @@ import { BlockTitle, MainTitle, RichText } from "@/styles/StyledTypography";
 
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const isDemoShowHasTokenButton = process.env.NEXT_PUBLIC_DEMO_SHOW_HAS_TOKEN_BUTTON === "true";
+const isTokenRequired = process.env.NEXT_PUBLIC_TOKEN_REQUIRED !== "false";
 
 export default function HomePage() {
   const landing = useRichTranslations("landing");
+  const actions = useRichTranslations("actions");
 
   return (
     <Container maxWidth="md" sx={{ flexGrow: 1 }}>
@@ -143,18 +145,22 @@ export default function HomePage() {
             bgcolor: "warning.light"
           }}
         >
-          <RichText sx={{ fontWeight: 700, mb: 2 }}>{landing.t("enrollment.body")}</RichText>
+          <RichText sx={{ fontWeight: 700, mb: 2 }}>
+            {isTokenRequired ? landing.t("enrollment.body") : landing.t("enrollment.noTokenBody")}
+          </RichText>
           <Stack
             spacing={2}
             direction={{ xs: "column", sm: "row" }}
             sx={{ justifyContent: "center", alignItems: "center" }}
           >
-            <LinkButton variant="outlined" href={landing.t("enrollment.signupUrl")} target="_blank">
-              {landing.t("enrollment.signUpButton")}
-            </LinkButton>
-            {(!isDemoMode || isDemoShowHasTokenButton) && (
+            {isTokenRequired ? (
+              <LinkButton variant="outlined" href={landing.t("enrollment.signupUrl")} target="_blank">
+                {landing.t("enrollment.signUpButton")}
+              </LinkButton>
+            ) : null}
+            {(!isTokenRequired || !isDemoMode || isDemoShowHasTokenButton) && (
               <LinkButton variant="contained" href="/instructions">
-                {landing.t("enrollment.hasTokenButton")}
+                {isTokenRequired ? landing.t("enrollment.hasTokenButton") : actions.t("donate")}
               </LinkButton>
             )}
           </Stack>

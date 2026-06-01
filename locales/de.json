@@ -101,6 +101,7 @@
     },
     "enrollment": {
       "body": "Um an der Studie teilzunehmen, müssen Sie sich anmelden und einen persönlichen Token erhalten. Das ist wichtig, damit Sie am Ende Ihre Vergütung erhalten können. Wenn Sie Ihren Token bereits per E-Mail erhalten haben, machen Sie bitte weiter.",
+      "noTokenBody": "Sie können ohne Token teilnehmen. Bitte fahren Sie mit den Datenspende-Schritten fort.",
       "signUpButton": "Ich muss mich anmelden",
       "hasTokenButton": "Ich habe meinen Token erhalten",
       "signupUrl": "https://landing.dona.tf.uni-bielefeld.de/"

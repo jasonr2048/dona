@@ -1,3 +1,5 @@
+import { DataSourceValue } from "@/models/processed";
+
 const SUPPORTED_LOCALES = ["en", "de", "hy"] as const;
 
 export type Locale = (typeof SUPPORTED_LOCALES)[number];

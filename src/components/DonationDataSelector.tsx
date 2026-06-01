@@ -24,6 +24,7 @@ import { calculateMinMaxDates, filterDataByRange, NullableRange, validateDateRan
 import { validateMinChatsForDonation, validateMinImportantChatsForDonation } from "@services/validation";
 
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const duplicateCheckEnabled = !isDemoMode && CONFIG.DUPLICATE_DONATION_CHECK_ENABLED;
 
 const UploadAlert = styled((props: AlertProps) => <Alert severity="error" {...props} />)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -78,7 +79,7 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
 
       let conversationsWithHashes = result.anonymizedConversations;
 
-      if (!isDemoMode) {
+      if (duplicateCheckEnabled) {
         // Step 2: Compute hashes and check for duplicates with server
         setLoadingStep(2);
         conversationsWithHashes = result.anonymizedConversations.map(convo => {
@@ -156,7 +157,10 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       return;
     }
 
-    const features = collectDuplicateCheckFeatures(anonymizationResult.anonymizedConversations, CONFIG.MIN_MESSAGES_FOR_DUPLICATE_CHECK);
+    const features = collectDuplicateCheckFeatures(
+      anonymizationResult.anonymizedConversations,
+      CONFIG.MIN_MESSAGES_FOR_DUPLICATE_CHECK
+    );
     const csvContent = duplicateCheckFeaturesToCsv(features);
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);

@@ -50,8 +50,11 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
 - `DONOR_ID_INPUT_METHOD`, `DONOR_SURVEY_ENABLED`, `FEEDBACK_SURVEY_ENABLED`, `DONOR_SURVEY_LINK`, `FEEDBACK_SURVEY_LINK` — feature flags/links
 - `ENABLED_LANGUAGES` — comma-separated active UI languages (supported values: `en,de,hy`)
 - `DEFAULT_LANGUAGE` — default UI language (must be one of `ENABLED_LANGUAGES`)
+- `BROWSER_LANGUAGE_ENABLED` — set to `true` to use the browser language when no locale cookie is set (default: `false`)
 - `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, no duplicate checks, demo notices in flow, sample data downloads on the instructions page, disabled consent PDF download, and no final survey CTA)
 - `DEMO_SHOW_HAS_TOKEN_BUTTON` — set to `true` to show the "I have received my token" button in demo mode
+- `UPLOAD_TEST_ENABLED` — set to `false` to skip the data file testing step before upload (default: `true`)
+- `TOKEN_REQUIRED` — set to `false` to allow users to proceed without a token (default: `true`)
 - `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, demo notices in flow, sample data downloads on feedback page, and no final survey CTA)
 - `NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED` — set to `false` to skip duplicate-donation rejection during upload (default: `true`)
 - `DUPLICATE_DONATION_CHECK_ENABLED` — server-side toggle for duplicate checking, should usually match `NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED` (default: `true`)

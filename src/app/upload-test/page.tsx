@@ -9,21 +9,37 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import ConsentModal from "@/components/ConsentModal";
 import { LinkButton } from "@/components/LinkButton";
 import UploadTestSelector from "@/components/UploadTestSelector";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { MainTitle, RichText } from "@/styles/StyledTypography";
+import { ENABLED_DATA_SOURCES } from "@/config";
 import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@components/CustomIcon";
 import { DataSourceValue } from "@models/processed";
 
 export default function UploadTestPage() {
+  const router = useRouter();
   const actions = useTranslations("actions");
   const testUpload = useRichTranslations("testUpload");
+  const isUploadTestEnabled = process.env.NEXT_PUBLIC_UPLOAD_TEST_ENABLED !== "false";
 
-  const [validBySource, setValidBySource] = useState<Record<DataSourceValue, boolean>>({} as Record<DataSourceValue, boolean>);
+  const [validBySource, setValidBySource] = useState<Record<DataSourceValue, boolean>>(
+    {} as Record<DataSourceValue, boolean>
+  );
+
+  useEffect(() => {
+    if (!isUploadTestEnabled) {
+      router.replace("/data-donation");
+    }
+  }, [isUploadTestEnabled, router]);
+
+  if (!isUploadTestEnabled) {
+    return null;
+  }
 
   const hasValidSource = useMemo(() => Object.values(validBySource).some(Boolean), [validBySource]);
 
@@ -49,7 +65,7 @@ export default function UploadTestPage() {
         <RichText>{testUpload.t("placeholder")}</RichText>
 
         <Box sx={{ my: 4, minWidth: "80%", textAlign: "left" }}>
-          {[DataSourceValue.WhatsApp, DataSourceValue.Facebook, DataSourceValue.Instagram, DataSourceValue.IMessage].map(source => (
+          {ENABLED_DATA_SOURCES.map(source => (
             <Accordion key={source} sx={{ my: 1 }}>
               <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
                 {source === DataSourceValue.WhatsApp && <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />}
@@ -63,14 +79,21 @@ export default function UploadTestPage() {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <UploadTestSelector dataSourceValue={source} onValidationChange={isValid => handleValidationChange(source, isValid)} />
+                <UploadTestSelector
+                  dataSourceValue={source}
+                  onValidationChange={isValid => handleValidationChange(source, isValid)}
+                />
               </AccordionDetails>
             </Accordion>
           ))}
         </Box>
 
         <Box>
-          <Stack spacing={2} direction={{ xs: "column", sm: "row" }} sx={{ justifyContent: "center", alignItems: "center" }}>
+          <Stack
+            spacing={2}
+            direction={{ xs: "column", sm: "row" }}
+            sx={{ justifyContent: "center", alignItems: "center" }}
+          >
             <LinkButton variant="contained" href="/instructions">
               {actions("previous")}
             </LinkButton>

@@ -1,5 +1,20 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+
+// This is a devcontainer.json file for a development container definition. It specifies the base image to use for the container, as well as any features or customizations to include. The file can also specify commands to run after the container is created, and ports to forward from the container to the host machine. The configuration options are documented in the links provided in the comments.
+// For format details, see https://aka.ms/devcontainer.json.
+// One should clone this repository and open the folder in VS Code to use the dev container.
+// For first setup do the following steps:
+// 1. Install Docker and VS Code on your machine.
+// 2. Install the "Remote - Containers" extension in VS Code.
+// 3. Open the folder containing this devcontainer.json file in VS Code.
+// 4. When prompted, select "Reopen in Container" to build and start the development container.
+// Otherwise do the following steps:
+// 1. Open the Command Palette in VS Code (Ctrl+Shift+P or Cmd+Shift+P).
+// 2. Type "Remote-Containers: Reopen in Container" or "Rebuild Container" and select the appropriate option to start the development container.
+// inside the container you will have the necessary tools and environment to work on your project, and any changes you make will be saved to your local file system.
+// Afterwards follow the instructions in the README.md file to set up the project and start working on it.
+
 {
   "name": "Ubuntu",
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile

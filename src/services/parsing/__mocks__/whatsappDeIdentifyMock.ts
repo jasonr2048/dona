@@ -20,6 +20,9 @@ export default jest.fn(
       dataSource: DataSourceValue.WhatsApp,
       id: `mock_chat_${idx + 1}`
     })),
+    posts: [],
+    comments: [],
+    reactions: [],
     participantNamesToPseudonyms: { [donorName]: "Donor" },
     chatMappingToShow: new Map<string, string[]>()
   })

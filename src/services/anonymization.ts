@@ -1,4 +1,5 @@
 import { AnonymizationResult, DataSourceValue } from "@models/processed";
+import { CONFIG } from "@/config";
 import { DonationErrors, DonationValidationError } from "@services/errors";
 import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
 import { handleFacebookZipFiles, handleInstagramZipFiles } from "@services/parsing/meta/metaHandlers";
@@ -13,6 +14,7 @@ import {
 
 interface AnonymizeDataOptions {
   skipValidation?: boolean;
+  includePublicContent?: boolean;
 }
 
 export async function anonymizeData(
@@ -21,6 +23,7 @@ export async function anonymizeData(
   options: AnonymizeDataOptions = {}
 ): Promise<AnonymizationResult> {
   let resultPromise;
+  const includePublicContent = options.includePublicContent ?? CONFIG.PUBLIC_DATA_DONATION_ENABLED;
   switch (dataSourceValue) {
     case DataSourceValue.WhatsApp:
       const txtFiles: File[] = [];
@@ -40,10 +43,10 @@ export async function anonymizeData(
       );
       break;
     case DataSourceValue.Facebook:
-      resultPromise = handleFacebookZipFiles(files);
+      resultPromise = handleFacebookZipFiles(files, { includePublicContent });
       break;
     case DataSourceValue.Instagram:
-      resultPromise = handleInstagramZipFiles(files);
+      resultPromise = handleInstagramZipFiles(files, { includePublicContent });
       break;
     case DataSourceValue.IMessage:
       resultPromise = handleImessageDBFiles(files);

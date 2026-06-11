@@ -65,6 +65,28 @@ export interface BasicStatistics {
   emojisTotal?: SentReceived;
 }
 
+export interface PostStats {
+  totalPosts: number;
+  totalWords: number;
+  totalMedia: number;
+  avgWordsPerPost: number;
+  avgMediaPerPost: number;
+  postsOverTime: DailySentReceivedPoint[];
+}
+
+export interface CommentStats {
+  totalComments: number;
+  totalWords: number;
+  avgWordsPerComment: number;
+  commentsOverTime: DailySentReceivedPoint[];
+}
+
+export interface ReactionStats {
+  totalReactions: number;
+  reactionTypeBreakdown: Record<string, number>;
+  reactionsOverTime: DailySentReceivedPoint[];
+}
+
 export interface GraphData {
   focusConversations: string[];
   monthlyWordsPerConversation: Record<string, SentReceivedPoint[]>;
@@ -82,4 +104,7 @@ export interface GraphData {
   audioLengthDistribution: AudioLengthDistribution;
   emojiDistribution?: EmojiDistribution;
   basicStatistics: BasicStatistics;
+  postStats?: PostStats;
+  commentStats?: CommentStats;
+  reactionStats?: ReactionStats;
 }

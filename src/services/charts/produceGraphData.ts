@@ -1,6 +1,7 @@
 import { DailySentReceivedPoint, GraphData } from "@models/graphData";
-import { Conversation, DataSourceValue } from "@models/processed";
+import { Comment, Conversation, DataSourceValue, Post, Reaction } from "@models/processed";
 import produceBasicStatistics from "@services/charts/produceBasicStatistics";
+import { produceCommentStats, producePostStats, produceReactionStats } from "@services/charts/produceContentStats";
 import {
   aggregateDailyCounts,
   monthlyCountsPerConversation,
@@ -28,7 +29,13 @@ function groupByToPairs<T, K extends string | number>(items: T[], keyFn: (item: 
   return Array.from(map.entries());
 }
 
-export default function produceGraphData(donorId: string, allConversations: Conversation[]): Record<string, GraphData> {
+export default function produceGraphData(
+  donorId: string,
+  allConversations: Conversation[],
+  allPosts: Post[] = [],
+  allComments: Comment[] = [],
+  allReactions: Reaction[] = []
+): Record<string, GraphData> {
   return Object.fromEntries(
     groupByToPairs(allConversations, ({ dataSource }) => dataSource).map(([dataSourceValue, conversations]) => {
       // Extract focus conversations
@@ -148,6 +155,10 @@ export default function produceGraphData(donorId: string, allConversations: Conv
         hasEmojis ? { sent: totalEmojisSent, received: totalEmojisReceived } : undefined
       );
 
+      const sourcePosts = allPosts.filter(post => post.dataSource === dataSourceValue);
+      const sourceComments = allComments.filter(comment => comment.dataSource === dataSourceValue);
+      const sourceReactions = allReactions.filter(reaction => reaction.dataSource === dataSourceValue);
+
       const graphData: GraphData = {
         focusConversations,
         monthlyWordsPerConversation,
@@ -163,7 +174,10 @@ export default function produceGraphData(donorId: string, allConversations: Conv
         basicStatistics,
         participantsPerConversation,
         audioLengthDistribution,
-        emojiDistribution
+        emojiDistribution,
+        postStats: producePostStats(sourcePosts),
+        commentStats: produceCommentStats(sourceComments),
+        reactionStats: produceReactionStats(sourceReactions)
       };
 
       return [dataSourceValue, graphData];

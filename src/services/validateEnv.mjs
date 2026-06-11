@@ -13,6 +13,7 @@ const envSchema = z.object({
   DEMO_SHOW_HAS_TOKEN_BUTTON: z.enum(["true", "false"]).default("false"),
   UPLOAD_TEST_ENABLED: z.enum(["true", "false"]).default("true"),
   TOKEN_REQUIRED: z.enum(["true", "false"]).default("true"),
+  PUBLIC_DATA_DONATION_ENABLED: z.enum(["true", "false"]).default("false"),
   ENABLED_DATA_SOURCES: z.string().default("WhatsApp,Facebook,Instagram,IMessage"),
   DONOR_ID_INPUT_METHOD: z.enum(["automated", "showid", "manually"]),
   BROWSER_LANGUAGE_ENABLED: z.enum(["true", "false"]).default("false"),

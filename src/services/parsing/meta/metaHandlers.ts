@@ -10,6 +10,10 @@ import {
 
 import deIdentify from "./deIdentify";
 
+interface MetaHandlerOptions {
+  includePublicContent?: boolean;
+}
+
 interface ParsedMessage {
   sender_name: string;
   content?: string;
@@ -23,21 +27,29 @@ export interface ParsedConversation {
   [key: string]: any;
 }
 
-export async function handleInstagramZipFiles(fileList: File[]): Promise<AnonymizationResult> {
+export async function handleInstagramZipFiles(
+  fileList: File[],
+  options: MetaHandlerOptions = {}
+): Promise<AnonymizationResult> {
   return handleMetaZipFiles(
     fileList,
     "personal_information.json",
     extractDonorNameFromInstagramProfile,
-    DataSourceValue.Instagram
+    DataSourceValue.Instagram,
+    options
   );
 }
 
-export async function handleFacebookZipFiles(fileList: File[]): Promise<AnonymizationResult> {
+export async function handleFacebookZipFiles(
+  fileList: File[],
+  options: MetaHandlerOptions = {}
+): Promise<AnonymizationResult> {
   return handleMetaZipFiles(
     fileList,
     "profile_information.json",
     extractDonorNameFromFacebookProfile,
-    DataSourceValue.Facebook
+    DataSourceValue.Facebook,
+    options
   );
 }
 
@@ -82,7 +94,8 @@ async function handleMetaZipFiles(
   fileList: File[],
   profileInfoFilePattern: string,
   userNameExtractor: (profileText: string) => string,
-  dataSourceValue: DataSourceValue
+  dataSourceValue: DataSourceValue,
+  options: MetaHandlerOptions
 ): Promise<AnonymizationResult> {
   const allEntries: ValidEntry[] = await extractEntriesFromZips(fileList);
 
@@ -102,6 +115,42 @@ async function handleMetaZipFiles(
   const audioEntries = allEntries.filter(entry => isMatchingEntry(entry, ".wav"));
   console.log("Audio entries found:", audioEntries.length);
 
+  const includePublicContent = options.includePublicContent === true;
+
+  // Filter for post entries (exclude past_instagram_insights/posts.json)
+  const postEntries = includePublicContent
+    ? allEntries.filter(
+        entry =>
+          !isMatchingEntry(entry, "past_instagram_insights/posts.json") &&
+          (isMatchingEntry(entry, "/posts_1.json") ||
+            isMatchingEntry(entry, "/posts.json") ||
+            isMatchingEntry(entry, "your_posts.json"))
+      )
+    : [];
+  console.log("Post entries found:", postEntries.length);
+
+  // Filter for comment entries
+  const commentEntries = includePublicContent
+    ? allEntries.filter(
+        entry =>
+          isMatchingEntry(entry, "post_comments_1.json") ||
+          isMatchingEntry(entry, "post_comments.json") ||
+          isMatchingEntry(entry, "/comments.json")
+      )
+    : [];
+  console.log("Comment entries found:", commentEntries.length);
+
+  // Filter for reaction/like entries
+  const reactionEntries = includePublicContent
+    ? allEntries.filter(
+        entry =>
+          isMatchingEntry(entry, "liked_comments.json") ||
+          isMatchingEntry(entry, "liked_posts.json") ||
+          isMatchingEntry(entry, "/likes.json")
+      )
+    : [];
+  console.log("Reaction entries found:", reactionEntries.length);
+
   try {
     // Extract donor name from profile
     const donorName = userNameExtractor(await getEntryText(profileInfoEntry));
@@ -109,8 +158,21 @@ async function handleMetaZipFiles(
     // Extract message contents from message entries
     const parsedConversations = await getConversationsFromEntries(messageEntries);
 
+    // Read raw content for posts, comments, reactions
+    const rawPosts = await Promise.all(postEntries.map(getEntryText));
+    const rawComments = await Promise.all(commentEntries.map(getEntryText));
+    const rawReactions = await Promise.all(reactionEntries.map(getEntryText));
+
     // Process the extracted data
-    return deIdentify(parsedConversations, audioEntries, donorName, dataSourceValue);
+    return deIdentify(
+      parsedConversations,
+      audioEntries,
+      donorName,
+      dataSourceValue,
+      rawPosts,
+      rawComments,
+      rawReactions
+    );
   } catch (error) {
     // Keep actionable validation reasons for the UI instead of collapsing to UnknownError.
     if (error && typeof error === "object" && "reason" in error) {

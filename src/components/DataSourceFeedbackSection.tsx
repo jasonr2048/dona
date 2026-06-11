@@ -26,6 +26,8 @@ export default function DataSourceFeedbackSection({
   graphData: GraphData;
 }) {
   const showDetailedAudioFeedback = [DataSourceValue.Facebook, DataSourceValue.Instagram].includes(dataSourceValue);
+  const showContentFeedback = [DataSourceValue.Facebook, DataSourceValue.Instagram].includes(dataSourceValue);
+  const hasContentData = !!(graphData.postStats || graphData.commentStats || graphData.reactionStats);
   // console.log("[FEEDBACK][CLIENT] Full graph data:", graphData);  # For development only
   let t = useTranslations("feedback");
   const ii = useTranslations("feedback.interactionIntensity");
@@ -221,6 +223,84 @@ export default function DataSourceFeedbackSection({
           </Box>
           <ChartContainer type={ChartType.ResponseTimeBarChart} data={graphData} dataSourceValue={dataSourceValue} />
           <Button onClick={() => openSectionModal("responseTimes")}>{rt("moreAbout")}</Button>
+
+          {/* Social Content Activity */}
+          {showContentFeedback && hasContentData && (
+            <>
+              <Typography variant="h6" sx={{ mt: 3 }}>
+                Social Content Activity
+              </Typography>
+              <Box>
+                <Typography variant="body1" fontWeight="fontWeightBold">
+                  Social Engagement Timeline
+                </Typography>
+                <Typography variant="body2">Combined view of all your social content activity over time.</Typography>
+              </Box>
+              <ChartContainer
+                type={ChartType.SocialEngagementTimelineChart}
+                data={graphData}
+                dataSourceValue={dataSourceValue}
+              />
+              <Box>
+                <Typography variant="body1" fontWeight="fontWeightBold">
+                  Your Engagement Style
+                </Typography>
+                <Typography variant="body2">
+                  How your activity is distributed across creating, commenting, and reacting.
+                </Typography>
+              </Box>
+              <ChartContainer
+                type={ChartType.EngagementStyleChart}
+                data={graphData}
+                dataSourceValue={dataSourceValue}
+              />
+              {graphData.postStats && (
+                <>
+                  <Box>
+                    <Typography variant="body1" fontWeight="fontWeightBold">
+                      Post Activity
+                    </Typography>
+                    <Typography variant="body2">Frequency and composition of your posts over time.</Typography>
+                  </Box>
+                  <ChartContainer
+                    type={ChartType.PostActivityChart}
+                    data={graphData}
+                    dataSourceValue={dataSourceValue}
+                  />
+                </>
+              )}
+              {graphData.commentStats && (
+                <>
+                  <Box>
+                    <Typography variant="body1" fontWeight="fontWeightBold">
+                      Comment Activity
+                    </Typography>
+                    <Typography variant="body2">Your commenting activity over time.</Typography>
+                  </Box>
+                  <ChartContainer
+                    type={ChartType.CommentActivityChart}
+                    data={graphData}
+                    dataSourceValue={dataSourceValue}
+                  />
+                </>
+              )}
+              {graphData.reactionStats && (
+                <>
+                  <Box>
+                    <Typography variant="body1" fontWeight="fontWeightBold">
+                      Reactions
+                    </Typography>
+                    <Typography variant="body2">Breakdown of your reaction types and activity over time.</Typography>
+                  </Box>
+                  <ChartContainer
+                    type={ChartType.ReactionBreakdownChart}
+                    data={graphData}
+                    dataSourceValue={dataSourceValue}
+                  />
+                </>
+              )}
+            </>
+          )}
         </Stack>
       </AccordionDetails>
 

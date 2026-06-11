@@ -98,6 +98,9 @@ export default async function handleImessageDBFiles(
 
   return {
     anonymizedConversations: Array.from(conversationsMap.values()),
+    posts: [],
+    comments: [],
+    reactions: [],
     participantNamesToPseudonyms: contactPseudonyms.getPseudonymMap(),
     chatMappingToShow: chatPseudonyms.getPseudonymMap()
   };

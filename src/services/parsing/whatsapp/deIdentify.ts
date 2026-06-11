@@ -55,6 +55,9 @@ export default async function deIdentify(
 
   return {
     anonymizedConversations: deIdentifiedConversations,
+    posts: [],
+    comments: [],
+    reactions: [],
     participantNamesToPseudonyms: contactPseudonyms.getPseudonymMap(),
     chatMappingToShow: chatPseudonyms.getPseudonymMap()
   };

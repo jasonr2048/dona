@@ -55,6 +55,7 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
 - `DEMO_SHOW_HAS_TOKEN_BUTTON` — set to `true` to show the "I have received my token" button in demo mode
 - `UPLOAD_TEST_ENABLED` — set to `false` to skip the data file testing step before upload (default: `true`)
 - `TOKEN_REQUIRED` — set to `false` to allow users to proceed without a token (default: `true`)
+- `PUBLIC_DATA_DONATION_ENABLED` — set to `true` to collect Facebook/Instagram posts, comments, and reactions (default: `false`)
 - `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, demo notices in flow, sample data downloads on feedback page, and no final survey CTA)
 - `NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED` — set to `false` to skip duplicate-donation rejection during upload (default: `true`)
 - `DUPLICATE_DONATION_CHECK_ENABLED` — server-side toggle for duplicate checking, should usually match `NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED` (default: `true`)
@@ -173,6 +174,7 @@ DONOR_ID_INPUT_METHOD=manually
 DONOR_SURVEY_ENABLED=false
 DEMO_MODE=false
 DEMO_SHOW_HAS_TOKEN_BUTTON=false
+PUBLIC_DATA_DONATION_ENABLED=false
 FEEDBACK_SURVEY_ENABLED=true
 DONOR_SURVEY_LINK=
 FEEDBACK_SURVEY_LINK=

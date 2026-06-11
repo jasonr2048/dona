@@ -6,10 +6,20 @@ import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/db/drizzle";
-import { conversationParticipants, conversations, donations, graphData, messages, messagesAudio } from "@/db/schema";
+import {
+  comments,
+  conversationParticipants,
+  conversations,
+  donations,
+  graphData,
+  messages,
+  messagesAudio,
+  posts,
+  reactions
+} from "@/db/schema";
 import { DbClient } from "@/db/types";
-import { NewConversation, NewMessage, NewMessageAudio } from "@models/persisted";
-import { Conversation, DonationStatus } from "@models/processed";
+import { NewComment, NewConversation, NewMessage, NewMessageAudio, NewPost, NewReaction } from "@models/persisted";
+import { Comment, Conversation, DonationStatus, Post, Reaction } from "@models/processed";
 import { parseDuplicateCheckExceptionHashesCsv } from "@/services/duplicateCheckExceptions";
 import { DonationStats } from "@services/donationStats";
 import { DonationErrors, DonationProcessingError, SerializedDonationError } from "@services/errors";
@@ -18,7 +28,8 @@ const MAX_MESSAGES_PER_TX = 10000; // max messages (text + audio) per DB transac
 const BULK_CHUNK = 2000; // chunk size for large bulk inserts
 const isDemoMode = process.env.DEMO_MODE === "true";
 const isDuplicateCheckEnabled =
-  process.env.DUPLICATE_DONATION_CHECK_ENABLED !== "false" && process.env.NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED !== "false";
+  process.env.DUPLICATE_DONATION_CHECK_ENABLED !== "false" &&
+  process.env.NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED !== "false";
 
 let cachedExceptionHashes: Set<string> | null = null;
 
@@ -28,7 +39,8 @@ async function loadDuplicateCheckExceptionHashes(): Promise<Set<string>> {
   }
 
   const configuredPath =
-    process.env.DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH || "public/documents/sample-data/duplicate-check-exceptions.csv";
+    process.env.DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH ||
+    "public/documents/sample-data/duplicate-check-exceptions.csv";
   const csvPath = path.isAbsolute(configuredPath) ? configuredPath : path.join(process.cwd(), configuredPath);
 
   try {
@@ -118,7 +130,9 @@ export async function appendConversationBatch(
     return { success: true, data: { inserted: batch.length } };
   }
 
-  console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`);
+  console.log(
+    `[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`
+  );
 
   try {
     const dataSources = (await dbClient.query.dataSources.findMany()) as any;
@@ -263,6 +277,68 @@ export async function appendConversationBatch(
   }
 }
 
+export async function appendContentData(
+  donationId: string,
+  postItems: Post[],
+  commentItems: Comment[],
+  reactionItems: Reaction[],
+  dbClient: DbClient = db
+): Promise<ActionResult> {
+  console.log(
+    `[DONATION][donationId=${donationId}] appendContentData: ${postItems.length} posts, ${commentItems.length} comments, ${reactionItems.length} reactions`
+  );
+
+  try {
+    const dataSources = (await dbClient.query.dataSources.findMany()) as any;
+
+    const resolveDataSourceId = (dataSource: string): number =>
+      dataSources.find((ds: any) => ds.name === dataSource)?.id ?? dataSources[0].id;
+
+    // Insert posts
+    if (postItems.length > 0) {
+      const postsToInsert = postItems.map(p => NewPost.create(donationId, resolveDataSourceId(p.dataSource), p));
+      for (let i = 0; i < postsToInsert.length; i += BULK_CHUNK) {
+        const chunk = postsToInsert.slice(i, i + BULK_CHUNK);
+        await dbClient.insert(posts).values(chunk);
+      }
+    }
+
+    // Insert comments
+    if (commentItems.length > 0) {
+      const commentsToInsert = commentItems.map(c =>
+        NewComment.create(donationId, resolveDataSourceId(c.dataSource), c)
+      );
+      for (let i = 0; i < commentsToInsert.length; i += BULK_CHUNK) {
+        const chunk = commentsToInsert.slice(i, i + BULK_CHUNK);
+        await dbClient.insert(comments).values(chunk);
+      }
+    }
+
+    // Insert reactions
+    if (reactionItems.length > 0) {
+      const reactionsToInsert = reactionItems.map(r =>
+        NewReaction.create(donationId, resolveDataSourceId(r.dataSource), r)
+      );
+      for (let i = 0; i < reactionsToInsert.length; i += BULK_CHUNK) {
+        const chunk = reactionsToInsert.slice(i, i + BULK_CHUNK);
+        await dbClient.insert(reactions).values(chunk);
+      }
+    }
+
+    console.log(`[DONATION][donationId=${donationId}] ✅ appendContentData`);
+    return { success: true };
+  } catch (err) {
+    console.error(`[DONATION][donationId=${donationId}] ❌ appendContentData:`, {
+      error: err,
+      stack: (err as any)?.stack
+    });
+    return {
+      success: false,
+      error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err })
+    };
+  }
+}
+
 export async function finalizeDonation(
   donationId: string,
   graphDataRecord: Record<string, any>,
@@ -329,7 +405,8 @@ export async function checkForDuplicateConversations(
 
     // Query database for existing conversations with these hashes
     const existingConversations = await dbClient.query.conversations.findMany({
-      where: (conversations: any, { inArray }: { inArray: any }) => inArray(conversations.conversationHash, hashesToCheck),
+      where: (conversations: any, { inArray }: { inArray: any }) =>
+        inArray(conversations.conversationHash, hashesToCheck),
       columns: {
         conversationHash: true
       }

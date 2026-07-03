@@ -29,11 +29,13 @@ const sampleDataFiles = [
   },
   {
     key: "instagram",
-    href: "/documents/sample-data/artificial_instagram_export_valid.zip"
+    href: "/documents/sample-data/artificial_instagram_export_valid.zip",
+    external: false
   },
   {
     key: "imessage",
-    href: "/documents/sample-data/valid_data.db"
+    href: "/documents/sample-data/valid_data.db",
+    external: false
   }
 ] as const;
 

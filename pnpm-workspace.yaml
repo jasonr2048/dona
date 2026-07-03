@@ -1,0 +1,8 @@
+allowBuilds:
+  '@journeyapps/wa-sqlite': true
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  sharp: true
+  sqlite3: true
+  unrs-resolver: true
